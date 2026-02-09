@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="Switch" Id="{2a9efa6e-06af-49f4-a6ac-df8fcb8da5bd}">
+    <Declaration><![CDATA[TYPE Switch :
+STRUCT
+    Config              : SwitchConfig;        // Configuration
+    State               : SwitchStateData;     // Current state
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

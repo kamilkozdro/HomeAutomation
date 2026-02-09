@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="SwitchStateData" Id="{95f89ab6-dc0c-4e63-95ce-633bc21eb204}">
+    <Declaration><![CDATA[TYPE SwitchStateData :
+STRUCT
+    // Logical state
+    CurrentState        : SwitchState;         // Current processed state
+    PreviousState       : SwitchState;         // Previous state
+    StateChanged        : BOOL;                // State change flag
+    
+    // Counters
+    PressCount          : USINT := 0;            // Number of clicks in sequence
+    TotalPresses        : UDINT := 0;          // Total number of clicks
+
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

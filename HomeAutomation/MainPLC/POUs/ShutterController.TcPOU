@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="ShutterController" Id="{dd08b1ec-d745-4a63-8932-a31fbeb61274}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC ShutterController
+VAR_INPUT
+    Config  : ShutterConfig;         // Shutter configuration
+    Command : ShutterCommand;        // Command input
+END_VAR
+VAR_OUTPUT
+    State   : ShutterStateData;      // Current state
+END_VAR
+VAR
+    MoveTimer : TON;                 // Movement timer
+    StartTime : TIME;                // Movement start time
+    Direction : INT;                 // 1 = up, -1 = down, 0 = stop
+    
+    // Local calculation variables (all USINT where possible)
+    Distance : USINT;
+    MoveTime : TIME;
+    Elapsed : TIME;
+    Progress : USINT;                // Progress as percentage (0-100)
+    TraveledDistance : USINT;        // Distance traveled so far
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Get current time once
+CurrentTime := TIME();
+
+// Store previous state
+State.PreviousState := State.CurrentState;
+
+// Handle commands
+CASE Command.CommandType OF
+    ShutterCommandType.STOP:
+        State.CurrentState := ShutterState.IDLE;
+        Direction := 0;
+        Config.UpOutput := FALSE;
+        Config.DownOutput := FALSE;
+        MoveTimer(IN := FALSE);
+        
+    ShutterCommandType.OPEN:
+        IF State.CurrentState = ShutterState.IDLE THEN
+            State.TargetPosition := 100;
+            Direction := 1;
+        END_IF;
+        
+    ShutterCommandType.CLOSE:
+        IF State.CurrentState = ShutterState.IDLE THEN
+            State.TargetPosition := 0;
+            Direction := -1;
+        END_IF;
+        
+    ShutterCommandType.MOVE_TO_POSITION:
+        IF State.CurrentState = ShutterState.IDLE AND Command.Position <= 100 THEN
+            State.TargetPosition := Command.Position;
+            // Determine direction
+            IF Command.Position > State.CurrentPosition THEN
+                Direction := 1;
+            ELSIF Command.Position < State.CurrentPosition THEN
+                Direction := -1;
+            ELSE
+                Direction := 0;  // Already at target
+            END_IF;
+        END_IF;
+        
+    ShutterCommandType.NONE:
+        // No command
+        ;
+END_CASE;
+
+// Start movement if we have a direction and are idle
+IF Direction <> 0 AND State.CurrentState = ShutterState.IDLE THEN
+    StartTime := CurrentTime;
+    
+    // Calculate distance (USINT 0-100)
+    IF Direction = 1 THEN
+        Distance := State.TargetPosition - State.CurrentPosition;
+    ELSE
+        Distance := State.CurrentPosition - State.TargetPosition;
+    END_IF;
+    
+    // Calculate movement time: (distance / 100) * full travel time
+    TempReal := (USINT_TO_REAL(Distance) / 100.0) * TIME_TO_REAL(Config.TravelTime);
+    MoveTime := REAL_TO_TIME(TempReal);
+    
+    // Calculate total time in milliseconds
+    TotalMs := TIME_TO_UDINT(MoveTime);
+    
+    MoveTimer(IN := TRUE, PT := MoveTime);
+    
+    // Set outputs based on direction
+    IF Direction = 1 THEN
+        State.CurrentState := ShutterState.MOVING_UP;
+        Config.UpOutput := TRUE;
+        Config.DownOutput := FALSE;
+    ELSE
+        State.CurrentState := ShutterState.MOVING_DOWN;
+        Config.UpOutput := FALSE;
+        Config.DownOutput := TRUE;
+    END_IF;
+END_IF;
+
+// Update position while moving
+IF State.CurrentState = ShutterState.MOVING_UP OR 
+   State.CurrentState = ShutterState.MOVING_DOWN THEN
+    
+    // Calculate elapsed time
+    ElapsedTime := CurrentTime - StartTime;
+    
+    // Convert elapsed time to milliseconds
+    ElapsedMs := TIME_TO_UDINT(ElapsedTime);
+    
+    IF TotalMs > 0 AND ElapsedMs <= TotalMs THEN
+        // Calculate progress percentage (0-100) using integer math
+        // ElapsedMs * 100 could overflow, so use 64-bit intermediate
+        Progress := UDINT_TO_USINT((ElapsedMs * 100) / TotalMs);
+        
+        // Calculate new position: start + (distance * progress / 100)
+        IF State.CurrentState = ShutterState.MOVING_UP THEN
+            // Moving up: increase position
+            State.CurrentPosition := State.CurrentPosition + ((Distance * Progress) / 100);
+        ELSE
+            // Moving down: decrease position
+            State.CurrentPosition := State.CurrentPosition - ((Distance * Progress) / 100);
+        END_IF;
+        
+        // Clamp position to valid range
+        IF State.CurrentPosition > 100 THEN
+            State.CurrentPosition := 100;
+        ELSIF State.CurrentPosition < 0 THEN
+            State.CurrentPosition := 0;
+        END_IF;
+    ELSIF ElapsedMs > TotalMs THEN
+        // More time elapsed than expected - movement should be complete
+        Progress := 100;
+        State.CurrentPosition := State.TargetPosition;
+    END_IF;
+    
+    // Check if we should stop (timer expired or reached target)
+    IF MoveTimer.Q OR Progress >= 100 THEN
+        // Stop movement and snap to exact target
+        State.CurrentState := ShutterState.IDLE;
+        State.CurrentPosition := State.TargetPosition;
+        Config.UpOutput := FALSE;
+        Config.DownOutput := FALSE;
+        MoveTimer(IN := FALSE);
+        Direction := 0;
+    END_IF;
+END_IF;
+
+// Set state changed flag
+State.StateChanged := (State.CurrentState <> State.PreviousState);]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

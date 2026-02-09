@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ShutterState" Id="{739f3d94-17ed-4c90-bd16-9c7cc9683f6f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE ShutterState :
+(
+    IDLE,            // Not moving
+    MOVING_UP,       // Moving upward (opening)
+    MOVING_DOWN      // Moving downward (closing)
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
