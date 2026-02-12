@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbShutterController" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbShutterController
+VAR_INPUT
+    Config  : stShutterConfig;         // Shutter configuration
+    Command : stShutterCommand;        // Command input
+END_VAR
+VAR_OUTPUT
+    StateData   : stShutterState;      // Current state
+END_VAR
+VAR
+	OutputCheckTimer : TON;
+	OutputCheckCycleTime : TIME := T#100MS;
+	MovingToPosition : BOOL := FALSE;
+	PositionToBeMoved : USINT := 0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Handle commands
+CASE Command.CommandType OF
+    eShutterCommandType.STOP:
+		MovingToPosition := FALSE;
+        Config.UpOutput := FALSE;
+        Config.DownOutput := FALSE;
+		
+	eShutterCommandType.OPEN:
+		MovingToPosition := FALSE;
+        Config.UpOutput := TRUE;
+        Config.DownOutput := FALSE;
+	
+	eShutterCommandType.CLOSE:
+		MovingToPosition := FALSE;
+        Config.UpOutput := FALSE;
+        Config.DownOutput := TRUE;
+		
+	eShutterCommandType.MOVE_TO_POSITION:
+		MovingToPosition := TRUE;
+		PositionToBeMoved := Command.Position;
+		IF StateData.CurrentPosition < PositionToBeMoved THEN
+			Config.UpOutput := TRUE;
+			Config.DownOutput := FALSE;
+		ELSIF StateData.CurrentPosition > PositionToBeMoved THEN
+			Config.UpOutput := FALSE;
+			Config.DownOutput := TRUE;
+		ELSE
+			Config.UpOutput := FALSE;
+			Config.DownOutput := FALSE;
+		END_IF
+
+    eShutterCommandType.NONE:
+        // No command
+        ;
+END_CASE;
+
+// Stop moving when target shutter position is achieved
+IF MovingToPosition AND StateData.CurrentPosition = PositionToBeMoved THEN
+	MovingToPosition := FALSE;
+	Config.UpOutput := FALSE;
+	Config.DownOutput := FALSE;
+END_IF
+
+// TODO: Reset Outputs when shutter is at limits
+
+
+
+// Increment or decrement shutter position time when outputs are high
+OutputCheckTimer(IN := NOT OutputCheckTimer.Q, PT := OutputCheckCycleTime);
+IF OutputCheckTimer.Q THEN
+	IF Config.UpOutput AND StateData.CurrentPositionTime < Config.TravelTime THEN
+		StateData.CurrentPositionTime := StateData.CurrentPositionTime + OutputCheckCycleTime;
+	END_IF
+	IF Config.DownOutput AND StateData.CurrentPositionTime >= OutputCheckCycleTime  THEN
+		StateData.CurrentPositionTime := StateData.CurrentPositionTime - OutputCheckCycleTime;
+	END_IF
+END_IF
+
+// Update shutter position% basen on position time
+StateData.CurrentPosition := TimeToPosition(PositionTime := StateData.CurrentPositionTime, TravelTime := Config.TravelTime);
+
+// Update shutter current motor state
+IF Config.UpOutput AND NOT Config.DownOutput THEN
+	StateData.CurrentState := eShutterStateType.MOVING_UP;
+ELSIF NOT Config.UpOutput AND Config.DownOutput THEN
+	StateData.CurrentState := eShutterStateType.MOVING_DOWN;
+ELSE
+	StateData.CurrentState := eShutterStateType.IDLE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="PositionToTime" Id="{dbc29192-5de4-4308-8606-585b4f317150}">
+      <Declaration><![CDATA[METHOD PUBLIC PositionToTime : TIME
+VAR_INPUT
+	Position : USINT;
+	TravelTime : TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[PositionToTime := UDINT_TO_TIME(USINT_TO_UDINT(Position) * TIME_TO_UDINT(TravelTime) / 100);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TimeToPosition" Id="{efd8e2c9-8d96-4b41-9e35-c0880f0a2526}">
+      <Declaration><![CDATA[METHOD PUBLIC TimeToPosition : USINT
+VAR_INPUT
+	PositionTime : TIME;
+	TravelTime : TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TimeToPosition := UDINT_TO_USINT(100 * TIME_TO_UDINT(PositionTime) / TIME_TO_UDINT(TravelTime)); 
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

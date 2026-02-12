@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="SwitchConfig" Id="{5812c89a-38d9-4c5f-8ce2-7bfe653b25eb}">
-    <Declaration><![CDATA[TYPE SwitchConfig :
+  <DUT Name="stSwitchConfig" Id="{5812c89a-38d9-4c5f-8ce2-7bfe653b25eb}">
+    <Declaration><![CDATA[TYPE stSwitchConfig :
 STRUCT
     // Basic parameters
-    Typ                : SwitchType;          // Switch type
+    Typ                : eSwitchType;          // Switch type
     Input       : BOOL;                
     
     // Click timing parameters

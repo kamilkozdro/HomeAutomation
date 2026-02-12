@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="SwitchController" Id="{e5dc1c87-f12a-49b0-abc3-d2006b1b7420}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC SwitchController
+  <POU Name="fbSwitchController" Id="{e5dc1c87-f12a-49b0-abc3-d2006b1b7420}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbSwitchController
 VAR_INPUT
-    Config : SwitchConfig;                     // Switch configuration
+    Config : stSwitchConfig;                     // Switch configuration
 END_VAR
 VAR_OUTPUT
-    State : SwitchStateData;                   // Processed switch state
+    State : stSwitchState;                   // Processed switch state
 END_VAR
 VAR
     // Beckhoff edge detection
@@ -51,13 +51,13 @@ IF F_Trig.Q THEN
     // Determine click type based on duration
     IF PressTimer.ET <= Config.ShortClickMaxTime THEN
         // Short click
-        State.CurrentState := SwitchState.SHORT_CLICK;
+        State.CurrentState := eSwitchStateType.SHORT_CLICK;
         State.PressCount := PressCount;
         State.TotalPresses := State.TotalPresses + 1;
         
     ELSIF PressTimer.ET <= Config.LongClickMaxTime THEN
         // Long click
-        State.CurrentState := SwitchState.LONG_CLICK;
+        State.CurrentState := eSwitchStateType.LONG_CLICK;
         State.PressCount := PressCount;
         State.TotalPresses := State.TotalPresses + 1;
         
@@ -68,7 +68,7 @@ END_IF
 
 // Handle hold (still pressed after LongClickMaxTime)
 IF Config.Input AND PressTimer.Q THEN
-    State.CurrentState := SwitchState.HOLD;
+    State.CurrentState := eSwitchStateType.HOLD;
     State.StateChanged := TRUE;
     
     // Reset for multi-click
@@ -77,7 +77,7 @@ END_IF
 
 // Handle multi-click (timer expired after last release)
 IF NOT Config.Input AND ClickTimer.Q AND (PressCount > 1) THEN
-    State.CurrentState := SwitchState.MULTI_CLICK;
+    State.CurrentState := eSwitchStateType.MULTI_CLICK;
     State.PressCount := PressCount;
     State.TotalPresses := State.TotalPresses + 1;
     State.StateChanged := TRUE;

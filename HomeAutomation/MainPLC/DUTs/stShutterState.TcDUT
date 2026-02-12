@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="ShutterStateData" Id="{777aa08a-edfb-4ead-b67a-bc47756d0cde}">
-    <Declaration><![CDATA[TYPE ShutterStateData :
+  <DUT Name="stShutterState" Id="{777aa08a-edfb-4ead-b67a-bc47756d0cde}">
+    <Declaration><![CDATA[TYPE stShutterState :
 STRUCT
-    CurrentState    : ShutterState;        // Current shutter state
-    PreviousState   : ShutterState;        // Previous state
+    CurrentState    : eShutterStateType;        // Current shutter state
+    PreviousState   : eShutterStateType;        // Previous state
     StateChanged    : BOOL;                // State change flag
     
+	CurrentPositionTime : TIME := T#0s;
     CurrentPosition : USINT := 0;          // Current position [%] (0=closed, 100=open)
     TargetPosition  : USINT := 0;          // Target position [%]
     SavedPosition   : USINT := 50;         // Saved position for memory function

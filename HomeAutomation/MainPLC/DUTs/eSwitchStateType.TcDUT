@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <DUT Name="SwitchState" Id="{d36e16d9-ce68-4029-8826-9fad28d146b6}">
+  <DUT Name="eSwitchStateType" Id="{d36e16d9-ce68-4029-8826-9fad28d146b6}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
 {attribute 'to_string'}
-TYPE SwitchState :
+TYPE eSwitchStateType :
 (
     IDLE,            // Idle - no action
     SHORT_CLICK,     // Short click

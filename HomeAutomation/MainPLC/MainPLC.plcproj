@@ -18,34 +18,31 @@
     <LibraryReferences>{a33bae39-a904-45b5-bfab-865e9a5eefd3}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\ShutterCommand.TcDUT">
+    <Compile Include="DUTs\stShutterCommand.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ShutterCommandType.TcDUT">
+    <Compile Include="DUTs\eShutterCommandType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ShutterConfig.TcDUT">
+    <Compile Include="DUTs\stShutterConfig.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ShutterState.TcDUT">
+    <Compile Include="DUTs\eShutterStateType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ShutterStateData.TcDUT">
+    <Compile Include="DUTs\stShutterState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\Switch.TcDUT">
+    <Compile Include="DUTs\stSwitchConfig.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\SwitchConfig.TcDUT">
+    <Compile Include="DUTs\eSwitchStateType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\SwitchState.TcDUT">
+    <Compile Include="DUTs\stSwitchState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\SwitchStateData.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\SwitchType.TcDUT">
+    <Compile Include="DUTs\eSwitchType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
@@ -54,10 +51,10 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ShutterController.TcPOU">
+    <Compile Include="POUs\fbShutterController.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\SwitchController.TcPOU">
+    <Compile Include="POUs\fbSwitchController.TcPOU">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -82,11 +79,16 @@
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="MainPLC.tmc">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -156,14 +158,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
