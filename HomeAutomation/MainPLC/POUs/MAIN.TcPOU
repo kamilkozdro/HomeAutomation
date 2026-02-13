@@ -37,8 +37,8 @@ IF PlcFirstCycle THEN
 END_IF
 
 
-Switch1State := Switch1Ctrl(Config := Switch1Config);
-
+Switch1Ctrl(Config := Switch1Config);
+Switch1State := Switch1Ctrl.State;
 CASE Switch1State.CurrentState OF
 	eSwitchStateType.HOLD:
 		Shutter1Command.CommandType := eShutterCommandType.OPEN;
@@ -49,8 +49,8 @@ CASE Switch1State.CurrentState OF
 		Shutter1Command.CommandType := eShutterCommandType.STOP;
 END_CASE
 
-Shutter1State := Shutter1Ctrl(Config := Shutter1Config, Command := Shutter1Command);
-
+Shutter1Ctrl(Config := Shutter1Config, Command := Shutter1Command);
+Shutter1State := Shutter1Ctrl.State;
 
 
 ]]></ST>
