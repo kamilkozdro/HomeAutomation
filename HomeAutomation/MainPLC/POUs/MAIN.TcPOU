@@ -20,34 +20,37 @@ VAR
 	
 	// SHUTTER CONTROLLERS
 	Shutter1Ctrl : fbShutterController;
+	
+	
+	// Test
+
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+Switch1Config.Input := gvlSwitches.gvSwitchH1;
+
 IF PlcFirstCycle THEN
-	Switch1Config.ShortClickMaxTime := T#200MS;
+	Switch1Config.ShortClickMaxTime := T#500MS;
 	Switch1Config.ShortClickDelayTime := T#500MS;
-	Switch1Config.LongClickMaxTime := T#1000MS;
-	
+	Switch1Config.LongClickMaxTime := T#1500MS;
 	Shutter1Config.TravelTime := T#20S;
-	
-	
-	PlcFirstCycle := TRUE;
-	
+	PlcFirstCycle := FALSE;
 END_IF
 
 
 Switch1Ctrl(Config := Switch1Config);
 Switch1State := Switch1Ctrl.State;
-CASE Switch1State.CurrentState OF
-	eSwitchStateType.HOLD:
-		Shutter1Command.CommandType := eShutterCommandType.OPEN;
-	eSwitchStateType.LONG_CLICK:
-		Shutter1Command.CommandType := eShutterCommandType.MOVE_TO_POSITION;
-		Shutter1Command.Position := 100;
-	eSwitchStateType.SHORT_CLICK:
-		Shutter1Command.CommandType := eShutterCommandType.STOP;
-END_CASE
+
+// CASE Switch1State.CurrentState OF
+// 	eSwitchStateType.HOLD:
+// 		Shutter1Command.CommandType := eShutterCommandType.OPEN;
+// 	eSwitchStateType.LONG_CLICK:
+// 		Shutter1Command.CommandType := eShutterCommandType.MOVE_TO_POSITION;
+// 		Shutter1Command.Position := 100;
+// 	eSwitchStateType.SHORT_CLICK:
+// 		Shutter1Command.CommandType := eShutterCommandType.STOP;
+// END_CASE
 
 Shutter1Ctrl(Config := Shutter1Config, Command := Shutter1Command);
 Shutter1State := Shutter1Ctrl.State;

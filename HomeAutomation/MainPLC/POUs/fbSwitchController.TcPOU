@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fbSwitchController" Id="{e5dc1c87-f12a-49b0-abc3-d2006b1b7420}" SpecialFunc="None">
+  <POU Name="fbSwitchController" Id="{6dccb3b9-fb1e-43bd-90e9-b21e728438a7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbSwitchController
 VAR_INPUT
     Config : stSwitchConfig;                     // Switch configuration
@@ -10,79 +10,84 @@ VAR_OUTPUT
 END_VAR
 VAR
     // Beckhoff edge detection
-    R_Trig : R_TRIG;                          // Rising edge detector
-    F_Trig : F_TRIG;                          // Falling edge detector
+    SwitchPressed : R_TRIG;                          // Rising edge detector
+    SwitchReleased : F_TRIG;                          // Falling edge detector
     
     // Timers
     PressTimer : TON;                         // Press duration timer
-    ClickTimer : TON;                         // Multi-click timer
+    MultiClickTimer : TON;                    // Multi-click timer
     
     // Internal
     PressCount : USINT := 0;                  // Click counter
-END_VAR
-]]></Declaration>
+	PressTime : TIME := T#0MS;
+	ClickType : eSwitchStateType := eSwitchStateType.IDLE;
+END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-// Edge detection
-R_Trig(CLK := Config.Input);
-F_Trig(CLK := Config.Input);
+      <ST><![CDATA[(* 
+-----------------------------
+fbSwitchController:
+Set State output based on Config.Input.
+State persist per one PLC cycle, except HOLD, which last until switch release, and IDLE, which is a normal state.
+Every state change sets State.StateChanged to TRUE for one PLC cycle.
 
-// Store previous state
-State.PreviousState := State.CurrentState;
+SHORT_CLICK <= Config.ShortClickMaxTime
+Config.ShortClickMaxTime < LONG_CLICK < Config.LongClickMaxTime
+Config.LongClickMaxTime <= HOLD
+MULTI_CLICK is multiple SHORT_CLICKs delayed from one another < Config.ShortClickDelayTime
+State.PressCount hold amount of switch releases for MULTI_CLICK
+-----------------------------
+*)
 
-// Handle button press (rising edge)
-IF R_Trig.Q THEN
-    // Start timing the press
+ClickType := eSwitchStateType.IDLE;
+State.StateChanged := FALSE;
+SwitchPressed(CLK := Config.Input);
+SwitchReleased(CLK := Config.Input);
+
+IF SwitchPressed.Q THEN
     PressTimer(IN := TRUE, PT := Config.LongClickMaxTime);
-    
-    // Count this press
-    PressCount := PressCount + 1;
-    
-    // Reset and start multi-click timer
-    ClickTimer(IN := FALSE);
-    ClickTimer(IN := TRUE, PT := Config.ShortClickDelayTime);
+
 END_IF
 
-// Handle button release (falling edge)
-IF F_Trig.Q THEN
-    // Stop press timer
-    PressTimer(IN := FALSE);
-    
-    // Determine click type based on duration
-    IF PressTimer.ET <= Config.ShortClickMaxTime THEN
-        // Short click
-        State.CurrentState := eSwitchStateType.SHORT_CLICK;
-        State.PressCount := PressCount;
-        State.TotalPresses := State.TotalPresses + 1;
-        
-    ELSIF PressTimer.ET <= Config.LongClickMaxTime THEN
-        // Long click
-        State.CurrentState := eSwitchStateType.LONG_CLICK;
-        State.PressCount := PressCount;
-        State.TotalPresses := State.TotalPresses + 1;
-        
-    END_IF
-    
-    State.StateChanged := TRUE;
+PressTimer();
+MultiClickTimer();
+
+IF SwitchReleased.Q THEN
+	PressTime := PressTimer.ET;
+	PressTimer(IN := FALSE);
+	PressCount := PressCount + 1;
+	MultiClickTimer(IN := FALSE);
+	
+	// Short click
+	IF(PressTime <= Config.ShortClickMaxTime) THEN
+		MultiClickTimer(IN := TRUE, PT := Config.ShortClickDelayTime);
+	// Long click	
+	ELSIF (PressTime < Config.LongClickMaxTime) THEN
+		ClickType := eSwitchStateType.LONG_CLICK;
+	// NOTE: if PressTime = Config.LongClickMaxTime, after HOLD release next state became LONG_CLICK instead of IDLE
+	END_IF
 END_IF
 
-// Handle hold (still pressed after LongClickMaxTime)
+// Hold click
 IF Config.Input AND PressTimer.Q THEN
-    State.CurrentState := eSwitchStateType.HOLD;
-    State.StateChanged := TRUE;
-    
-    // Reset for multi-click
-    PressCount := 0;
+    ClickType := eSwitchStateType.HOLD;
 END_IF
 
-// Handle multi-click (timer expired after last release)
-IF NOT Config.Input AND ClickTimer.Q AND (PressCount > 1) THEN
-    State.CurrentState := eSwitchStateType.MULTI_CLICK;
-    State.PressCount := PressCount;
-    State.TotalPresses := State.TotalPresses + 1;
-    State.StateChanged := TRUE;
-    
-    PressCount := 0;
+IF MultiClickTimer.Q AND NOT Config.Input THEN
+	IF PressCount > 1 THEN
+		 ClickType := eSwitchStateType.MULTI_CLICK;
+	ELSE
+		ClickType := eSwitchStateType.SHORT_CLICK;
+	END_IF
+	MultiClickTimer(IN := FALSE);
+END_IF
+
+IF ClickType <> State.CurrentState THEN
+	State.PreviousState := State.CurrentState;
+	State.CurrentState := ClickType;
+	State.PressCount := PressCount;
+	State.StateChanged := TRUE;
+	
+	PressCount := 0;
 END_IF]]></ST>
     </Implementation>
   </POU>

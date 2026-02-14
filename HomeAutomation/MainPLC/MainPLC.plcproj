@@ -45,19 +45,20 @@
     <Compile Include="DUTs\eSwitchType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GVLs\gvlSwitches.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\fbSwitchController_1.TcPOU">
+    <Compile Include="POUs\fbSwitchController.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\fbShutterController.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\fbSwitchController.TcPOU">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
