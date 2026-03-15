@@ -3,8 +3,9 @@
   <DUT Name="stShutterCommand" Id="{23984a6c-c09a-4012-8087-64a064ebe57b}">
     <Declaration><![CDATA[TYPE stShutterCommand :
 STRUCT
-    CommandType  : eShutterCommandType;       // Command type
-    Position : USINT;                // Position for MOVE_TO_POSITION command
+    CommandType  : eShutterCommandType;	// Command type
+    Position : USINT;                	// Position for MOVE_TO_POSITION command
+	Angle : USINT;						// Fin Angle for MOVE_TO_POSITION command
 END_STRUCT
 END_TYPE
 ]]></Declaration>
