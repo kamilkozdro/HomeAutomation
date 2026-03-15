@@ -3,11 +3,13 @@
   <POU Name="fbShutterController" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbShutterController
 VAR_INPUT
-    Config  : stShutterConfig;         // Shutter configuration
     Command : stShutterCommand;        // Command input
 END_VAR
 VAR_OUTPUT
     State   : stShutterState;      // Current state
+END_VAR
+VAR_IN_OUT
+    Config  : stShutterConfig;         // Shutter configuration
 END_VAR
 VAR
 	OutputCheckTimer : TON;
@@ -50,7 +52,6 @@ CASE Command.CommandType OF
 
     eShutterCommandType.NONE:
         // No command
-        ;
 END_CASE;
 
 // Stop moving when target shutter position is achieved

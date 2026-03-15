@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbShutterActuator" Id="{bf5508e1-fa2e-4067-8ed9-cd7815de8c52}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterActuator
+VAR_INPUT
+	MoveUp : BOOL;
+	MoveDown : BOOL;
+END_VAR
+VAR_OUTPUT
+	ShutterState : stShutterState;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -6,7 +6,8 @@ STRUCT
     UpOutput   : BOOL;                // Relay control for upward movement
     DownOutput : BOOL;                // Relay control for downward movement
     
-    TravelTime : TIME := T#30s;       // Time for full open/close movement [0-100%]
+    TravelTime : TIME := T#30S;			// Time for full open/close vertical movement
+	AngleFullTurnTime : TIME := T#3S;		// Time for fins to make full rotation
 END_STRUCT
 END_TYPE
 ]]></Declaration>
