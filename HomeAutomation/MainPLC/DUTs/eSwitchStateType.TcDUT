@@ -9,7 +9,8 @@ TYPE eSwitchStateType :
     IDLE,            // Idle - no action
     SHORT_CLICK,     // Short click
     LONG_CLICK,      // Long click
-    HOLD,            // Hold
+    HOLD_ON,         // Hold rising edge
+	HOLD_OFF,		// Hold falling edge
     MULTI_CLICK      // Multiple click
 );
 END_TYPE
