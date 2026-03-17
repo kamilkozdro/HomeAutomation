@@ -9,6 +9,8 @@ TYPE eShutterCommandType :
     NONE,           // No command
     OPEN,           // Open command (move to 100%)
     CLOSE,          // Close command (move to 0%)
+	STEP_OPEN,		// Open by step 10%
+	STEP_CLOSE,		// Close by step 10%
     STOP,           // Stop command
     MOVE_TO_POSITION // Move to specific position
 );
