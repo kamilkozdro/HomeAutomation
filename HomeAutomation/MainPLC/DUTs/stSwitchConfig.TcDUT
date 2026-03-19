@@ -4,7 +4,6 @@
     <Declaration><![CDATA[TYPE stSwitchConfig :
 STRUCT
     // Basic parameters
-    Typ                : eSwitchType;          // Switch type
     Input       : BOOL;                
     
     // Click timing parameters

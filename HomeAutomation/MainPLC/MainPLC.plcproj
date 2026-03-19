@@ -42,9 +42,6 @@
     <Compile Include="DUTs\stSwitchState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\eSwitchType.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="GVLs\gvlSwitches.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>

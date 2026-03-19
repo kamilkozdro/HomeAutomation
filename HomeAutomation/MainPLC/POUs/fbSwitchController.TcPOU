@@ -71,11 +71,11 @@ IF SwitchReleased.Q THEN
 END_IF
 
 // Hold click
-IF PressTimerQRise THEN
+IF PressTimerQRise.Q THEN
     ClickType := eSwitchStateType.HOLD_ON;
 END_IF
 
-IF PressTimerQFall THEN
+IF PressTimerQFall.Q THEN
     ClickType := eSwitchStateType.HOLD_OFF;
 END_IF
 
