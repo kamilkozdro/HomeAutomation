@@ -40,7 +40,7 @@ END_IF
 
 // Reset signal if shutter reached fully close position
 IF Q_MoveDown AND CurrentPosTime <= T#0S THEN
-	Q_MoveUp := FALSE;
+	Q_MoveDown := FALSE;
 END_IF
 
 // Count time and accumulate when signals are set
@@ -59,7 +59,7 @@ IF OutputCheckTimer.Q THEN
 		// Close fins first before moving down
 		IF CurrentAngleTime > T#0S THEN
 			CurrentAngleTime := CurrentAngleTime - OutputCheckCycleTime;
-		ELSIF CurrentPosTime < Config.TravelTime THEN
+		ELSIF CurrentPosTime > T#0s THEN
 			CurrentPosTime := CurrentPosTime - OutputCheckCycleTime;
 		END_IF;
 	END_IF

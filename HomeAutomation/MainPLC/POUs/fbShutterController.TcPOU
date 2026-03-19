@@ -25,6 +25,8 @@ END_VAR]]></Declaration>
       <ST><![CDATA[(* 
 	Shutter Controller Function Block
 	
+	100 - fully open position/angle
+	0 - fully close position/angle
 
 *)
 
@@ -57,7 +59,7 @@ IF CommandChanged THEN
 			MovingToPosition := TRUE;
 			TargetPosition := State.CurrentPosition;
 			// First open fins by angle step
-			IF State.CurrentAngle < 100 - MoveStep THEN
+			IF State.CurrentAngle <= 100 - MoveStep THEN
 				TargetAngle := State.CurrentAngle + MoveStep;
 			// If fins are fully open -> move position
 			ELSE
@@ -68,8 +70,24 @@ IF CommandChanged THEN
 					TargetPosition := 100;
 				END_IF
 			END_IF
-			TargetPosition := State.CurrentPosition + MoveStep;
-			TargetAngle := 0;
+			//TargetPosition := State.CurrentPosition + MoveStep;
+			//TargetAngle := 0;
+			
+		eShutterCommandType.STEP_CLOSE:
+			MovingToPosition := TRUE;
+			TargetPosition := State.CurrentPosition;
+			// First close fins by angle step
+			IF State.CurrentAngle >= 0 + MoveStep THEN
+				TargetAngle := State.CurrentAngle - MoveStep;
+			// If fins are fully closed -> move position
+			ELSE
+				TargetAngle := 0;
+				IF State.CurrentPosition >= 0 + MoveStep THEN
+					TargetPosition := State.CurrentPosition - MoveStep;
+				ELSE
+					TargetPosition := 0;
+				END_IF
+			END_IF
 			
 		eShutterCommandType.MOVE_TO_POSITION:
 			MovingToPosition := TRUE;

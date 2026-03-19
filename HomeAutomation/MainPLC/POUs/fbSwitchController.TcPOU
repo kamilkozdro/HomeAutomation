@@ -43,8 +43,8 @@ ClickType := eSwitchStateType.IDLE;
 State.StateChanged := FALSE;
 SwitchPressed(CLK := Config.Input);
 SwitchReleased(CLK := Config.Input);
-PressTimerQRise(CLK := Config.Input);
-PressTimerQFall(CLK := Config.Input);
+PressTimerQRise(CLK := PressTimer.Q);
+PressTimerQFall(CLK := PressTimer.Q);
 
 IF SwitchPressed.Q THEN
     PressTimer(IN := TRUE, PT := Config.LongClickMaxTime);

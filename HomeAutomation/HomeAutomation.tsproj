@@ -16,20 +16,28 @@
 		</System>
 		<Plc>
 			<Project GUID="{F19B6445-F9FB-4350-82DA-0CB2ABA4EFAC}" Name="MainPLC" PrjFilePath="MainPLC\MainPLC.plcproj" TmcFilePath="MainPLC\MainPLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{954F0254-6268-E7D1-6E69-10AC6B71098F}" TmcPath="MainPLC\MainPLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{5AA69B11-C539-345E-214E-73FE21A851D1}" TmcPath="MainPLC\MainPLC.tmc">
 					<Name>MainPLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
-							<Name>GVL_Shutters.gvShutter1Up</Name>
+							<Name>gvlShutters.gvShutter1Up</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>gvlShutters.gvShutter1Down</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>gvlSwitches.gvSwitchH1</Name>
+							<Name>gvlSwitches.gvSwitchR1Up</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>gvlSwitches.gvSwitchR1Down</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -925,10 +933,12 @@
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
 		<OwnerA Name="TIPC^MainPLC^MainPLC Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1100)^Term 11 (EL2809)">
-				<Link VarA="PlcTask Outputs^GVL_Shutters.gvShutter1Up" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^gvlShutters.gvShutter1Down" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^gvlShutters.gvShutter1Up" VarB="Channel 1^Output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1100)^Term 5 (EL1008)">
-				<Link VarA="PlcTask Inputs^gvlSwitches.gvSwitchH1" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^gvlSwitches.gvSwitchR1Down" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^gvlSwitches.gvSwitchR1Up" VarB="Channel 1^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>
