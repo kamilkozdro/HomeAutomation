@@ -44,7 +44,7 @@ IF Q_MoveDown AND CurrentPosTime <= T#0S THEN
 END_IF
 
 // Count time and accumulate when signals are set
-OutputCheckTimer(IN := NOT OutputCheckTimer.Q, PT := OutputCheckCycleTime);
+OutputCheckTimer(IN := Q_MoveDown OR Q_MoveUp, PT := OutputCheckCycleTime);
 IF OutputCheckTimer.Q THEN
 	IF Q_MoveUp THEN
 		// Open fins first before moving up
@@ -63,6 +63,8 @@ IF OutputCheckTimer.Q THEN
 			CurrentPosTime := CurrentPosTime - OutputCheckCycleTime;
 		END_IF;
 	END_IF
+	
+	OutputCheckTimer.IN := FALSE;  // reset
 END_IF
 
 // Update shutter position% basen on position time
