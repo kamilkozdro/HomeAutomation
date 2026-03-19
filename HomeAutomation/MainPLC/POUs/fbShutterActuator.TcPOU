@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbShutterActuator" Id="{bf5508e1-fa2e-4067-8ed9-cd7815de8c52}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterActuator
+VAR_INPUT
+	MoveUp : BOOL;
+	MoveDown : BOOL;
+	Config : stShutterConfig;
+END_VAR
+VAR_OUTPUT
+	Q_MoveUp : BOOL;
+	Q_MoveDown : BOOL;
+	State : stShutterState;
+END_VAR
+VAR
+	OutputCheckTimer : TON;
+END_VAR
+VAR CONSTANT
+	OutputCheckCycleTime: TIME := T#50MS;
+END_VAR
+VAR PERSISTENT
+	CurrentPosTime: TIME := T#0S;
+	CurrentAngleTime: TIME := T#0S;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+Q_MoveUp := MoveUp;
+Q_MoveDown := MoveDown;
+
+// Both signals must not be set at the same time
+IF Q_MoveUp AND Q_MoveDown THEN
+	Q_MoveUp := FALSE;
+	Q_MoveDown := FALSE;
+END_IF
+
+// Reset signal if shutter reached fully open position with overstep
+IF Q_MoveUp AND CurrentPosTime >= Config.TravelTime + Config.TravelTimeOverstep THEN
+	Q_MoveUp := FALSE;
+END_IF
+
+// Reset signal if shutter reached fully close position
+IF Q_MoveDown AND CurrentPosTime <= T#0S THEN
+	Q_MoveUp := FALSE;
+END_IF
+
+// Count time and accumulate when signals are set
+OutputCheckTimer(IN := NOT OutputCheckTimer.Q, PT := OutputCheckCycleTime);
+IF OutputCheckTimer.Q THEN
+	IF Q_MoveUp THEN
+		// Open fins first before moving up
+		IF CurrentAngleTime < Config.AngleFullTurnTime THEN
+			CurrentAngleTime := CurrentAngleTime + OutputCheckCycleTime;
+		ELSIF CurrentPosTime < Config.TravelTime THEN
+			CurrentPosTime := CurrentPosTime + OutputCheckCycleTime;
+		END_IF;
+	END_IF
+	
+	IF Q_MoveDown THEN
+		// Close fins first before moving down
+		IF CurrentAngleTime > T#0S THEN
+			CurrentAngleTime := CurrentAngleTime - OutputCheckCycleTime;
+		ELSIF CurrentPosTime < Config.TravelTime THEN
+			CurrentPosTime := CurrentPosTime - OutputCheckCycleTime;
+		END_IF;
+	END_IF
+END_IF
+
+// Update shutter position% basen on position time
+State.CurrentPosition := TimeToPosition(CurrentPosTime := CurrentPosTime, TravelTime := Config.TravelTime);
+State.CurrentAngle := TimeToPosition(CurrentPosTime := CurrentAngleTime, TravelTime := Config.AngleFullTurnTime);
+
+// Update shutter current motor state
+IF Q_MoveUp AND NOT Q_MoveDown THEN
+	State.CurrentState := eShutterStateType.MOVING_UP;
+ELSIF NOT Q_MoveUp AND Q_MoveDown THEN
+	State.CurrentState := eShutterStateType.MOVING_DOWN;
+ELSE
+	State.CurrentState := eShutterStateType.IDLE;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Method Name="TimeToPosition" Id="{bd68f6ed-8fd2-4d73-8913-5e309fff6117}">
+      <Declaration><![CDATA[METHOD PUBLIC TimeToPosition : USINT
+VAR_INPUT
+	CurrentPosTime : TIME;
+	TravelTime : TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TimeToPosition := UDINT_TO_USINT(100 * TIME_TO_UDINT(CurrentPosTime) / TIME_TO_UDINT(TravelTime)); 
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

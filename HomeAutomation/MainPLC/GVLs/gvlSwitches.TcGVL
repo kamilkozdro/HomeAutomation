@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="gvlSwitches" Id="{e769fc42-99e4-482c-9eed-c0cbd00c6def}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	gvSwitchH1 AT %I* : BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

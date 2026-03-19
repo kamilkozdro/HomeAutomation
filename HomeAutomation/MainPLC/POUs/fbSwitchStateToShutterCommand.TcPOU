@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbSwitchStateToShutterCommand" Id="{7a8a37bc-5d21-41c8-abe5-cb90717222bb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbSwitchStateToShutterCommand
+VAR_INPUT
+	SwitchState : stSwitchState;
+END_VAR
+VAR_OUTPUT
+	ShutterCommand : stShutterCommand;
+END_VAR
+VAR_IN_OUT
+	ShutterState : stShutterState;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE SwitchState.CurrentState OF
+	eSwitchStateType.SHORT_CLICK:
+		IF ShutterState.CurrentState <> eShutterStateType.IDLE THEN
+			ShutterCommand.CommandType := eShutterCommandType.STOP;
+		END_IF
+	eSwitchStateType.LONG_CLICK:
+	;
+	eSwitchStateType.HOLD:
+	;
+	eSwitchStateType.MULTI_CLICK:
+	;
+	eSwitchStateType.IDLE:
+	;
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

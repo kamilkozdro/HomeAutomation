@@ -18,46 +18,54 @@
     <LibraryReferences>{a33bae39-a904-45b5-bfab-865e9a5eefd3}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\ShutterCommand.TcDUT">
+    <Compile Include="DUTs\stShutterCommand.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ShutterCommandType.TcDUT">
+    <Compile Include="DUTs\eShutterCommandType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ShutterConfig.TcDUT">
+    <Compile Include="DUTs\stShutterConfig.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ShutterState.TcDUT">
+    <Compile Include="DUTs\eShutterStateType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ShutterStateData.TcDUT">
+    <Compile Include="DUTs\stShutterState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\Switch.TcDUT">
+    <Compile Include="DUTs\stSwitchConfig.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\SwitchConfig.TcDUT">
+    <Compile Include="DUTs\eSwitchStateType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\SwitchState.TcDUT">
+    <Compile Include="DUTs\stSwitchState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\SwitchStateData.TcDUT">
+    <Compile Include="GVLs\gvlSwitches.TcGVL">
       <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="DUTs\SwitchType.TcDUT">
+    <Compile Include="GVLs\GVL_Shutters.TcGVL">
       <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\fbShutterActuator.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\fbSwitchController.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\fbSwitchStateToShutterCommand.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ShutterController.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\SwitchController.TcPOU">
+    <Compile Include="POUs\fbShutterController.TcPOU">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -81,6 +89,11 @@
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MainPLC.tmc">
+      <SubType>Content</SubType>
+    </None>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
