@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbShutter" Id="{9c24352d-2ef6-461c-a234-b431579881fd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbShutter
+VAR_INPUT
+  Command : stShutterCommand;  // Switches/HA/scheduler
+  Config : stShutterConfig;
+END_VAR
+VAR_OUTPUT
+  Q_MoveUp : BOOL;
+  Q_MoveDown : BOOL;
+  State : stShutterState;
+END_VAR
+VAR
+  Ctrl : fbShutterController;
+  Act : fbShutterActuator;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Ctrl(Command := Command, State := Act.State);
+Act(MoveUp := Ctrl.MoveUp, MoveDown := Ctrl.MoveDown, Config := Config);
+
+Q_MoveUp := Act.Q_MoveUp;
+Q_MoveDown := Act.Q_MoveDown;
+State := Act.State;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

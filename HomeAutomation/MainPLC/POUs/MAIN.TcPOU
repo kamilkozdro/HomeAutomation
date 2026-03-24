@@ -12,12 +12,9 @@ VAR
 	SwitchR1DownCtrl : fbSwitchController;
 	SwitchR1DownConfig : stSwitchConfig;
 	
-	// SHUTTER CONTROLLERS
-	Shutter1Ctrl : fbShutterController;
+	// SHUTTERS
+	Shutter1 : fbShutter;
 	Shutter1Cmd : stShutterCommand;
-	
-	// SHUTTER ACTUATORS
-	Shutter1Act : fbShutterActuator;
 	Shutter1Config : stShutterConfig;
 	
 END_VAR
@@ -49,7 +46,7 @@ SwitchR1DownCtrl(Config := SwitchR1DownConfig);
 Shutter1Cmd.CommandType := eShutterCommandType.NONE;
 
 // STOP condition - If shutter is moving, any switch R1 or R2 click will stop shutter
-IF Shutter1Act.State.CurrentState <> eShutterStateType.IDLE AND 
+IF Shutter1.State.CurrentState <> eShutterStateType.IDLE AND 
 	( SwitchR1UpCtrl.State.CurrentState <> eSwitchStateType.IDLE
 	OR SwitchR1DownCtrl.State.CurrentState <> eSwitchStateType.IDLE) THEN
 	Shutter1Cmd.CommandType := eShutterCommandType.STOP;
@@ -78,10 +75,10 @@ ELSIF SwitchR1UpCtrl.State.CurrentState = eSwitchStateType.LONG_CLICK
 	Shutter1Cmd.CommandType := eShutterCommandType.MOVE_TO_POSITION;
 END_IF
 
-Shutter1Ctrl(Command := Shutter1Cmd, State := Shutter1Act.State);
-Shutter1Act(MoveUp := Shutter1Ctrl.MoveUp, MoveDown := Shutter1Ctrl.MoveDown, Config := Shutter1Config);
+Shutter1(Command := Shutter1Cmd, Config := Shutter1Config);
 
-gvlShutters.gvShutter1Up := Shutter1Act.Q_MoveUp;
+gvlShutters.gvShutter1Up := Shutter1.Q_MoveUp;
+gvlShutters.gvShutter1Down := Shutter1.Q_MoveDown;
 ]]></ST>
     </Implementation>
   </POU>

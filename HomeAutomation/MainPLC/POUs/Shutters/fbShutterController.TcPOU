@@ -125,29 +125,5 @@ IF MovingToPosition THEN
 END_IF
 ]]></ST>
     </Implementation>
-    <Method Name="PositionToTime" Id="{dbc29192-5de4-4308-8606-585b4f317150}">
-      <Declaration><![CDATA[METHOD PUBLIC PositionToTime : TIME
-VAR_INPUT
-	Position : USINT;
-	TravelTime : TIME;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[PositionToTime := UDINT_TO_TIME(USINT_TO_UDINT(Position) * TIME_TO_UDINT(TravelTime) / 100);
-]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TimeToPosition" Id="{efd8e2c9-8d96-4b41-9e35-c0880f0a2526}">
-      <Declaration><![CDATA[METHOD PUBLIC TimeToPosition : USINT
-VAR_INPUT
-	PositionTime : TIME;
-	TravelTime : TIME;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TimeToPosition := UDINT_TO_USINT(100 * TIME_TO_UDINT(PositionTime) / TIME_TO_UDINT(TravelTime)); 
-]]></ST>
-      </Implementation>
-    </Method>
   </POU>
 </TcPlcObject>
