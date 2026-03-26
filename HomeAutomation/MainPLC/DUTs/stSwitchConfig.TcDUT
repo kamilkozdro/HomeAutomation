@@ -3,9 +3,7 @@
   <DUT Name="stSwitchConfig" Id="{5812c89a-38d9-4c5f-8ce2-7bfe653b25eb}">
     <Declaration><![CDATA[TYPE stSwitchConfig :
 STRUCT
-    // Basic parameters
-    Input       : BOOL;                
-    
+	
     // Click timing parameters
     ShortClickMaxTime   : TIME := T#300ms;     // Max time for short click
     ShortClickDelayTime : TIME := T#300MS;     // Max time between short clicks

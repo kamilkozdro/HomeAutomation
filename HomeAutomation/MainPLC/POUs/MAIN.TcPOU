@@ -7,9 +7,9 @@ VAR
 	PlcFirstCycle : BOOL := TRUE;
 
 	// SWITCHES
-	SwitchR1UpCtrl : fbSwitchController;
+	SwitchR1Up : fbSwitch;
 	SwitchR1UpConfig : stSwitchConfig;
-	SwitchR1DownCtrl : fbSwitchController;
+	SwitchR1Down : fbSwitch;
 	SwitchR1DownConfig : stSwitchConfig;
 	
 	// SHUTTERS
@@ -21,9 +21,6 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-SwitchR1UpConfig.Input := gvlSwitches.gvSwitchR1Up;
-SwitchR1DownConfig.Input := gvlSwitches.gvSwitchR1Down;
-
 IF PlcFirstCycle THEN
 	SwitchR1UpConfig.ShortClickMaxTime := T#500MS;
 	SwitchR1UpConfig.ShortClickDelayTime := T#500MS;
@@ -40,36 +37,36 @@ IF PlcFirstCycle THEN
 END_IF
 
 
-SwitchR1UpCtrl(Config := SwitchR1UpConfig);
-SwitchR1DownCtrl(Config := SwitchR1DownConfig);
+SwitchR1Up(I_Switch := gvlSwitches.gvSwitchR1Up, Config := SwitchR1UpConfig);
+SwitchR1Down(I_Switch := gvlSwitches.gvSwitchR1Down, Config := SwitchR1DownConfig);
 
 Shutter1Cmd.CommandType := eShutterCommandType.NONE;
 
 // STOP condition - If shutter is moving, any switch R1 or R2 click will stop shutter
 IF Shutter1.State.CurrentState <> eShutterStateType.IDLE AND 
-	( SwitchR1UpCtrl.State.CurrentState <> eSwitchStateType.IDLE
-	OR SwitchR1DownCtrl.State.CurrentState <> eSwitchStateType.IDLE) THEN
+	( SwitchR1Up.State.CurrentState <> eSwitchStateType.IDLE
+	OR SwitchR1Down.State.CurrentState <> eSwitchStateType.IDLE) THEN
 	Shutter1Cmd.CommandType := eShutterCommandType.STOP;
 
 // OPEN condition
-ELSIF SwitchR1UpCtrl.State.CurrentState = eSwitchStateType.MULTI_CLICK AND SwitchR1UpCtrl.State.PressCount = 2 THEN
+ELSIF SwitchR1Up.State.CurrentState = eSwitchStateType.MULTI_CLICK AND SwitchR1Up.State.PressCount = 2 THEN
 	Shutter1Cmd.CommandType := eShutterCommandType.OPEN;
 
 // Close condition
-ELSIF SwitchR1DownCtrl.State.CurrentState = eSwitchStateType.MULTI_CLICK AND SwitchR1DownCtrl.State.PressCount = 2 THEN
+ELSIF SwitchR1Down.State.CurrentState = eSwitchStateType.MULTI_CLICK AND SwitchR1Down.State.PressCount = 2 THEN
 	Shutter1Cmd.CommandType := eShutterCommandType.Close;
 
 // STEP_OPEN condition
-ELSIF SwitchR1UpCtrl.State.CurrentState = eSwitchStateType.SHORT_CLICK THEN
+ELSIF SwitchR1Up.State.CurrentState = eSwitchStateType.SHORT_CLICK THEN
 	Shutter1Cmd.CommandType := eShutterCommandType.STEP_OPEN;
 	
 // STEP_CLOSE condition
-ELSIF SwitchR1DownCtrl.State.CurrentState = eSwitchStateType.SHORT_CLICK THEN
+ELSIF SwitchR1Down.State.CurrentState = eSwitchStateType.SHORT_CLICK THEN
 	Shutter1Cmd.CommandType := eShutterCommandType.STEP_CLOSE;
 	
 // MOVE_TO_POSITION condition
-ELSIF SwitchR1UpCtrl.State.CurrentState = eSwitchStateType.LONG_CLICK
-	OR SwitchR1DownCtrl.State.CurrentState = eSwitchStateType.LONG_CLICK THEN
+ELSIF SwitchR1Up.State.CurrentState = eSwitchStateType.LONG_CLICK
+	OR SwitchR1Down.State.CurrentState = eSwitchStateType.LONG_CLICK THEN
 	Shutter1Cmd.Position := 50;
 	Shutter1Cmd.Angle := 50;
 	Shutter1Cmd.CommandType := eShutterCommandType.MOVE_TO_POSITION;

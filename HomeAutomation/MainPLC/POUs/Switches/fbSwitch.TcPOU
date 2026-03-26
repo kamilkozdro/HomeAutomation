@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fbSwitchController" Id="{6dccb3b9-fb1e-43bd-90e9-b21e728438a7}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbSwitchController
+  <POU Name="fbSwitch" Id="{6dccb3b9-fb1e-43bd-90e9-b21e728438a7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbSwitch
 VAR_INPUT
+	I_Switch : BOOL;							// Physical switch input
     Config : stSwitchConfig;                     // Switch configuration
 END_VAR
 VAR_OUTPUT
@@ -41,8 +42,8 @@ State.PressCount hold amount of switch releases for MULTI_CLICK
 
 ClickType := eSwitchStateType.IDLE;
 State.StateChanged := FALSE;
-SwitchPressed(CLK := Config.Input);
-SwitchReleased(CLK := Config.Input);
+SwitchPressed(CLK := I_Switch);
+SwitchReleased(CLK := I_Switch);
 PressTimerQRise(CLK := PressTimer.Q);
 PressTimerQFall(CLK := PressTimer.Q);
 
@@ -79,7 +80,7 @@ IF PressTimerQFall.Q THEN
     ClickType := eSwitchStateType.HOLD_OFF;
 END_IF
 
-IF MultiClickTimer.Q AND NOT Config.Input THEN
+IF MultiClickTimer.Q AND NOT I_Switch THEN
 	IF PressCount > 1 THEN
 		 ClickType := eSwitchStateType.MULTI_CLICK;
 	ELSE
