@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbMonoSwitchCtrl" Id="{d36a5674-47b7-4d99-8111-38bc99505a2d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitchCtrl
+VAR
+	Switch : iSwitch;
+	SwitchConfig : stSwitchConfig;
+	
+	CurrentState        : stSwitchState;         // Current processed state
+    PreviousState       : stSwitchState;         // Previous state
+	StateChanged        : BOOL;                // State change flag
+	
+	// edge detection
+    PressTimerQRise : R_TRIG;
+	PressTimerQFall : F_TRIG;
+	
+    // Timers
+    PressTimer : TON;                         // Press duration timer
+    MultiClickTimer : TON;                    // Multi-click timer
+    
+    // Internal
+	TempPressCount : USINT := 0;                  // Click counter
+	PressTime : TIME := T#0MS;
+	ClickType : eSwitchStateType := eSwitchStateType.IDLE;
+	
+	// Counters
+    TotalPresses        : UDINT := 0;          // Total number of clicks
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 
+-----------------------------
+fbSwitchController:
+Set State output based on SwitchConfig.Input.
+State persist per one PLC cycle, except IDLE, which is a default state.
+Every state change sets State.StateChanged to TRUE for one PLC cycle.
+
+SHORT_CLICK <= SwitchConfig.ShortClickMaxTime
+SwitchConfig.ShortClickMaxTime < LONG_CLICK < SwitchConfig.LongClickMaxTime
+SwitchConfig.LongClickMaxTime <= HOLD
+MULTI_CLICK is multiple SHORT_CLICKs delayed from one another < SwitchConfig.ShortClickDelayTime
+State.PressCount hold amount of switch releases for MULTI_CLICK
+-----------------------------
+*)
+
+ClickType := eSwitchStateType.IDLE;
+StateChanged := FALSE;
+PressTimerQRise(CLK := PressTimer.Q);
+PressTimerQFall(CLK := PressTimer.Q);
+
+IF Switch.IsPressed THEN
+    PressTimer(IN := TRUE, PT := SwitchConfig.LongClickMaxTime);
+
+END_IF
+
+PressTimer();
+MultiClickTimer();
+
+IF Switch.IsReleased THEN
+	PressTime := PressTimer.ET;
+	PressTimer(IN := FALSE);
+	TempPressCount := TempPressCount + 1;
+	MultiClickTimer(IN := FALSE);
+	
+	// Short click
+	IF(PressTime <= SwitchConfig.ShortClickMaxTime) THEN
+		MultiClickTimer(IN := TRUE, PT := SwitchConfig.ShortClickDelayTime);
+	// Long click	
+	ELSIF (PressTime < SwitchConfig.LongClickMaxTime) THEN
+		ClickType := eSwitchStateType.LONG_CLICK;
+	// NOTE: if PressTime = SwitchConfig.LongClickMaxTime, after HOLD release next state became LONG_CLICK instead of IDLE
+	END_IF
+END_IF
+
+// Hold click
+IF PressTimerQRise.Q THEN
+    ClickType := eSwitchStateType.HOLD_ON;
+END_IF
+
+IF PressTimerQFall.Q THEN
+    ClickType := eSwitchStateType.HOLD_OFF;
+END_IF
+
+IF MultiClickTimer.Q AND Switch.IsReleased THEN
+	IF TempPressCount > 1 THEN
+		 ClickType := eSwitchStateType.MULTI_CLICK;
+	ELSE
+		ClickType := eSwitchStateType.SHORT_CLICK;
+	END_IF
+	MultiClickTimer(IN := FALSE);
+END_IF
+
+IF ClickType <> CurrentState.StateType THEN
+	PreviousState.StateType := CurrentState.StateType;
+	PreviousState.PressCount := CurrentState.PressCount;
+	CurrentState.StateType := ClickType;
+	CurrentState.PressCount := TempPressCount;
+	StateChanged := TRUE;
+	TempPressCount := 0;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{f3147b87-a325-4179-8539-56d63e87b120}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
+
+	Switch : iSwitch;
+	SwitchConfig : stSwitchConfig;
+ 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Switch := Switch;
+This^.SwitchConfig := SwitchConfig;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="GetCurrentSwitchState" Id="{2413e82c-73b6-4e3b-a1e9-ed0d19a245a1}">
+      <Declaration><![CDATA[PROPERTY PUBLIC GetCurrentSwitchState : stSwitchState]]></Declaration>
+      <Get Name="Get" Id="{703bcaa9-aef2-4df4-80c9-4f301945efe6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[GetCurrentSwitchState := This^.CurrentState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="GetPreviousSwitchState" Id="{a463ca6c-0dc9-4590-bb11-33459706d200}">
+      <Declaration><![CDATA[PROPERTY PUBLIC GetPreviousSwitchState : stSwitchState]]></Declaration>
+      <Get Name="Get" Id="{614420ed-5391-42c6-9cbb-e8be9de0eaf7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[GetPreviousSwitchState := this^.PreviousState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

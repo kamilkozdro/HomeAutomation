@@ -5,7 +5,7 @@
 STRUCT
 	
     // Click timing parameters
-    ShortClickMaxTime   : TIME := T#300ms;     // Max time for short click
+    ShortClickMaxTime   : TIME := T#300MS;     // Max time for short click
     ShortClickDelayTime : TIME := T#300MS;     // Max time between short clicks
     LongClickMaxTime    : TIME := T#1000MS;    // Max time for long click
     

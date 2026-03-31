@@ -12,7 +12,7 @@ VAR_OUTPUT
   State : stShutterState;
 END_VAR
 VAR
-  Ctrl : fbShutterController;
+  Ctrl : fbShutterCtrl;
   Act : fbShutterActuator;
 END_VAR]]></Declaration>
     <Implementation>

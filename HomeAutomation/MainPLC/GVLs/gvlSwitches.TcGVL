@@ -3,8 +3,17 @@
   <GVL Name="gvlSwitches" Id="{e769fc42-99e4-482c-9eed-c0cbd00c6def}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-	gvSwitchR1Up AT %I* : BOOL;
-	gvSwitchR1Down AT %I* : BOOL;
+
+	SwitchConfig : stSwitchConfig :=(ShortClickMaxTime := T#300MS,
+									ShortClickDelayTime := T#300MS,
+									LongClickMaxTime := T#1000MS);
+	
+	SwitchR1Up : fbMonoSwitch;
+	SwitchR1Down : fbMonoSwitch;
+	
+	SwitchR1UpCtrl : fbMonoSwitchCtrl(SwitchR1Up, SwitchConfig);
+	SwitchR1DownCtrl : fbMonoSwitchCtrl(SwitchR1Down, SwitchConfig);
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

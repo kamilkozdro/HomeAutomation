@@ -62,10 +62,16 @@
     <Compile Include="POUs\Shutters\fbShutterActuator.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Shutters\fbShutterController.TcPOU">
+    <Compile Include="POUs\Shutters\fbShutterCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Switches\fbSwitch.TcPOU">
+    <Compile Include="POUs\Switches\fbMonoSwitchCtrl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Switches\fbMonoSwitch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Switches\iSwitch.TcIO">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -5,12 +5,6 @@
 VAR
 	
 	PlcFirstCycle : BOOL := TRUE;
-
-	// SWITCHES
-	SwitchR1Up : fbSwitch;
-	SwitchR1UpConfig : stSwitchConfig;
-	SwitchR1Down : fbSwitch;
-	SwitchR1DownConfig : stSwitchConfig;
 	
 	// SHUTTERS
 	Shutter1 : fbShutter;
@@ -20,25 +14,14 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[(*
 IF PlcFirstCycle THEN
-	SwitchR1UpConfig.ShortClickMaxTime := T#500MS;
-	SwitchR1UpConfig.ShortClickDelayTime := T#500MS;
-	SwitchR1UpConfig.LongClickMaxTime := T#1500MS;
-	
-	SwitchR1DownConfig.ShortClickMaxTime := T#500MS;
-	SwitchR1DownConfig.ShortClickDelayTime := T#500MS;
-	SwitchR1DownConfig.LongClickMaxTime := T#1500MS;
-	
+
 	Shutter1Config.TravelTime := T#15S;
 	Shutter1Config.AngleFullTurnTime := T#3S;
 	
 	PlcFirstCycle := FALSE;
 END_IF
-
-
-SwitchR1Up(I_Switch := gvlSwitches.gvSwitchR1Up, Config := SwitchR1UpConfig);
-SwitchR1Down(I_Switch := gvlSwitches.gvSwitchR1Down, Config := SwitchR1DownConfig);
 
 Shutter1Cmd.CommandType := eShutterCommandType.NONE;
 
@@ -76,7 +59,8 @@ Shutter1(Command := Shutter1Cmd, Config := Shutter1Config);
 
 gvlShutters.gvShutter1Up := Shutter1.Q_MoveUp;
 gvlShutters.gvShutter1Down := Shutter1.Q_MoveDown;
-]]></ST>
+
+*)]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

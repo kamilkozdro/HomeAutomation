@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e">FBSHUTTERCONTROLLER</Type>
+      <From>fbShutterController</From>
+      <To>fbShutterCtrl</To>
+    </RenamedType>
+  </Renames>
+</Refactors>

@@ -3,15 +3,8 @@
   <DUT Name="stSwitchState" Id="{95f89ab6-dc0c-4e63-95ce-633bc21eb204}">
     <Declaration><![CDATA[TYPE stSwitchState :
 STRUCT
-    // Logical state
-    CurrentState        : eSwitchStateType;         // Current processed state
-    PreviousState       : eSwitchStateType;         // Previous state
-    StateChanged        : BOOL;                // State change flag
-    
-    // Counters
-    PressCount          : USINT := 0;            // Number of clicks in sequence
-    TotalPresses        : UDINT := 0;          // Total number of clicks
-
+    StateType : eSwitchStateType;         // Current processed state
+    PressCount : USINT := 0;            // Number of clicks in sequence
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="iSwitch" Id="{2b8cdf8a-a619-4e44-ba18-5ff28feae6d7}">
+    <Declaration><![CDATA[INTERFACE iSwitch
+]]></Declaration>
+    <Property Name="IsPressed" Id="{76e8bbdf-c484-4aa9-82c0-6b7f3dc3327a}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsPressed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b1befc1a-e193-4b1a-b19b-81d2f9e2197e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="IsReleased" Id="{72547f3f-78f0-4e28-87f6-c436549bb588}">
+      <Declaration><![CDATA[PROPERTY IsReleased : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b83f7f50-cdcf-4a72-8eba-03891819d814}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

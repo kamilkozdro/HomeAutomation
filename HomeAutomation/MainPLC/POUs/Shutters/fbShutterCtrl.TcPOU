@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fbShutterController" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbShutterController
+  <POU Name="fbShutterCtrl" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbShutterCtrl
 VAR_INPUT
     Command : stShutterCommand;			// Command input (one-shot or const)
 	State   : stShutterState;			// Shutter state from fbShutterActuator output
