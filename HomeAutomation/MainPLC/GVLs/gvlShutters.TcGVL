@@ -2,9 +2,14 @@
 <TcPlcObject Version="1.1.0.1">
   <GVL Name="gvlShutters" Id="{7a0c2c86-f13b-43d1-9cdd-d1f7080b47ea}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL PERSISTENT
+	ShutterR1Config : stShutterConfig := (HeightTravelTime := T#15S,
+										HeightTravelTimeOverstep := T#1S,
+										AngleTravelTime := T#3S);
+END_VAR
+
 VAR_GLOBAL
-	gvShutter1Up AT %Q* : BOOL;
-	gvShutter1Down AT %Q* : BOOL;
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

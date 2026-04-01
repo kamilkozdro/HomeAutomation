@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stShutterPosition" Id="{34b216a9-ee16-4ae0-a9c1-d30a847a7d9a}">
+    <Declaration><![CDATA[TYPE stShutterPosition :
+STRUCT
+	Height : USINT := 0;          // Current position [%] (0=closed, 100=open)
+	Angle : USINT := 0;				// Current angle [%] (0=closed, 100=open)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

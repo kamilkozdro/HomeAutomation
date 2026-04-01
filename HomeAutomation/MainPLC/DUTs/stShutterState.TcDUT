@@ -3,13 +3,16 @@
   <DUT Name="stShutterState" Id="{777aa08a-edfb-4ead-b67a-bc47756d0cde}">
     <Declaration><![CDATA[TYPE stShutterState :
 STRUCT
-    CurrentState    : eShutterStateType;        // Current shutter state
-    PreviousState   : eShutterStateType;        // Previous state
+    CurrentStateType    : eShutterStateType;
+    PreviousStateType   : eShutterStateType;
+	
+	(*
     StateChanged    : BOOL;                // State change flag
     
     CurrentPosition : USINT := 0;          // Current position [%] (0=closed, 100=open)
 	CurrentAngle : USINT := 0;				// Current angle [%] (0=closed, 100=open)
     SavedPosition   : USINT := 50;         // Saved position for memory function
+	*)
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

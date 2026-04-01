@@ -70,8 +70,6 @@ IF CommandChanged THEN
 					TargetPosition := 100;
 				END_IF
 			END_IF
-			//TargetPosition := State.CurrentPosition + MoveStep;
-			//TargetAngle := 0;
 			
 		eShutterCommandType.STEP_CLOSE:
 			MovingToPosition := TRUE;

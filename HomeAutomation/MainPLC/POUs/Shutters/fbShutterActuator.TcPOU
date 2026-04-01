@@ -34,7 +34,7 @@ IF Q_MoveUp AND Q_MoveDown THEN
 END_IF
 
 // Reset signal if shutter reached fully open position with overstep
-IF Q_MoveUp AND CurrentPosTime >= Config.TravelTime + Config.TravelTimeOverstep THEN
+IF Q_MoveUp AND CurrentPosTime >= Config.TravelTime + Config.HeightTravelTimeOverstep THEN
 	Q_MoveUp := FALSE;
 END_IF
 

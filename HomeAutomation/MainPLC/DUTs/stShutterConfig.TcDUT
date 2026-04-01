@@ -3,9 +3,9 @@
   <DUT Name="stShutterConfig" Id="{cba03735-b58c-4ca0-9c02-4878db374737}">
     <Declaration><![CDATA[TYPE stShutterConfig :
 STRUCT
-    TravelTime : TIME := T#30S;			// Time for full open/close vertical movement
-	AngleFullTurnTime : TIME := T#3S;			// Time for fins to make full rotation
-	TravelTimeOverstep : TIME := T#500MS;		// High state output signal time allowed to be maintain after reaching full open position
+    HeightTravelTime : TIME := T#30S;			// Time for full open/close vertical movement
+	AngleTravelTime : TIME := T#3S;			// Time for fins to make full rotation
+	HeightTravelTimeOverstep : TIME := T#500MS;		// High state output signal time allowed to be maintain after reaching full open position
 END_STRUCT
 END_TYPE
 ]]></Declaration>

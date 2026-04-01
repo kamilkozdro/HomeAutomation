@@ -3,7 +3,7 @@
   <POU Name="fbMonoSwitchCtrl" Id="{d36a5674-47b7-4d99-8111-38bc99505a2d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitchCtrl
 VAR
-	Switch : iSwitch;
+	switch : iSwitch;
 	SwitchConfig : stSwitchConfig;
 	
 	CurrentState        : stSwitchState;         // Current processed state
@@ -25,8 +25,7 @@ VAR
 	
 	// Counters
     TotalPresses        : UDINT := 0;          // Total number of clicks
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 
 -----------------------------
@@ -99,6 +98,17 @@ IF ClickType <> CurrentState.StateType THEN
 	TempPressCount := 0;
 END_IF]]></ST>
     </Implementation>
+    <Property Name="CurrentSwitchState" Id="{2413e82c-73b6-4e3b-a1e9-ed0d19a245a1}">
+      <Declaration><![CDATA[PROPERTY PUBLIC CurrentSwitchState : stSwitchState]]></Declaration>
+      <Get Name="Get" Id="{703bcaa9-aef2-4df4-80c9-4f301945efe6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentSwitchState := This^.CurrentSwitchState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="FB_Init" Id="{f3147b87-a325-4179-8539-56d63e87b120}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
 //The return value is not evaluated. For a specific influence, you can also declare the
@@ -119,25 +129,14 @@ END_VAR
 This^.SwitchConfig := SwitchConfig;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="GetCurrentSwitchState" Id="{2413e82c-73b6-4e3b-a1e9-ed0d19a245a1}">
-      <Declaration><![CDATA[PROPERTY PUBLIC GetCurrentSwitchState : stSwitchState]]></Declaration>
-      <Get Name="Get" Id="{703bcaa9-aef2-4df4-80c9-4f301945efe6}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[GetCurrentSwitchState := This^.CurrentState;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="GetPreviousSwitchState" Id="{a463ca6c-0dc9-4590-bb11-33459706d200}">
-      <Declaration><![CDATA[PROPERTY PUBLIC GetPreviousSwitchState : stSwitchState]]></Declaration>
+    <Property Name="PreviousSwitchState" Id="{a463ca6c-0dc9-4590-bb11-33459706d200}">
+      <Declaration><![CDATA[PROPERTY PUBLIC PreviousSwitchState : stSwitchState]]></Declaration>
       <Get Name="Get" Id="{614420ed-5391-42c6-9cbb-e8be9de0eaf7}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[GetPreviousSwitchState := this^.PreviousState;]]></ST>
+          <ST><![CDATA[PreviousSwitchState := this^.PreviousState;]]></ST>
         </Implementation>
       </Get>
     </Property>

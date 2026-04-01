@@ -16,20 +16,9 @@
 		</System>
 		<Plc>
 			<Project GUID="{F19B6445-F9FB-4350-82DA-0CB2ABA4EFAC}" Name="MainPLC" PrjFilePath="MainPLC\MainPLC.plcproj" TmcFilePath="MainPLC\MainPLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{5B86F220-9267-3CB7-A657-9E2705C95A60}" TmcPath="MainPLC\MainPLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{E8BFB530-53EF-01F8-22AD-CCDC1F0C943D}" TmcPath="MainPLC\MainPLC.tmc">
 					<Name>MainPLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
-					<Vars VarGrpType="2" AreaNo="1">
-						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>gvlShutters.gvShutter1Up</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>gvlShutters.gvShutter1Down</Name>
-							<Type>BOOL</Type>
-						</Var>
-					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
@@ -934,10 +923,6 @@
 	<Mappings>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
 		<OwnerA Name="TIPC^MainPLC^MainPLC Instance">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1100)^Term 11 (EL2809)">
-				<Link VarA="PlcTask Outputs^gvlShutters.gvShutter1Down" VarB="Channel 2^Output"/>
-				<Link VarA="PlcTask Outputs^gvlShutters.gvShutter1Up" VarB="Channel 1^Output"/>
-			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1100)^Term 5 (EL1008)">
 				<Link VarA="PlcTask Inputs^gvlSwitches.SwitchR1Down.Input" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^gvlSwitches.SwitchR1Up.Input" VarB="Channel 1^Input"/>

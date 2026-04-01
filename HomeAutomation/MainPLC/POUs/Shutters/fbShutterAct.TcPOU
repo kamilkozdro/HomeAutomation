@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbShutterAct" Id="{1ba23f45-b0eb-421e-9a3b-6a879c5afe8f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterAct
+VAR
+
+	OutputMoveUp AT %Q* : BOOL;	
+	OutputMoveDown AT %Q* : BOOL;
+	
+	MoveUp : BOOL;
+	MoveDown : BOOL;
+	
+	Config : stShutterConfig;
+	StateType : eShutterStateType;
+	Position : stShutterPosition;
+	
+	OutputCheckTimer : TON;
+END_VAR
+VAR CONSTANT
+	OutputCheckCycleTime: TIME := T#50MS;
+END_VAR
+VAR PERSISTENT
+	HeightTime: TIME := T#0S;
+	AngleTime: TIME := T#0S;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+OutputMoveUp := MoveUp;
+OutputMoveDown := MoveDown;
+
+// Both signals must not be set at the same time
+IF OutputMoveUp AND OutputMoveDown THEN
+	OutputMoveUp := FALSE;
+	OutputMoveDown := FALSE;
+END_IF
+
+// Reset signal if shutter reached fully open position with overstep
+IF OutputMoveUp AND HeightTime >= Config.HeightTravelTime + Config.HeightTravelTimeOverstep THEN
+	OutputMoveUp := FALSE;
+END_IF
+
+// Reset signal if shutter reached fully close position
+IF OutputMoveDown AND HeightTime <= T#0S THEN
+	OutputMoveDown := FALSE;
+END_IF
+
+// Count time and accumulate when signals are set
+OutputCheckTimer(IN := OutputMoveDown OR OutputMoveUp, PT := OutputCheckCycleTime);
+IF OutputCheckTimer.Q THEN
+	IF OutputMoveUp THEN
+		// Open fins first before moving up
+		IF AngleTime < Config.AngleTravelTime THEN
+			AngleTime := AngleTime + OutputCheckCycleTime;
+		ELSIF HeightTime < Config.HeightTravelTime THEN
+			HeightTime := HeightTime + OutputCheckCycleTime;
+		END_IF;
+	END_IF
+	
+	IF OutputMoveDown THEN
+		// Close fins first before moving down
+		IF AngleTime > T#0S THEN
+			AngleTime := AngleTime - OutputCheckCycleTime;
+		ELSIF HeightTime > T#0s THEN
+			HeightTime := HeightTime - OutputCheckCycleTime;
+		END_IF;
+	END_IF
+	
+	OutputCheckTimer.IN := FALSE;  // reset
+END_IF
+
+// Update shutter position% basen on position time
+Position.Height := TimeToPosition(CurrentPosTime := HeightTime, TravelTime := Config.HeightTravelTime);
+Position.Angle := TimeToPosition(CurrentPosTime := AngleTime, TravelTime := Config.AngleTravelTime);
+
+// Update shutter current motor state
+IF OutputMoveUp AND NOT OutputMoveDown THEN
+	StateType := eShutterStateType.MOVING_UP;
+ELSIF NOT OutputMoveUp AND OutputMoveDown THEN
+	StateType := eShutterStateType.MOVING_DOWN;
+ELSE
+	StateType := eShutterStateType.IDLE;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Property Name="CurrentPosition" Id="{2b919f92-eb20-4509-b645-1170702b40f8}">
+      <Declaration><![CDATA[PROPERTY PUBLIC CurrentPosition : stShutterPosition]]></Declaration>
+      <Get Name="Get" Id="{5aa7d824-10a8-4c2e-bbb5-00f6ebef7452}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentPosition := This^.Position;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="CurrentStateType" Id="{f29a13f8-1fef-4c57-98e7-dae28f0d5337}">
+      <Declaration><![CDATA[PROPERTY PUBLIC CurrentStateType : stShutterState]]></Declaration>
+      <Get Name="Get" Id="{4ce8aa33-4386-4ae1-b83b-8847cdd706ea}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentStateType := This^.StateType;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="TimeToPosition" Id="{772cedc8-24ef-4e71-897a-f0415c3ffac2}">
+      <Declaration><![CDATA[METHOD PUBLIC TimeToPosition : USINT
+VAR_INPUT
+	CurrentPosTime : TIME;
+	TravelTime : TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TimeToPosition := UDINT_TO_USINT(100 * TIME_TO_UDINT(CurrentPosTime) / TIME_TO_UDINT(TravelTime)); 
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
