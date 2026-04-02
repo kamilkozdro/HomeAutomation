@@ -10,6 +10,10 @@ END_VAR
 
 VAR_GLOBAL
 	
+	ShutterR1Act : fbShutterAct(OpenRelay := gvlRelays.Shutter1OpenRelay,
+								CloseRelay := gvlRelays.Shutter1CloseRelay,
+								Config := ShutterR1Config);
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

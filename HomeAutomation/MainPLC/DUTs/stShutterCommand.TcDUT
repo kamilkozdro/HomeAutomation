@@ -4,8 +4,7 @@
     <Declaration><![CDATA[TYPE stShutterCommand :
 STRUCT
     CommandType  : eShutterCommandType;	// Command type
-    Position : USINT;                	// Position for MOVE_TO_POSITION command
-	Angle : USINT;						// Fin Angle for MOVE_TO_POSITION command
+    Position : stShutterPosition;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

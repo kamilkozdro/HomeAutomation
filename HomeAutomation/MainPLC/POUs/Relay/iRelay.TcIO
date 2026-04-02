@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="iRelay" Id="{e3cfaf5b-d97f-49b8-86e4-4a18e56172f6}">
+    <Declaration><![CDATA[INTERFACE iRelay
+]]></Declaration>
+    <Property Name="IsSet" Id="{8a4b2fff-124d-4401-8d2b-2ab114f764de}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsSet : BOOL]]></Declaration>
+      <Get Name="Get" Id="{23762f9c-c9d0-4857-8def-d07098c24431}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{8832a2fe-12bf-40a0-9ba3-a21fe717fbe8}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Set" Id="{f9dfc50d-19c3-4d2f-9afa-e89c4ffba0a7}">
+      <Declaration><![CDATA[METHOD Set
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

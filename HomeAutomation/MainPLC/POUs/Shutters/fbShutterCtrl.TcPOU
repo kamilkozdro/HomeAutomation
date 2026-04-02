@@ -1,25 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterCtrl" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbShutterCtrl
-VAR_INPUT
-    Command : stShutterCommand;			// Command input (one-shot or const)
-	State   : stShutterState;			// Shutter state from fbShutterActuator output
-END_VAR
-VAR_OUTPUT
-    MoveUp : BOOL;						// Signal for fbShutterActuator input
-	MoveDown : BOOL;					// Signal for fbShutterActuator input
-END_VAR
+    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCtrl
 VAR
-	CurrentCommand : stShutterCommand;
-	CommandChanged : BOOL := FALSE;
+	ShutterAct : fbShutterAct;
+	NewCommandSet : BOOL := FALSE;
 	MovingToPosition : BOOL := FALSE;
-	TargetPosition : USINT := 0;
-	TargetAngle : USINT := 0;
+	TargetPosition : stShutterPosition;
 END_VAR
 VAR CONSTANT
 	Hysteresis: USINT := 1;
 	MoveStep : USINT := 10;
+END_VAR
+VAR_OUTPUT
+	// Commands exposed as read only in OUTPUT and not as Property.Get
+	// TwinCAT doesn't allow access to copied structure members in Property.Get, only when passed by REF (Not read only). 
+	// Couldn't do ShutterCtrl.CurrentCommand.Position.Height if CurrentCommand was a Property
+	CurrentCommand : stShutterCommand;
+	PreviousCommand : stShutterCommand;
+	CurrentPosition : stShutterPosition;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 
@@ -29,68 +28,60 @@ END_VAR]]></Declaration>
 	0 - fully close position/angle
 
 *)
-
-
-// Check for new command
-CommandChanged := Command.CommandType <> CurrentCommand.CommandType
-					OR Command.Position <> CurrentCommand.Position
-					OR Command.Angle <> CurrentCommand.Angle;
 					
 // Handle new command
-IF CommandChanged THEN
-	CurrentCommand := Command;
-	CASE Command.CommandType OF
+IF NewCommandSet THEN
+	NewCommandSet := FALSE;
+	CASE CurrentCommand.CommandType OF
 		eShutterCommandType.STOP:
 			MovingToPosition := FALSE;
-			MoveUp := FALSE;
-			MoveDown := FALSE;
+			ShutterAct.Stop();
 			
 		eShutterCommandType.OPEN:
 			MovingToPosition := TRUE;
-			TargetPosition := 100;
-			TargetAngle := 100;
+			TargetPosition.Height := 100;
+			TargetPosition.Angle := 100;
 		
 		eShutterCommandType.CLOSE:
 			MovingToPosition := TRUE;
-			TargetPosition := 0;
-			TargetAngle := 0;
+			TargetPosition.Height := 0;
+			TargetPosition.Angle := 0;
 			
 		eShutterCommandType.STEP_OPEN:
 			MovingToPosition := TRUE;
-			TargetPosition := State.CurrentPosition;
+			TargetPosition := ShutterAct.Position;
 			// First open fins by angle step
-			IF State.CurrentAngle <= 100 - MoveStep THEN
-				TargetAngle := State.CurrentAngle + MoveStep;
+			IF ShutterAct.Position.Angle <= 100 - MoveStep THEN
+				TargetPosition.Angle := ShutterAct.Position.Angle + MoveStep;
 			// If fins are fully open -> move position
 			ELSE
-				TargetAngle := 100;
-				IF State.CurrentPosition < 100 - MoveStep THEN
-					TargetPosition := State.CurrentPosition + MoveStep;
+				TargetPosition.Angle := 100;
+				IF ShutterAct.Position.Height < 100 - MoveStep THEN
+					TargetPosition.Height := ShutterAct.Position.Height + MoveStep;
 				ELSE
-					TargetPosition := 100;
+					TargetPosition.Height := 100;
 				END_IF
 			END_IF
 			
 		eShutterCommandType.STEP_CLOSE:
 			MovingToPosition := TRUE;
-			TargetPosition := State.CurrentPosition;
+			TargetPosition := ShutterAct.Position;
 			// First close fins by angle step
-			IF State.CurrentAngle >= 0 + MoveStep THEN
-				TargetAngle := State.CurrentAngle - MoveStep;
+			IF ShutterAct.Position.Angle >= 0 + MoveStep THEN
+				TargetPosition.Angle := ShutterAct.Position.Angle - MoveStep;
 			// If fins are fully closed -> move position
 			ELSE
-				TargetAngle := 0;
-				IF State.CurrentPosition >= 0 + MoveStep THEN
-					TargetPosition := State.CurrentPosition - MoveStep;
+				TargetPosition.Angle := 0;
+				IF ShutterAct.Position.Height >= 0 + MoveStep THEN
+					TargetPosition.Height := ShutterAct.Position.Height - MoveStep;
 				ELSE
-					TargetPosition := 0;
+					TargetPosition.Height := 0;
 				END_IF
 			END_IF
 			
 		eShutterCommandType.MOVE_TO_POSITION:
 			MovingToPosition := TRUE;
-			TargetPosition := Command.Position;
-			TargetAngle := Command.Angle;
+			TargetPosition := CurrentCommand.Position;
 			
 		eShutterCommandType.NONE:
 			// No command
@@ -99,29 +90,38 @@ END_IF
 
 IF MovingToPosition THEN	
 	// Move to target vertical position first
-	IF State.CurrentPosition < TargetPosition THEN
-		MoveUp := TRUE;
-		MoveDown := FALSE;
-	ELSIF State.CurrentPosition > TargetPosition THEN
-		MoveUp := FALSE;
-		MoveDown := TRUE;
+	IF ShutterAct.Position.Height + Hysteresis < TargetPosition.Height THEN
+		ShutterAct.Open();
+	ELSIF ShutterAct.Position.Height > TargetPosition.Height + Hysteresis THEN
+		ShutterAct.Close();
 	ELSE
 		// Then move to target angle
-		IF State.CurrentAngle < TargetAngle THEN
-			MoveUp := TRUE;
-			MoveDown := FALSE;
-		ELSIF State.CurrentAngle > TargetAngle THEN
-			MoveUp := FALSE;
-			MoveDown := TRUE;
+		IF ShutterAct.Position.Angle + Hysteresis < TargetPosition.Angle THEN
+			ShutterAct.Open();
+		ELSIF ShutterAct.Position.Angle > TargetPosition.Angle + Hysteresis THEN
+			ShutterAct.Close();
 		ELSE
 			// Target Position and Angle achieved
 			MovingToPosition := FALSE;
-			MoveUp := FALSE;
-			MoveDown := FALSE;
+			ShutterAct.Stop();
 		END_IF
 	END_IF
 END_IF
-]]></ST>
+
+CurrentPosition := ShutterAct.Position;]]></ST>
     </Implementation>
+    <Method Name="SetCommand" Id="{3d42c165-d268-469c-a969-e4963ab6a807}">
+      <Declaration><![CDATA[METHOD PUBLIC SetCommand
+VAR_INPUT
+	NewCmd : stShutterCommand;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.PreviousCommand := THIS^.CurrentCommand;
+THIS^.CurrentCommand := NewCmd;
+This^.NewCommandSet := TRUE;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

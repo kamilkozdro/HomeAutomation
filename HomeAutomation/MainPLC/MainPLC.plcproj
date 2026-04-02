@@ -45,6 +45,10 @@
     <Compile Include="DUTs\stSwitchState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GVLs\gvlRelays.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="GVLs\gvlSwitches.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -59,7 +63,16 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Shutters\fbShutter.TcPOU">
+    <Compile Include="POUs\Relay\fbBistableDoubleCoilRelay.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Relay\fbBistableSingleCoilRelay.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Relay\fbMonostableRelay.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Relay\iRelay.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Shutters\fbShutterAct.TcPOU">
@@ -84,6 +97,7 @@
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
+    <Folder Include="POUs\Relay" />
     <Folder Include="POUs\Switches" />
     <Folder Include="POUs\Shutters" />
     <Folder Include="VISUs" />

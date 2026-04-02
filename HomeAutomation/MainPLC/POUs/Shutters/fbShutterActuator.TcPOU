@@ -3,12 +3,12 @@
   <POU Name="fbShutterActuator" Id="{bf5508e1-fa2e-4067-8ed9-cd7815de8c52}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterActuator
 VAR_INPUT
-	MoveUp : BOOL;
+	Open : BOOL;
 	MoveDown : BOOL;
 	Config : stShutterConfig;
 END_VAR
 VAR_OUTPUT
-	Q_MoveUp : BOOL;
+	Q_Open : BOOL;
 	Q_MoveDown : BOOL;
 	State : stShutterState;
 END_VAR
@@ -23,19 +23,19 @@ VAR PERSISTENT
 	CurrentAngleTime: TIME := T#0S;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-Q_MoveUp := MoveUp;
+      <ST><![CDATA[(*
+Q_Open := Open;
 Q_MoveDown := MoveDown;
 
 // Both signals must not be set at the same time
-IF Q_MoveUp AND Q_MoveDown THEN
-	Q_MoveUp := FALSE;
+IF Q_Open AND Q_MoveDown THEN
+	Q_Open := FALSE;
 	Q_MoveDown := FALSE;
 END_IF
 
 // Reset signal if shutter reached fully open position with overstep
-IF Q_MoveUp AND CurrentPosTime >= Config.TravelTime + Config.HeightTravelTimeOverstep THEN
-	Q_MoveUp := FALSE;
+IF Q_Open AND CurrentPosTime >= Config.TravelTime + Config.HeightTravelTimeOverstep THEN
+	Q_Open := FALSE;
 END_IF
 
 // Reset signal if shutter reached fully close position
@@ -44,9 +44,9 @@ IF Q_MoveDown AND CurrentPosTime <= T#0S THEN
 END_IF
 
 // Count time and accumulate when signals are set
-OutputCheckTimer(IN := Q_MoveDown OR Q_MoveUp, PT := OutputCheckCycleTime);
+OutputCheckTimer(IN := Q_MoveDown OR Q_Open, PT := OutputCheckCycleTime);
 IF OutputCheckTimer.Q THEN
-	IF Q_MoveUp THEN
+	IF Q_Open THEN
 		// Open fins first before moving up
 		IF CurrentAngleTime < Config.AngleFullTurnTime THEN
 			CurrentAngleTime := CurrentAngleTime + OutputCheckCycleTime;
@@ -72,15 +72,15 @@ State.CurrentPosition := TimeToPosition(CurrentPosTime := CurrentPosTime, Travel
 State.CurrentAngle := TimeToPosition(CurrentPosTime := CurrentAngleTime, TravelTime := Config.AngleFullTurnTime);
 
 // Update shutter current motor state
-IF Q_MoveUp AND NOT Q_MoveDown THEN
+IF Q_Open AND NOT Q_MoveDown THEN
 	State.CurrentState := eShutterStateType.MOVING_UP;
-ELSIF NOT Q_MoveUp AND Q_MoveDown THEN
+ELSIF NOT Q_Open AND Q_MoveDown THEN
 	State.CurrentState := eShutterStateType.MOVING_DOWN;
 ELSE
 	State.CurrentState := eShutterStateType.IDLE;
 END_IF
 
-]]></ST>
+*)]]></ST>
     </Implementation>
     <Method Name="TimeToPosition" Id="{bd68f6ed-8fd2-4d73-8913-5e309fff6117}">
       <Declaration><![CDATA[METHOD PUBLIC TimeToPosition : USINT

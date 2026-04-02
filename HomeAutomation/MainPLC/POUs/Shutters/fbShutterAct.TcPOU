@@ -4,17 +4,19 @@
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterAct
 VAR
 
-	OutputMoveUp AT %Q* : BOOL;	
-	OutputMoveDown AT %Q* : BOOL;
+	OpenRelay : iRelay;
+	CloseRelay : iRelay;
 	
-	MoveUp : BOOL;
-	MoveDown : BOOL;
+	CmdOpen : BOOL;
+	CmdClose : BOOL;
 	
 	Config : stShutterConfig;
 	StateType : eShutterStateType;
-	Position : stShutterPosition;
 	
 	OutputCheckTimer : TON;
+END_VAR
+VAR_OUTPUT
+	Position : stShutterPosition;
 END_VAR
 VAR CONSTANT
 	OutputCheckCycleTime: TIME := T#50MS;
@@ -26,29 +28,41 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-OutputMoveUp := MoveUp;
-OutputMoveDown := MoveDown;
-
 // Both signals must not be set at the same time
-IF OutputMoveUp AND OutputMoveDown THEN
-	OutputMoveUp := FALSE;
-	OutputMoveDown := FALSE;
+IF CmdOpen AND CmdClose THEN
+	CmdOpen := FALSE;
+	CmdClose := FALSE;
 END_IF
 
 // Reset signal if shutter reached fully open position with overstep
-IF OutputMoveUp AND HeightTime >= Config.HeightTravelTime + Config.HeightTravelTimeOverstep THEN
-	OutputMoveUp := FALSE;
+IF CmdOpen AND HeightTime >= Config.HeightTravelTime + Config.HeightTravelTimeOverstep THEN
+	CmdOpen := FALSE;
 END_IF
 
 // Reset signal if shutter reached fully close position
-IF OutputMoveDown AND HeightTime <= T#0S THEN
-	OutputMoveDown := FALSE;
+IF CmdClose AND HeightTime <= T#0S THEN
+	CmdClose := FALSE;
+END_IF
+
+// Write physical outputs and update shutter state
+IF CmdOpen AND NOT CmdClose THEN
+    CloseRelay.Reset();
+    OpenRelay.Set();
+	StateType := eShutterStateType.MOVING_UP;
+ELSIF CmdClose AND NOT CmdOpen THEN
+    OpenRelay.Reset();
+    CloseRelay.Set();
+	StateType := eShutterStateType.MOVING_DOWN;
+ELSE
+    OpenRelay.Reset();
+    CloseRelay.Reset();
+	StateType := eShutterStateType.IDLE;
 END_IF
 
 // Count time and accumulate when signals are set
-OutputCheckTimer(IN := OutputMoveDown OR OutputMoveUp, PT := OutputCheckCycleTime);
+OutputCheckTimer(IN := CmdOpen OR CmdClose, PT := OutputCheckCycleTime);
 IF OutputCheckTimer.Q THEN
-	IF OutputMoveUp THEN
+	IF CmdOpen THEN
 		// Open fins first before moving up
 		IF AngleTime < Config.AngleTravelTime THEN
 			AngleTime := AngleTime + OutputCheckCycleTime;
@@ -57,7 +71,7 @@ IF OutputCheckTimer.Q THEN
 		END_IF;
 	END_IF
 	
-	IF OutputMoveDown THEN
+	IF CmdClose THEN
 		// Close fins first before moving down
 		IF AngleTime > T#0S THEN
 			AngleTime := AngleTime - OutputCheckCycleTime;
@@ -73,30 +87,19 @@ END_IF
 Position.Height := TimeToPosition(CurrentPosTime := HeightTime, TravelTime := Config.HeightTravelTime);
 Position.Angle := TimeToPosition(CurrentPosTime := AngleTime, TravelTime := Config.AngleTravelTime);
 
-// Update shutter current motor state
-IF OutputMoveUp AND NOT OutputMoveDown THEN
-	StateType := eShutterStateType.MOVING_UP;
-ELSIF NOT OutputMoveUp AND OutputMoveDown THEN
-	StateType := eShutterStateType.MOVING_DOWN;
-ELSE
-	StateType := eShutterStateType.IDLE;
-END_IF
-
 ]]></ST>
     </Implementation>
-    <Property Name="CurrentPosition" Id="{2b919f92-eb20-4509-b645-1170702b40f8}">
-      <Declaration><![CDATA[PROPERTY PUBLIC CurrentPosition : stShutterPosition]]></Declaration>
-      <Get Name="Get" Id="{5aa7d824-10a8-4c2e-bbb5-00f6ebef7452}">
-        <Declaration><![CDATA[VAR
-END_VAR
+    <Method Name="Close" Id="{f613d1a9-dcd5-4ce8-bd35-546352718445}">
+      <Declaration><![CDATA[METHOD Close
 ]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[CurrentPosition := This^.Position;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
+      <Implementation>
+        <ST><![CDATA[CmdOpen := FALSE;
+CmdClose := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="CurrentStateType" Id="{f29a13f8-1fef-4c57-98e7-dae28f0d5337}">
-      <Declaration><![CDATA[PROPERTY PUBLIC CurrentStateType : stShutterState]]></Declaration>
+      <Declaration><![CDATA[PROPERTY PUBLIC CurrentStateType : eShutterStateType]]></Declaration>
       <Get Name="Get" Id="{4ce8aa33-4386-4ae1-b83b-8847cdd706ea}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -106,6 +109,45 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="FB_Init" Id="{b49b88c3-5666-46b7-801a-0e8419ae9ce0}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+	
+	OpenRelay : iRelay;
+	CloseRelay : iRelay;
+	Config : stShutterConfig;
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Config := Config;
+THIS^.OpenRelay := OpenRelay;
+THIS^.CloseRelay := CloseRelay;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open" Id="{1dda91e8-cd15-4a31-9096-5e1a4c5f89a9}">
+      <Declaration><![CDATA[METHOD Open
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CmdClose := FALSE;
+CmdOpen := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Stop" Id="{17cc93a3-e742-4197-a775-db53f236a55d}">
+      <Declaration><![CDATA[METHOD Stop
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CmdOpen := FALSE;
+CmdClose := FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="TimeToPosition" Id="{772cedc8-24ef-4e71-897a-f0415c3ffac2}">
       <Declaration><![CDATA[METHOD PUBLIC TimeToPosition : USINT
 VAR_INPUT
@@ -114,8 +156,11 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TimeToPosition := UDINT_TO_USINT(100 * TIME_TO_UDINT(CurrentPosTime) / TIME_TO_UDINT(TravelTime)); 
-]]></ST>
+        <ST><![CDATA[IF TravelTime <= T#0S THEN
+    TimeToPosition := 0;
+ELSE
+    TimeToPosition := UDINT_TO_USINT(100 * TIME_TO_UDINT(CurrentPosTime) / TIME_TO_UDINT(TravelTime));
+END_IF]]></ST>
       </Implementation>
     </Method>
   </POU>

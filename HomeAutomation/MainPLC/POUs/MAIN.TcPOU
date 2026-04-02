@@ -7,9 +7,7 @@ VAR
 	PlcFirstCycle : BOOL := TRUE;
 	
 	// SHUTTERS
-	Shutter1 : fbShutter;
 	Shutter1Cmd : stShutterCommand;
-	Shutter1Config : stShutterConfig;
 	
 END_VAR
 ]]></Declaration>
@@ -57,7 +55,7 @@ END_IF
 
 Shutter1(Command := Shutter1Cmd, Config := Shutter1Config);
 
-gvlShutters.gvShutter1Up := Shutter1.Q_MoveUp;
+gvlShutters.gvShutter1Up := Shutter1.Q_Open;
 gvlShutters.gvShutter1Down := Shutter1.Q_MoveDown;
 
 *)]]></ST>

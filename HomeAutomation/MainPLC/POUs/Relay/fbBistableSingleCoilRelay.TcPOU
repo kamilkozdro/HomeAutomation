@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbBistableSingleCoilRelay" Id="{0fae3c70-2fb9-46ef-aed9-dd8518f75f14}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbBistableSingleCoilRelay IMPLEMENTS iRelay
+VAR
+	RelayOutput AT %Q* : BOOL;
+
+    PulseReq : BOOL;
+    PulseTP : TP;
+END_VAR
+VAR CONSTANT
+    PulseTime : TIME := T#200MS;
+END_VAR
+VAR PERSISTENT
+	RelaySet : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[PulseTP(IN := PulseReq, PT := PulseTime);
+RelayOutput := PulseTP.Q;
+
+IF PulseReq THEN
+	RelaySet := NOT RelaySet;
+	PulseReq := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <Property Name="IsSet" Id="{6eb00f3d-c6aa-447e-be14-295ed0b97da3}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY IsSet : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{8141aa7c-5d5a-4692-8792-e740038cfeb1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsSet := RelaySet;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{a9ee56df-9b3e-4fd0-adec-58152da57428}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF RelaySet THEN
+	PulseReq := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Set" Id="{e2e6b3f1-b1b7-4ef5-8c82-af292b3e5831}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Set
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT RelaySet THEN
+	PulseReq := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

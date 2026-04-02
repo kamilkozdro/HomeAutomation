@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbMonostableRelay" Id="{1e99fd58-1860-4d43-9df9-50b04eba5883}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbMonostableRelay IMPLEMENTS iRelay
+VAR
+    RelayOutput AT %Q* : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="IsSet" Id="{01e1278e-4d38-47d2-93b5-d878fc42c631}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsSet : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{df2cd450-f648-444f-8ba7-120d765e1ee5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsSet := RelayOutput;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{c8cf2292-1af8-451d-bc98-879376fef134}">
+      <Declaration><![CDATA[METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[RelayOutput := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Set" Id="{8b890796-e473-4154-bfe5-d2bb589f8e04}">
+      <Declaration><![CDATA[METHOD Set
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[RelayOutput := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
