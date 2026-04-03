@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbMonoSwitch" Id="{21737aef-df48-4987-83e0-aae9b7cbc7ab}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC fbMonoSwitch IMPLEMENTS iSwitch
+    <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitch IMPLEMENTS iSwitch
 VAR
 	Input AT %I* : BOOL;					// Physical switch input
 	
