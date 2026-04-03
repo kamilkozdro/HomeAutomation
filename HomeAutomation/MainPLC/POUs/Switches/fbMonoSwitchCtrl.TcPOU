@@ -3,7 +3,7 @@
   <POU Name="fbMonoSwitchCtrl" Id="{d36a5674-47b7-4d99-8111-38bc99505a2d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitchCtrl
 VAR
-	switch : iSwitch;
+	Switch : iSwitch;
 	SwitchConfig : stSwitchConfig;
 	
 	CurrentState        : stSwitchState;         // Current processed state
@@ -105,7 +105,7 @@ END_IF]]></ST>
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[CurrentSwitchState := This^.CurrentSwitchState;]]></ST>
+          <ST><![CDATA[CurrentSwitchState := This^.CurrentState;]]></ST>
         </Implementation>
       </Get>
     </Property>

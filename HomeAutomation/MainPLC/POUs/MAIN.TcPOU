@@ -14,9 +14,6 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(*
 IF PlcFirstCycle THEN
-
-	Shutter1Config.TravelTime := T#15S;
-	Shutter1Config.AngleFullTurnTime := T#3S;
 	
 	PlcFirstCycle := FALSE;
 END_IF

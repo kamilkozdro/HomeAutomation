@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="gvlHA" Id="{0181db7e-994c-475a-978f-c286ac6dc635}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+	// BistableSingleCoilRelay ToggleVirtualState
+	// Manually toggle internal, virtual relay state when mismatch with real, physical	
+	Shutter1OpenRelayToggle : BOOL := FALSE;
+	Shutter1CloseRelayToggle : BOOL := FALSE;
+	
+	// Shutters
+	Shutter1Cmd : stShutterCommand;
+	Shutter1CmdExecute : BOOL := FALSE;
+	Shutter1Position : stShutterPosition;
+    Shutter1State : eShutterStateType;
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

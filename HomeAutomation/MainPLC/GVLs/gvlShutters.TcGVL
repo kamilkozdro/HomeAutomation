@@ -13,6 +13,7 @@ VAR_GLOBAL
 	ShutterR1Act : fbShutterAct(OpenRelay := gvlRelays.Shutter1OpenRelay,
 								CloseRelay := gvlRelays.Shutter1CloseRelay,
 								Config := ShutterR1Config);
+	ShutterR1Ctrl : fbShutterCtrl(ShutterAct := ShutterR1Act);
 	
 END_VAR]]></Declaration>
   </GVL>

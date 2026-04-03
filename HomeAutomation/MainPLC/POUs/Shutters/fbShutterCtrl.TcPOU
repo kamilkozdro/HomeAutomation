@@ -110,6 +110,23 @@ END_IF
 
 CurrentPosition := ShutterAct.Position;]]></ST>
     </Implementation>
+    <Method Name="FB_Init" Id="{dc7607a4-407d-4d2f-a395-87e7bfbb24f9}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
+
+	ShutterAct : fbShutterAct; 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.CurrentCommand := ShutterAct;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetCommand" Id="{3d42c165-d268-469c-a969-e4963ab6a807}">
       <Declaration><![CDATA[METHOD PUBLIC SetCommand
 VAR_INPUT
