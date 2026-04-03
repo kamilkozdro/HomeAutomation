@@ -14,6 +14,8 @@ VAR_GLOBAL
 	Shutter1CmdExecute : BOOL := FALSE;
 	Shutter1Position : stShutterPosition;
     Shutter1State : eShutterStateType;
+	ShutterUpSavedPos : stShutterPosition;
+	ShutterDownSavedPos : stShutterPosition;
 
 END_VAR]]></Declaration>
   </GVL>

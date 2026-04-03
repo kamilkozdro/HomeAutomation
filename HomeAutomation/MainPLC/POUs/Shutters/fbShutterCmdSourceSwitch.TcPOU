@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbShutterCmdSourceSwitch" Id="{6425a77e-86b3-44e6-82a6-6f2235e7d8cd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceSwitch 
+VAR_INPUT
+    UpSwitchState : stSwitchState;
+    DownSwitchState : stSwitchState;
+END_VAR
+VAR_OUTPUT
+	Cmd : stShutterCommand;
+	NewCmd : BOOL;
+END_VAR
+VAR
+    UpLongClickPosition : stShutterPosition := (Height := 50, Angle := 100);
+    DownLongClickPosition : stShutterPosition := (Height := 0, Angle := 100);
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Default outputs every cycle
+Cmd.CommandType := eShutterCommandType.NONE;
+Cmd.Position.Height := 0;
+Cmd.Position.Angle := 0;
+NewCmd := FALSE;
+
+// STOP has priority if both switch sides are active at the same time
+IF (UpSwitchState.StateType <> eSwitchStateType.IDLE)
+   AND (DownSwitchState.StateType <> eSwitchStateType.IDLE) THEN
+    Cmd.CommandType := eShutterCommandType.STOP;
+    NewCmd := TRUE;
+
+// OPEN: double click UP
+ELSIF (UpSwitchState.StateType = eSwitchStateType.MULTI_CLICK)
+   AND (UpSwitchState.PressCount = 2) THEN
+    Cmd.CommandType := eShutterCommandType.OPEN;
+    NewCmd := TRUE;
+
+// CLOSE: double click DOWN
+ELSIF (DownSwitchState.StateType = eSwitchStateType.MULTI_CLICK)
+   AND (DownSwitchState.PressCount = 2) THEN
+    Cmd.CommandType := eShutterCommandType.CLOSE;
+    NewCmd := TRUE;
+
+// STEP_OPEN: short click UP
+ELSIF UpSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
+    Cmd.CommandType := eShutterCommandType.STEP_OPEN;
+    NewCmd := TRUE;
+
+// STEP_CLOSE: short click DOWN
+ELSIF DownSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
+    Cmd.CommandType := eShutterCommandType.STEP_CLOSE;
+    NewCmd := TRUE;
+
+// MOVE_TO_POSITION: long click UP
+ELSIF (UpSwitchState.StateType = eSwitchStateType.LONG_CLICK) THEN
+    Cmd.CommandType := eShutterCommandType.MOVE_TO_POSITION;
+    Cmd.Position := UpLongClickPosition;
+    NewCmd := TRUE;
+	// MOVE_TO_POSITION: long click DOWN
+ELSIF (DownSwitchState.StateType = eSwitchStateType.LONG_CLICK) THEN
+    Cmd.CommandType := eShutterCommandType.MOVE_TO_POSITION;
+    Cmd.Position := DownLongClickPosition;
+    NewCmd := TRUE;
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

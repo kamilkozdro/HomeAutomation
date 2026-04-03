@@ -82,6 +82,9 @@
     <Compile Include="POUs\Shutters\fbShutterAct.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Shutters\fbShutterCmdSourceSwitch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Shutters\fbShutterCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>

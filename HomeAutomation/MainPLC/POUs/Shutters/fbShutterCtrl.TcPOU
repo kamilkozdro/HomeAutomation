@@ -3,7 +3,7 @@
   <POU Name="fbShutterCtrl" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCtrl
 VAR
-	ShutterAct : fbShutterAct;
+	ShutterAct : REFERENCE TO fbShutterAct;
 	NewCommandSet : BOOL := FALSE;
 	MovingToPosition : BOOL := FALSE;
 	TargetPosition : stShutterPosition;
@@ -120,11 +120,11 @@ VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
 
-	ShutterAct : fbShutterAct; 
+	ShutterActuator : REFERENCE TO fbShutterAct; 
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.CurrentCommand := ShutterAct;]]></ST>
+        <ST><![CDATA[THIS^.ShutterAct REF= ShutterActuator;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetCommand" Id="{3d42c165-d268-469c-a969-e4963ab6a807}">
