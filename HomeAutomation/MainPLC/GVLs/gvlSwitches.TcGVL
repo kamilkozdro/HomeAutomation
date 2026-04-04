@@ -4,7 +4,7 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL PERSISTENT
 	SwitchConfig : stSwitchConfig :=(ShortClickMaxTime := T#300MS,
-									ShortClickDelayTime := T#300MS,
+									ShortClickDelayTime := T#400MS,
 									LongClickMaxTime := T#1000MS);
 END_VAR
 
@@ -12,11 +12,11 @@ VAR_GLOBAL
 
 	
 	
-	SwitchR1Up : fbMonoSwitch;
-	SwitchR1Down : fbMonoSwitch;
+	SwitchR1Open : fbMonoSwitch;
+	SwitchR1Close : fbMonoSwitch;
 	
-	SwitchR1UpCtrl : fbMonoSwitchCtrl(SwitchR1Up, SwitchConfig);
-	SwitchR1DownCtrl : fbMonoSwitchCtrl(SwitchR1Down, SwitchConfig);
+	SwitchR1OpenCtrl : fbMonoSwitchCtrl(SwitchR1Open, SwitchConfig);
+	SwitchR1CloseCtrl : fbMonoSwitchCtrl(SwitchR1Close, SwitchConfig);
 	
 END_VAR]]></Declaration>
   </GVL>

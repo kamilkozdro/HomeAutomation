@@ -80,7 +80,7 @@ IF PressTimerQFall.Q THEN
     ClickType := eSwitchStateType.HOLD_OFF;
 END_IF
 
-IF MultiClickTimer.Q AND Switch.IsReleased THEN
+IF MultiClickTimer.Q THEN
 	IF TempPressCount > 1 THEN
 		 ClickType := eSwitchStateType.MULTI_CLICK;
 	ELSE

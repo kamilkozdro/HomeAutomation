@@ -7,55 +7,44 @@ VAR
 	PlcFirstCycle : BOOL := TRUE;
 	
 	// SHUTTERS
-	Shutter1Cmd : stShutterCommand;
+	Shutter1Switch : fbShutterCmdSourceSwitch;
+	Shutter1SafetyCmd : stShutterCommand;
+	Shutter1SafetyCmdExecute : BOOL := FALSE;
+	Shutter1Arbiter : fbShutterCmdArbiter;
 	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(*
+      <ST><![CDATA[
 IF PlcFirstCycle THEN
 	
 	PlcFirstCycle := FALSE;
 END_IF
 
-Shutter1Cmd.CommandType := eShutterCommandType.NONE;
+gvlSwitches.SwitchR1Open();
+gvlSwitches.SwitchR1Close();
+gvlSwitches.SwitchR1OpenCtrl();
+gvlSwitches.SwitchR1CloseCtrl();
 
-// STOP condition - If shutter is moving, any switch R1 or R2 click will stop shutter
-IF Shutter1.State.CurrentState <> eShutterStateType.IDLE AND 
-	( SwitchR1Up.State.CurrentState <> eSwitchStateType.IDLE
-	OR SwitchR1Down.State.CurrentState <> eSwitchStateType.IDLE) THEN
-	Shutter1Cmd.CommandType := eShutterCommandType.STOP;
-
-// OPEN condition
-ELSIF SwitchR1Up.State.CurrentState = eSwitchStateType.MULTI_CLICK AND SwitchR1Up.State.PressCount = 2 THEN
-	Shutter1Cmd.CommandType := eShutterCommandType.OPEN;
-
-// Close condition
-ELSIF SwitchR1Down.State.CurrentState = eSwitchStateType.MULTI_CLICK AND SwitchR1Down.State.PressCount = 2 THEN
-	Shutter1Cmd.CommandType := eShutterCommandType.Close;
-
-// STEP_OPEN condition
-ELSIF SwitchR1Up.State.CurrentState = eSwitchStateType.SHORT_CLICK THEN
-	Shutter1Cmd.CommandType := eShutterCommandType.STEP_OPEN;
-	
-// STEP_CLOSE condition
-ELSIF SwitchR1Down.State.CurrentState = eSwitchStateType.SHORT_CLICK THEN
-	Shutter1Cmd.CommandType := eShutterCommandType.STEP_CLOSE;
-	
-// MOVE_TO_POSITION condition
-ELSIF SwitchR1Up.State.CurrentState = eSwitchStateType.LONG_CLICK
-	OR SwitchR1Down.State.CurrentState = eSwitchStateType.LONG_CLICK THEN
-	Shutter1Cmd.Position := 50;
-	Shutter1Cmd.Angle := 50;
-	Shutter1Cmd.CommandType := eShutterCommandType.MOVE_TO_POSITION;
+Shutter1Switch(OpenSwitchState := gvlSwitches.SwitchR1OpenCtrl.CurrentSwitchState,
+				CloseSwitchState := gvlSwitches.SwitchR1CloseCtrl.CurrentSwitchState,
+				ShutterStateType := gvlShutters.ShutterR1Act.CurrentStateType);
+				
+Shutter1Arbiter(SwitchCmd := Shutter1Switch.Cmd,
+				SwitchNewCmd := Shutter1Switch.NewCmd,
+				AutoCmd := gvlHA.Shutter1Cmd,
+				AutoNewCmd := gvlHA.Shutter1CmdExecute,
+				SafetyCmd := Shutter1SafetyCmd,
+				SafetyNewCmd := Shutter1SafetyCmdExecute);
+				
+IF Shutter1Arbiter.NewCmd THEN
+	gvlShutters.ShutterR1Ctrl.SetCommand(NewCmd := Shutter1Arbiter.Cmd);
 END_IF
 
-Shutter1(Command := Shutter1Cmd, Config := Shutter1Config);
-
-gvlShutters.gvShutter1Up := Shutter1.Q_Open;
-gvlShutters.gvShutter1Down := Shutter1.Q_MoveDown;
-
-*)]]></ST>
+// Execute shutter logic
+gvlShutters.ShutterR1Ctrl();
+gvlShutters.ShutterR1Act();
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
