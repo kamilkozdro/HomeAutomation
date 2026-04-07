@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbScheduler" Id="{e6beab7c-6878-4fdf-b4e1-89106bd737c9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbScheduler
+VAR
+	_Active : BOOL;
+	_Now : TIMESTRUCT;
+	NowTOD : TIME_OF_DAY;
+	i : USINT;
+END_VAR
+VAR PERSISTENT
+    _Enabled : BOOL := FALSE;
+    _Config : stSchedulerConfig;
+END_VAR
+VAR CONSTANT
+	EmptyTimeTrigger : TIME_OF_DAY := TOD#00:00;
+	TriggerTimeTolerance : TIME := T#1M; 
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+_Active := FALSE;
+NowTOD := SYSTEMTIME_TO_TOD(_Now);
+
+// Sprawdz, czy trigger wlaczony
+IF NOT _Enabled THEN 
+  RETURN; 
+END_IF;
+
+// Sprawdz, czy aktualny miesiac
+IF NOT _Config.Months[_Now.wMonth] THEN 
+  RETURN; 
+END_IF;
+
+// Sprawdz, czy aktualny dzien
+IF NOT _Config.WeekDays[_Now.wDayOfWeek + 1] THEN // (Now.wDayOfWeek 0 (Sunday) = CyclicTrigger.WeekDays[1])
+  RETURN; 
+END_IF;
+
+// Sprawdz czasy
+FOR i := 1 TO 6 DO
+  IF ((_Config.Times[i] <> EmptyTimeTrigger) AND
+		ABS(NowTOD - _Config.Times[i]) <= TriggerTimeTolerance) THEN
+	_Active := TRUE;
+    RETURN;  // Pierwsza zgodnosc wystarczy
+  END_IF;
+END_FOR;
+
+
+]]></ST>
+    </Implementation>
+    <Property Name="Enable" Id="{2e980649-b9bf-4864-9037-87be4a693a3a}">
+      <Declaration><![CDATA[PROPERTY Enable : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f622a717-b980-4bf5-8bc8-af059c50987c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Enable := THIS^._Enabled;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f8d081ad-dbd1-4281-97d1-0f22ba6611a9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[THIS^._Enabled := Enable;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="IsActive" Id="{1670c2e2-c25a-4a5e-84dc-d3f2300321a8}">
+      <Declaration><![CDATA[PROPERTY IsActive : BOOL]]></Declaration>
+      <Get Name="Get" Id="{62b511ae-b1df-442d-9bd8-f2eff94c4283}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsActive := THIS^._Active;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="SetConfig" Id="{1f07cda4-afa7-4310-8fba-eb5cd655d675}">
+      <Declaration><![CDATA[METHOD SetConfig
+VAR_INPUT
+	Config : stSchedulerConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^._Config := Config;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UpdateTime" Id="{9c526424-860f-4349-8539-a9d423bc789c}">
+      <Declaration><![CDATA[METHOD UpdateTime
+VAR_INPUT
+	Now : TIMESTRUCT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_Now := Now;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

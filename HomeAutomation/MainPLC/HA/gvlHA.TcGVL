@@ -16,6 +16,10 @@ VAR_GLOBAL
     Shutter1State : eShutterStateType;
 	ShutterUpSavedPos : stShutterPosition;
 	ShutterDownSavedPos : stShutterPosition;
+	
+	// Schedulers
+	gvShutter1MorningScheduleConfig : stSchedulerConfig;
+	gvShutter1EveningScheduleConfig : stSchedulerConfig;
 
 END_VAR]]></Declaration>
   </GVL>
