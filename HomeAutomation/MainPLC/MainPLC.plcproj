@@ -18,97 +18,105 @@
     <LibraryReferences>{a33bae39-a904-45b5-bfab-865e9a5eefd3}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\stShutterCommand.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\eShutterCommandType.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\stShutterConfig.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\eShutterStateType.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\stShutterPosition.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\stShutterState.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\stSwitchConfig.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\eSwitchStateType.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\stSwitchState.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GVLs\gvlHA.TcGVL">
+    <Compile Include="HA\gvlHA.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\gvlRelays.TcGVL">
+    <Compile Include="Main\POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="GVLs\gvlSwitches.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="GVLs\gvlShutters.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\MAIN.TcPOU">
+    <Compile Include="Relay\gvlRelays.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="Relay\POUs\fbBistableDoubleCoilRelay.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Relay\fbBistableDoubleCoilRelay.TcPOU">
+    <Compile Include="Relay\POUs\fbBistableSingleCoilRelay.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Relay\fbBistableSingleCoilRelay.TcPOU">
+    <Compile Include="Relay\POUs\fbMonostableRelay.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Relay\fbMonostableRelay.TcPOU">
+    <Compile Include="Relay\POUs\iRelay.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Relay\iRelay.TcIO">
+    <Compile Include="Shutters\DUTs\eShutterCommandType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Shutters\fbShutterAct.TcPOU">
+    <Compile Include="Shutters\DUTs\eShutterStateType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Shutters\fbShutterCmdArbiter.TcPOU">
+    <Compile Include="Shutters\DUTs\stShutterCommand.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Shutters\fbShutterCmdSourceSwitch.TcPOU">
+    <Compile Include="Shutters\DUTs\stShutterConfig.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Shutters\fbShutterCtrl.TcPOU">
+    <Compile Include="Shutters\DUTs\stShutterPosition.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Switches\fbMonoSwitchCtrl.TcPOU">
+    <Compile Include="Shutters\DUTs\stShutterState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Switches\fbMonoSwitch.TcPOU">
+    <Compile Include="Shutters\gvlShutters.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="Shutters\POUs\fbShutterAct.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Switches\iSwitch.TcIO">
+    <Compile Include="Shutters\POUs\fbShutterCmdArbiter.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shutters\POUs\fbShutterCmdSourceSwitch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shutters\POUs\fbShutterCtrl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Switches\DUTs\eSwitchStateType.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Switches\DUTs\stSwitchConfig.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Switches\DUTs\stSwitchState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Switches\gvlSwitches.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="Switches\POUs\fbMonoSwitch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Switches\POUs\fbMonoSwitchCtrl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Switches\POUs\iSwitch.TcIO">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DUTs" />
-    <Folder Include="GVLs" />
-    <Folder Include="POUs\Relay" />
-    <Folder Include="POUs\Switches" />
-    <Folder Include="POUs\Shutters" />
+    <Folder Include="HA" />
+    <Folder Include="HA\DUTs" />
+    <Folder Include="Main" />
+    <Folder Include="Main\DUTs" />
+    <Folder Include="Main\POUs" />
+    <Folder Include="Relay" />
+    <Folder Include="Relay\DUTs" />
+    <Folder Include="Relay\POUs" />
+    <Folder Include="Shutters" />
+    <Folder Include="Shutters\DUTs" />
+    <Folder Include="Shutters\POUs" />
+    <Folder Include="Switches" />
+    <Folder Include="Switches\DUTs" />
+    <Folder Include="Switches\POUs" />
     <Folder Include="VISUs" />
-    <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="Tc2_Standard">
@@ -133,8 +141,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -204,14 +212,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
