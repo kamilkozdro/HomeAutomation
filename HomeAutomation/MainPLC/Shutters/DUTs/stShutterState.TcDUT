@@ -5,14 +5,6 @@
 STRUCT
     CurrentStateType    : eShutterStateType;
     PreviousStateType   : eShutterStateType;
-	
-	(*
-    StateChanged    : BOOL;                // State change flag
-    
-    CurrentPosition : USINT := 0;          // Current position [%] (0=closed, 100=open)
-	CurrentAngle : USINT := 0;				// Current angle [%] (0=closed, 100=open)
-    SavedPosition   : USINT := 50;         // Saved position for memory function
-	*)
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

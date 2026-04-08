@@ -7,6 +7,8 @@ VAR
 	_Now : TIMESTRUCT;
 	NowTOD : TIME_OF_DAY;
 	i : USINT;
+	TimeDiff : DINT;
+	ActiveRTrigger : R_TRIG;
 END_VAR
 VAR PERSISTENT
     _Enabled : BOOL := FALSE;
@@ -38,14 +40,22 @@ END_IF;
 
 // Sprawdz czasy
 FOR i := 1 TO 6 DO
-  IF ((_Config.Times[i] <> EmptyTimeTrigger) AND
-		ABS(NowTOD - _Config.Times[i]) <= TriggerTimeTolerance) THEN
-	_Active := TRUE;
-    RETURN;  // Pierwsza zgodnosc wystarczy
+  IF _Config.Times[i] <> EmptyTimeTrigger THEN
+	  TimeDiff := TOD_TO_DINT(NowTOD) - TOD_TO_DINT(_Config.Times[i]);	  
+	  // Korekta przekroczenia doby (86 400 000 ms = 24h)
+	IF TimeDiff > 43200000 THEN       // >12h różnicy → cofnij o dobę
+		TimeDiff := TimeDiff - 86400000;
+	ELSIF TimeDiff < -43200000 THEN   // <-12h różnicy → dodaj dobę
+		TimeDiff := TimeDiff + 86400000;
+	END_IF
+	IF ABS(TimeDiff) <= TIME_TO_DINT(TriggerTimeTolerance) THEN  // ← TO BRAKOWAŁO
+        _Active := TRUE;
+        EXIT;  // Pierwsza zgodnosc wystarczy
+    END_IF
   END_IF;
 END_FOR;
 
-
+ActiveRTrigger(CLK := _Active);
 ]]></ST>
     </Implementation>
     <Property Name="Enable" Id="{2e980649-b9bf-4864-9037-87be4a693a3a}">
@@ -88,6 +98,17 @@ END_VAR
         <ST><![CDATA[THIS^._Config := Config;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Triggered" Id="{2975e954-9b3b-4e9b-b472-d35dfc8b1e42}">
+      <Declaration><![CDATA[PROPERTY Triggered : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1fa6a10c-de63-4b3a-a0b0-2bb8f0332aae}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Triggered := THIS^.ActiveRTrigger.Q;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="UpdateTime" Id="{9c526424-860f-4349-8539-a9d423bc789c}">
       <Declaration><![CDATA[METHOD UpdateTime
 VAR_INPUT
