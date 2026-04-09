@@ -4,9 +4,13 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 
 VAR_GLOBAL
-	gvShutter1MorningSchedule : fbScheduler;
-	gvShutter1EveningSchedule : fbScheduler;
+	Shutter1MorningScheduler : fbScheduler;
+	Shutter1EveningScheduler : fbScheduler;
 
-END_VAR]]></Declaration>
+
+															
+															
+END_VAR
+]]></Declaration>
   </GVL>
 </TcPlcObject>

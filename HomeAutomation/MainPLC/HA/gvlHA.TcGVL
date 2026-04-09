@@ -17,10 +17,28 @@ VAR_GLOBAL
 	ShutterUpSavedPos : stShutterPosition;
 	ShutterDownSavedPos : stShutterPosition;
 	
-	// Schedulers
-	gvShutter1MorningScheduleConfig : stSchedulerConfig;
-	gvShutter1EveningScheduleConfig : stSchedulerConfig;
+	// Schedulerr
+	Shutter1EveningScheduleSet : BOOL := FALSE;
+END_VAR
 
-END_VAR]]></Declaration>
+VAR_GLOBAL PERSISTENT
+	
+	// Schedulers
+	ScheduleMonths   : ARRAY[1..12] OF BOOL := [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+	ScheduleWeekDays : ARRAY[1..7] OF BOOL := [1, 1, 1, 1, 1, 1, 1, 1];
+    ScheduleTimes    : ARRAY[1..6] OF TIME_OF_DAY := [
+        TOD#17:10,
+        TOD#17:15,
+        TOD#17:20,
+        TOD#17:25,
+        TOD#00:00,
+        TOD#00:00
+    ];
+
+	Shutter1EveningScheduleConfig : stSchedulerConfig := (Months := ScheduleMonths,
+															WeekDays := ScheduleWeekDays,
+															Times := ScheduleTimes);
+END_VAR
+]]></Declaration>
   </GVL>
 </TcPlcObject>
