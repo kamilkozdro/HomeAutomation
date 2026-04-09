@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fbShutterCmdSourceSwitch" Id="{6425a77e-86b3-44e6-82a6-6f2235e7d8cd}" SpecialFunc="None">
+  <POU Name="fbShutterCmdSourceSwitch" Id="{c862dcf9-c651-483d-a78a-0c62d3a73fd7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceSwitch IMPLEMENTS iShutterCmdSource
 VAR_INPUT
     OpenSwitchState : stSwitchState;
@@ -10,14 +10,15 @@ END_VAR
 VAR PERSISTENT
     OpenLongClickPosition : stShutterPosition := (Height := 50, Angle := 100);
     CloseLongClickPosition : stShutterPosition := (Height := 0, Angle := 100);
-END_VAR]]></Declaration>
+END_VAR
+]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Process" Id="{89e36c8d-4d5b-4502-b02e-639e28f620be}">
+    <Method Name="Process" Id="{bb7c2f45-924d-4762-a2d7-89765f3d0a73}">
       <Declaration><![CDATA[METHOD Process
 VAR_IN_OUT
-	CmdEvent : stShutterCmdEvent;
+	CmdEvent	: stShutterCmdEvent;
 END_VAR
 VAR
 	NewCmd : stShutterCmd;

@@ -38,6 +38,9 @@
     <Compile Include="Shutters\DUTs\stShutterCmdEvent.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Shutters\POUs\fbShutterCmdSourceSwitch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Shutters\POUs\iShutterCmdSource.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -90,9 +93,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Shutters\POUs\fbShutterCmdArbiter.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Shutters\POUs\fbShutterCmdSourceSwitch.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Shutters\POUs\fbShutterCtrl.TcPOU">
