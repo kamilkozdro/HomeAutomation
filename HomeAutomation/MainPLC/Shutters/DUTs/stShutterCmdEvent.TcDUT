@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stShutterCmdEvent" Id="{e6ee52d5-e2da-4fe0-b612-a98cede1bba8}">
+    <Declaration><![CDATA[TYPE stShutterCmdEvent :
+STRUCT
+	Execute : BOOL;
+    Cmd : stShutterCmd;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

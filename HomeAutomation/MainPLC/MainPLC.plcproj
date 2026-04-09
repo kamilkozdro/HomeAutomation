@@ -35,6 +35,12 @@
     <Compile Include="Scheduler\POUs\fbScheduler.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Shutters\DUTs\stShutterCmdEvent.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Shutters\POUs\iShutterCmdSource.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Template\gvlTemplate.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -58,13 +64,13 @@
     <Compile Include="Relay\POUs\iRelay.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Shutters\DUTs\eShutterCommandType.TcDUT">
+    <Compile Include="Shutters\DUTs\eShutterCmdType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Shutters\DUTs\eShutterStateType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Shutters\DUTs\stShutterCommand.TcDUT">
+    <Compile Include="Shutters\DUTs\stShutterCmd.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Shutters\DUTs\stShutterConfig.TcDUT">

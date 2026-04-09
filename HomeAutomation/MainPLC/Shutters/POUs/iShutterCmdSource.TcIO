@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="iShutterCmdSource" Id="{d0feda71-d4be-4b61-af82-bec6d51289df}">
+    <Declaration><![CDATA[INTERFACE iShutterCmdSource
+]]></Declaration>
+    <Method Name="Process" Id="{469b2737-1c8c-408e-927f-cfef22293fe5}">
+      <Declaration><![CDATA[METHOD Process
+VAR_IN_OUT
+	CmdEvent : stShutterCmdEvent;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

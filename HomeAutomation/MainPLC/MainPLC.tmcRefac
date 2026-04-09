@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="23be3c58-230f-4a45-8a04-cf15dcfe10a1">ESHUTTERCOMMANDTYPE</Type>
+      <From>eShutterCommandType</From>
+      <To>eShutterCmdType</To>
+    </RenamedType>
+    <RenamedType>
+      <Type guid="23984a6c-c09a-4012-8087-64a064ebe57b">STSHUTTERCOMMAND</Type>
+      <From>stShutterCommand</From>
+      <To>stShutterCmd</To>
+    </RenamedType>
+  </Renames>
+</Refactors>

@@ -7,18 +7,15 @@ VAR
 	PlcFirstCycle : BOOL := TRUE;
 	
 	// SHUTTERS
-	Shutter1Switch : fbShutterCmdSourceSwitch;
-	Shutter1SafetyCmd : stShutterCommand;
-	Shutter1SafetyCmdExecute : BOOL := FALSE;
-	Shutter1Arbiter : fbShutterCmdArbiter;
-	Shutter1ArbiterSwitchCmd : stShutterCommand;
-	Shutter1ArbiterSwitchCmdExec : BOOL;
-	Shutter1ArbiterAutoCmd : stShutterCommand;
-	Shutter1ArbiterAutoCmdExec : BOOL;
-	Shutter1ArbiterSafetyCmd : stShutterCommand;
-	Shutter1ArbiterSafetyCmdExec : BOOL;
+	
+	ShutterR1CmdEvent : stShutterCmdEvent;
+
 END_VAR
-]]></Declaration>
+VAR CONSTANT
+	ShutterCleanCmdEvent : stShutterCmdEvent := (
+        Execute := FALSE,
+        Cmd := ( CommandType := eShutterCmdType.NONE, Position := (Height := 0, Angle := 0 ) ) );
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 IF PlcFirstCycle THEN
@@ -37,14 +34,8 @@ gvlSwitches.SwitchR1Close();
 gvlSwitches.SwitchR1OpenCtrl();
 gvlSwitches.SwitchR1CloseCtrl();
 
-
-// ------ Run Shutter Commands from Switches ------
-Shutter1Switch(OpenSwitchState := gvlSwitches.SwitchR1OpenCtrl.CurrentSwitchState,
-				CloseSwitchState := gvlSwitches.SwitchR1CloseCtrl.CurrentSwitchState,
-				ShutterStateType := gvlShutters.ShutterR1Act.CurrentStateType);
-
-// ------ Run Shutter Commands from Safety sources ------
-
+// Clear Shutter Commands
+ShutterR1CmdEvent := ShutterCleanCmdEvent;
 
 // ------ Run Shutter Commands from Auto sources ------
 
@@ -53,38 +44,15 @@ IF gvlHA.Shutter1EveningScheduleSet THEN
 	gvlHA.Shutter1EveningScheduleSet := FALSE;
 END_IF
 
-gvlScheduler.Shutter1EveningScheduler();
 
-// ------ Run Shutter Commands Arbiter ------	
-Shutter1ArbiterSwitchCmdExec := Shutter1Switch.NewCmd;
-IF Shutter1Switch.NewCmd THEN
-	Shutter1ArbiterSwitchCmd := Shutter1Switch.Cmd;	
-END_IF
 
-Shutter1ArbiterAutoCmdExec := gvlHA.Shutter1CmdExecute OR
-								gvlScheduler.Shutter1EveningScheduler.Triggered;
-IF gvlHA.Shutter1CmdExecute THEN
-	Shutter1ArbiterAutoCmd := gvlHA.Shutter1Cmd;
-ELSIF gvlScheduler.Shutter1EveningScheduler.Triggered THEN
-	Shutter1ArbiterAutoCmd.CommandType := eShutterCommandType.CLOSE;
-    Shutter1ArbiterAutoCmd.Position.Height := 0;
-    Shutter1ArbiterAutoCmd.Position.Angle := 0;
-END_IF
+// ------ Run Shutter Commands from Switches ------
+gvlShutters.ShutterR1Switch.Process(CmdEvent := ShutterR1CmdEvent);
 
-Shutter1Arbiter(SwitchCmd := Shutter1ArbiterSwitchCmd,
-				SwitchNewCmd := Shutter1ArbiterSwitchCmdExec,
-				AutoCmd := Shutter1ArbiterAutoCmd,
-				AutoNewCmd := Shutter1ArbiterAutoCmdExec,
-				SafetyCmd := Shutter1ArbiterSafetyCmd,
-				SafetyNewCmd := Shutter1ArbiterSafetyCmdExec);
-				
-IF Shutter1Arbiter.NewCmd THEN
-	gvlShutters.ShutterR1Ctrl.SetCommand(NewCmd := Shutter1Arbiter.Cmd);
-END_IF
+// ------ Run Shutter Commands from Safety sources ------
 
 // ------ Run Shutter Controllers ------
 gvlShutters.ShutterR1Ctrl();
-
 
 // ------ Run Shutter Actuators ------
 gvlShutters.ShutterR1Act();

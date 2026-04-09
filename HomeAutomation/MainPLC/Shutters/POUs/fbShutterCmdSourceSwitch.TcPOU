@@ -1,71 +1,67 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterCmdSourceSwitch" Id="{6425a77e-86b3-44e6-82a6-6f2235e7d8cd}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceSwitch 
+    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceSwitch IMPLEMENTS iShutterCmdSource
 VAR_INPUT
     OpenSwitchState : stSwitchState;
     CloseSwitchState : stSwitchState;
     ShutterStateType : eShutterStateType;
 END_VAR
-VAR_OUTPUT
-	Cmd : stShutterCommand;
-	NewCmd : BOOL;
-END_VAR
-VAR
-    UpLongClickPosition : stShutterPosition := (Height := 50, Angle := 100);
-    DownLongClickPosition : stShutterPosition := (Height := 0, Angle := 100);
+VAR PERSISTENT
+    OpenLongClickPosition : stShutterPosition := (Height := 50, Angle := 100);
+    CloseLongClickPosition : stShutterPosition := (Height := 0, Angle := 100);
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-// Default outputs every cycle
-Cmd.CommandType := eShutterCommandType.NONE;
-Cmd.Position.Height := 0;
-Cmd.Position.Angle := 0;
-NewCmd := FALSE;
-
-// If shutter is moving, any button event means STOP
-IF (ShutterStateType <> eShutterStateType.IDLE)
-   AND (
-        (OpenSwitchState.StateType <> eSwitchStateType.IDLE)
-        OR
-        (CloseSwitchState.StateType <> eSwitchStateType.IDLE)
-   ) THEN
-    Cmd.CommandType := eShutterCommandType.STOP;
-    NewCmd := TRUE;
-
-// OPEN: double click UP
-ELSIF (OpenSwitchState.StateType = eSwitchStateType.MULTI_CLICK)
-   AND (OpenSwitchState.PressCount = 2) THEN
-    Cmd.CommandType := eShutterCommandType.OPEN;
-    NewCmd := TRUE;
-
-// CLOSE: double click DOWN
-ELSIF (CloseSwitchState.StateType = eSwitchStateType.MULTI_CLICK)
-   AND (CloseSwitchState.PressCount = 2) THEN
-    Cmd.CommandType := eShutterCommandType.CLOSE;
-    NewCmd := TRUE;
-
-// STEP_OPEN: short click UP
-ELSIF OpenSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
-    Cmd.CommandType := eShutterCommandType.STEP_OPEN;
-    NewCmd := TRUE;
-
-// STEP_CLOSE: short click DOWN
-ELSIF CloseSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
-    Cmd.CommandType := eShutterCommandType.STEP_CLOSE;
-    NewCmd := TRUE;
-
-// MOVE_TO_POSITION: long click UP
-ELSIF (OpenSwitchState.StateType = eSwitchStateType.LONG_CLICK) THEN
-    Cmd.CommandType := eShutterCommandType.MOVE_TO_POSITION;
-    Cmd.Position := UpLongClickPosition;
-    NewCmd := TRUE;
-	// MOVE_TO_POSITION: long click DOWN
-ELSIF (CloseSwitchState.StateType = eSwitchStateType.LONG_CLICK) THEN
-    Cmd.CommandType := eShutterCommandType.MOVE_TO_POSITION;
-    Cmd.Position := DownLongClickPosition;
-    NewCmd := TRUE;
-END_IF]]></ST>
+      <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="Process" Id="{89e36c8d-4d5b-4502-b02e-639e28f620be}">
+      <Declaration><![CDATA[METHOD Process
+VAR_IN_OUT
+	CmdEvent : stShutterCmdEvent;
+END_VAR
+VAR
+	NewCmd : stShutterCmd;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// Exit if both switches are idle
+IF OpenSwitchState.StateType = eSwitchStateType.IDLE AND
+   CloseSwitchState.StateType = eSwitchStateType.IDLE THEN
+    RETURN;
+END_IF
+
+// If shutter is moving and any switch was pressed
+IF ShutterStateType <> eShutterStateType.IDLE THEN
+    NewCmd.CommandType := eShutterCmdType.STOP;
+    CmdEvent.Execute := TRUE;
+// Double Open click
+ELSIF (OpenSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (OpenSwitchState.PressCount = 2) THEN
+    NewCmd.CommandType := eShutterCmdType.OPEN;
+    CmdEvent.Execute := TRUE;
+// Double Close click
+ELSIF (CloseSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (CloseSwitchState.PressCount = 2) THEN
+    NewCmd.CommandType := eShutterCmdType.CLOSE;
+    CmdEvent.Execute := TRUE;
+// Short Open click
+ELSIF OpenSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
+    NewCmd.CommandType := eShutterCmdType.STEP_OPEN;
+    CmdEvent.Execute := TRUE;
+// Short Close click
+ELSIF CloseSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
+    NewCmd.CommandType := eShutterCmdType.STEP_CLOSE;
+    CmdEvent.Execute := TRUE;
+// Long Open click
+ELSIF OpenSwitchState.StateType = eSwitchStateType.LONG_CLICK THEN
+    NewCmd.CommandType := eShutterCmdType.MOVE_TO_POSITION;
+    NewCmd.Position := OpenLongClickPosition;
+    CmdEvent.Execute := TRUE;
+// Long Close click
+ELSIF CloseSwitchState.StateType = eSwitchStateType.LONG_CLICK THEN
+    NewCmd.CommandType := eShutterCmdType.MOVE_TO_POSITION;
+    NewCmd.Position := CloseLongClickPosition;
+    CmdEvent.Execute := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

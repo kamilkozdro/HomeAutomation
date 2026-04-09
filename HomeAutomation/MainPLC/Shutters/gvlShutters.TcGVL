@@ -15,6 +15,10 @@ VAR_GLOBAL
 								Config := ShutterR1Config);
 	ShutterR1Ctrl : fbShutterCtrl(ShutterActuator := ShutterR1Act);
 	
+	ShutterR1Switch : fbShutterCmdSourceSwitch := (OpenSwitchState := gvlSwitches.SwitchR1OpenCtrl.CurrentSwitchState,
+													CloseSwitchState := gvlSwitches.SwitchR1CloseCtrl.CurrentSwitchState,
+													ShutterStateType := gvlShutters.ShutterR1Act.CurrentStateType);
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
