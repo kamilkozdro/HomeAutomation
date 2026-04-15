@@ -2,13 +2,14 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbBistableSingleCoilRelay" Id="{0fae3c70-2fb9-46ef-aed9-dd8518f75f14}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbBistableSingleCoilRelay IMPLEMENTS iRelay
-VAR
+VAR_OUTPUT
 	RelayOutput AT %Q* : BOOL;
-
+END_VAR
+VAR
     PulseReq : BOOL;
     PulseTP : TP;
 	
-	ToggleVirtualStateTrig : R_TRIG;
+	ToggleVirtualStateTrig : R_TRIG;	
 END_VAR
 VAR CONSTANT
     PulseTime : TIME := T#200MS;
@@ -31,7 +32,7 @@ END_VAR]]></Declaration>
 PulseTP(IN := PulseReq, PT := PulseTime);
 RelayOutput := PulseTP.Q;
 
-IF PulseReq THEN
+IF PulseReq AND PulseTP.Q THEN
 	RelaySet := NOT RelaySet;
 	PulseReq := FALSE;
 END_IF]]></ST>

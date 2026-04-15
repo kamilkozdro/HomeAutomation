@@ -2,10 +2,11 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbBistableDoubleCoilRelay" Id="{335a84c2-d420-4524-aa4e-8efe9b956cf1}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbBistableDoubleCoilRelay IMPLEMENTS iRelay
-VAR
+VAR_OUTPUT
 	RelaySetOutput AT %Q* : BOOL;
 	RelayResetOutput AT %Q* : BOOL;
-	
+END_VAR
+VAR
 	CmdSet : BOOL;
     CmdReset : BOOL;
     SetPulseTP : TP;

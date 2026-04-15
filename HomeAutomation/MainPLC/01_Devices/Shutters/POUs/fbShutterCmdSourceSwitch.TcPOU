@@ -15,13 +15,30 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="FB_Init" Id="{fff114ce-5fd2-46ef-8f18-76cafa481a71}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
+    OpenSwitchState : REFERENCE TO stSwitchState;
+    CloseSwitchState : REFERENCE TO stSwitchState;
+    ShutterStateType : REFERENCE TO eShutterStateType;   
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.OpenSwitchState REF= OpenSwitchState;
+THIS^.CloseSwitchState REF= CloseSwitchState;
+THIS^.ShutterStateType REF= ShutterStateType;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Process" Id="{bb7c2f45-924d-4762-a2d7-89765f3d0a73}">
       <Declaration><![CDATA[METHOD Process
 VAR_IN_OUT
-	CmdEvent	: stShutterCmdEvent;
-END_VAR
-VAR
-	NewCmd : stShutterCmd;
+	CmdEvent : stShutterCmdEvent;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -33,35 +50,30 @@ END_IF
 
 // If shutter is moving and any switch was pressed
 IF ShutterStateType <> eShutterStateType.IDLE THEN
-    NewCmd.CommandType := eShutterCmdType.STOP;
-    CmdEvent.Execute := TRUE;
+    CmdEvent.Cmd.CommandType := eShutterCmdType.STOP;
 // Double Open click
 ELSIF (OpenSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (OpenSwitchState.PressCount = 2) THEN
-    NewCmd.CommandType := eShutterCmdType.OPEN;
-    CmdEvent.Execute := TRUE;
+    CmdEvent.Cmd.CommandType := eShutterCmdType.OPEN;
 // Double Close click
 ELSIF (CloseSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (CloseSwitchState.PressCount = 2) THEN
-    NewCmd.CommandType := eShutterCmdType.CLOSE;
-    CmdEvent.Execute := TRUE;
+    CmdEvent.Cmd.CommandType := eShutterCmdType.CLOSE;
 // Short Open click
 ELSIF OpenSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
-    NewCmd.CommandType := eShutterCmdType.STEP_OPEN;
-    CmdEvent.Execute := TRUE;
+    CmdEvent.Cmd.CommandType := eShutterCmdType.STEP_OPEN;
 // Short Close click
 ELSIF CloseSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
-    NewCmd.CommandType := eShutterCmdType.STEP_CLOSE;
-    CmdEvent.Execute := TRUE;
+    CmdEvent.Cmd.CommandType := eShutterCmdType.STEP_CLOSE;
 // Long Open click
 ELSIF OpenSwitchState.StateType = eSwitchStateType.LONG_CLICK THEN
-    NewCmd.CommandType := eShutterCmdType.MOVE_TO_POSITION;
-    NewCmd.Position := OpenLongClickPosition;
-    CmdEvent.Execute := TRUE;
+    CmdEvent.Cmd.CommandType := eShutterCmdType.MOVE_TO_POSITION;
+    CmdEvent.Cmd.Position := OpenLongClickPosition;
 // Long Close click
 ELSIF CloseSwitchState.StateType = eSwitchStateType.LONG_CLICK THEN
-    NewCmd.CommandType := eShutterCmdType.MOVE_TO_POSITION;
-    NewCmd.Position := CloseLongClickPosition;
-    CmdEvent.Execute := TRUE;
-END_IF]]></ST>
+    CmdEvent.Cmd.CommandType := eShutterCmdType.MOVE_TO_POSITION;
+    CmdEvent.Cmd.Position := CloseLongClickPosition;
+END_IF
+
+CmdEvent.Execute := TRUE;]]></ST>
       </Implementation>
     </Method>
   </POU>

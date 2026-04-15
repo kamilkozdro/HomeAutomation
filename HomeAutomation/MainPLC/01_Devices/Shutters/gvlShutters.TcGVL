@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="gvlShutters" Id="{7a0c2c86-f13b-43d1-9cdd-d1f7080b47ea}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL PERSISTENT
+	ShutterR1Config : stShutterConfig := (HeightTravelTime := T#15S,
+										HeightTravelTimeOverstep := T#1S,
+										AngleTravelTime := T#3S);
+END_VAR
+
+VAR_GLOBAL
+	
+// ------ Shutter Actuators ------
+	ShutterR1Act : fbShutterAct;
+								
+// ------ Shutter Controllers ------
+	ShutterR1Ctrl : fbShutterCtrl(ShutterActuator := ShutterR1Act);
+	
+	
+	
+// ------ Shutter Command Sources ------
+
+	// ------ Home Assistant ------
+	ShutterR1Ha : fbShutterCmdSourceHa(HaCmdEvent := gvlHa.Shutter1CmdEvent);
+
+	// ------ Switches ------
+	ShutterR1Switch : fbShutterCmdSourceSwitch(OpenSwitchState := gvlSwitches.SwitchR1OpenCtrl.CurrentState,
+									CloseSwitchState := gvlSwitches.SwitchR1CloseCtrl.CurrentState,
+									ShutterStateType := gvlShutters.ShutterR1Act.StateType);
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

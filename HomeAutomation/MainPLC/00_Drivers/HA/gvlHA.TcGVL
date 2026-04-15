@@ -10,8 +10,7 @@ VAR_GLOBAL
 	Shutter1CloseRelayToggle : BOOL := FALSE;
 	
 	// Shutters
-	Shutter1Cmd : stShutterCommand;
-	Shutter1CmdExecute : BOOL := FALSE;
+	Shutter1CmdEvent : stShutterCmdEvent;
 	Shutter1Position : stShutterPosition;
     Shutter1State : eShutterStateType;
 	ShutterUpSavedPos : stShutterPosition;
@@ -25,7 +24,7 @@ VAR_GLOBAL PERSISTENT
 	
 	// Schedulers
 	ScheduleMonths   : ARRAY[1..12] OF BOOL := [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-	ScheduleWeekDays : ARRAY[1..7] OF BOOL := [1, 1, 1, 1, 1, 1, 1, 1];
+	ScheduleWeekDays : ARRAY[1..7] OF BOOL := [1, 1, 1, 1, 1, 1, 1];
     ScheduleTimes    : ARRAY[1..6] OF TIME_OF_DAY := [
         TOD#17:10,
         TOD#17:15,

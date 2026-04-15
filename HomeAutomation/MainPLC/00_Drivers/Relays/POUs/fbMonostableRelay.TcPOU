@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbMonostableRelay" Id="{1e99fd58-1860-4d43-9df9-50b04eba5883}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbMonostableRelay IMPLEMENTS iRelay
-VAR
+VAR_OUTPUT
     RelayOutput AT %Q* : BOOL;
 END_VAR]]></Declaration>
     <Implementation>

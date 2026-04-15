@@ -16,8 +16,8 @@ VAR_OUTPUT
 	// Commands exposed as read only in OUTPUT and not as Property.Get
 	// TwinCAT doesn't allow access to copied structure members in Property.Get, only when passed by REF (Not read only). 
 	// Couldn't do ShutterCtrl.CurrentCommand.Position.Height if CurrentCommand was a Property
-	CurrentCommand : stShutterCommand;
-	PreviousCommand : stShutterCommand;
+	CurrentCommand : stShutterCmd;
+	PreviousCommand : stShutterCmd;
 	CurrentPosition : stShutterPosition;
 END_VAR]]></Declaration>
     <Implementation>
@@ -33,21 +33,21 @@ END_VAR]]></Declaration>
 IF NewCommandSet THEN
 	NewCommandSet := FALSE;
 	CASE CurrentCommand.CommandType OF
-		eShutterCommandType.STOP:
+		eShutterCmdType.STOP:
 			MovingToPosition := FALSE;
 			ShutterAct.Stop();
 			
-		eShutterCommandType.OPEN:
+		eShutterCmdType.OPEN:
 			MovingToPosition := TRUE;
 			TargetPosition.Height := 100;
 			TargetPosition.Angle := 100;
 		
-		eShutterCommandType.CLOSE:
+		eShutterCmdType.CLOSE:
 			MovingToPosition := TRUE;
 			TargetPosition.Height := 0;
 			TargetPosition.Angle := 0;
 			
-		eShutterCommandType.STEP_OPEN:
+		eShutterCmdType.STEP_OPEN:
 			MovingToPosition := TRUE;
 			TargetPosition := ShutterAct.Position;
 			// First open fins by angle step
@@ -63,7 +63,7 @@ IF NewCommandSet THEN
 				END_IF
 			END_IF
 			
-		eShutterCommandType.STEP_CLOSE:
+		eShutterCmdType.STEP_CLOSE:
 			MovingToPosition := TRUE;
 			TargetPosition := ShutterAct.Position;
 			// First close fins by angle step
@@ -79,11 +79,11 @@ IF NewCommandSet THEN
 				END_IF
 			END_IF
 			
-		eShutterCommandType.MOVE_TO_POSITION:
+		eShutterCmdType.MOVE_TO_POSITION:
 			MovingToPosition := TRUE;
 			TargetPosition := CurrentCommand.Position;
 			
-		eShutterCommandType.NONE:
+		eShutterCmdType.NONE:
 			// No command
 	END_CASE;
 END_IF
@@ -130,7 +130,7 @@ END_VAR
     <Method Name="SetCommand" Id="{3d42c165-d268-469c-a969-e4963ab6a807}">
       <Declaration><![CDATA[METHOD PUBLIC SetCommand
 VAR_INPUT
-	NewCmd : stShutterCommand;
+	NewCmd : stShutterCmd;
 END_VAR
 
 ]]></Declaration>

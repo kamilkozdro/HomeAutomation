@@ -11,12 +11,12 @@ VAR
 	CmdClose : BOOL;
 	
 	Config : stShutterConfig;
-	StateType : eShutterStateType;
 	
 	OutputCheckTimer : TON;
 END_VAR
 VAR_OUTPUT
 	Position : stShutterPosition;
+	StateType : eShutterStateType;
 END_VAR
 VAR CONSTANT
 	OutputCheckCycleTime: TIME := T#50MS;
@@ -98,31 +98,12 @@ CmdClose := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="CurrentStateType" Id="{f29a13f8-1fef-4c57-98e7-dae28f0d5337}">
-      <Declaration><![CDATA[PROPERTY PUBLIC CurrentStateType : eShutterStateType]]></Declaration>
-      <Get Name="Get" Id="{4ce8aa33-4386-4ae1-b83b-8847cdd706ea}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[CurrentStateType := This^.StateType;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Method Name="FB_Init" Id="{b49b88c3-5666-46b7-801a-0e8419ae9ce0}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
-METHOD FB_Init: BOOL
+    <Method Name="Init" Id="{f4ce97e9-a5c2-452b-b73c-23b84716f67a}">
+      <Declaration><![CDATA[METHOD Init
 VAR_INPUT
-    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
-	
 	OpenRelay : iRelay;
 	CloseRelay : iRelay;
 	Config : stShutterConfig;
-	
 END_VAR
 ]]></Declaration>
       <Implementation>

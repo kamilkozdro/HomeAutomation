@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbMonoSwitch" Id="{21737aef-df48-4987-83e0-aae9b7cbc7ab}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitch IMPLEMENTS iSwitch
+VAR_INPUT
+	Input AT %I* : BOOL;
+END_VAR					// Physical switch input
+VAR
+    PrevInput : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[PrevInput := Input;]]></ST>
+    </Implementation>
+    <Property Name="IsPressed" Id="{3ddc41e3-a43a-457c-8835-114dca2b3407}">
+      <Declaration><![CDATA[PROPERTY IsPressed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{61dbcbff-306a-4c29-b7b4-947c3ee82b24}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsPressed := THIS^.Input;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsReleased" Id="{6c0ebfae-fd6b-467c-bcf0-d0f0949b6be2}">
+      <Declaration><![CDATA[PROPERTY IsReleased : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1b38215a-e5dc-40a6-900f-84342805f4f2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsReleased := NOT THIS^.Input;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="OnPressed" Id="{238fedb4-7f31-449e-bffb-88405f0e3fe6}">
+      <Declaration><![CDATA[PROPERTY PUBLIC OnPressed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{bc4b2b4d-b425-4031-ada5-782516be3c69}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[OnPressed := Input AND NOT PrevInput;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="OnReleased" Id="{f2e12f74-1423-4b11-9d68-63053027c6bb}">
+      <Declaration><![CDATA[PROPERTY OnReleased : BOOL]]></Declaration>
+      <Get Name="Get" Id="{00b0c95b-d4ed-4500-978f-f246b06ade20}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[OnReleased := NOT Input AND PrevInput;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>
