@@ -3,8 +3,8 @@
   <DUT Name="stShutterState" Id="{777aa08a-edfb-4ead-b67a-bc47756d0cde}">
     <Declaration><![CDATA[TYPE stShutterState :
 STRUCT
-    CurrentStateType    : eShutterStateType;
-    PreviousStateType   : eShutterStateType;
+    StateType : eShutterStateType;
+    Position  : stShutterPosition;
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

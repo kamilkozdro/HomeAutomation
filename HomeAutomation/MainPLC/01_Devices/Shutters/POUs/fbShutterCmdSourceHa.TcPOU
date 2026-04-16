@@ -36,6 +36,7 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF HaCmdEvent.Execute THEN
 	CmdEvent := HaCmdEvent;
+	CmdEvent.Source := eShutterCmdSource.HA;
 	HaCmdEvent.Execute := FALSE;
 END_IF
 

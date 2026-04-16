@@ -5,6 +5,7 @@
 STRUCT
 	Execute : BOOL;
     Cmd : stShutterCmd;
+	Source  : eShutterCmdSource;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

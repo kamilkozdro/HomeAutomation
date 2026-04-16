@@ -52,6 +52,9 @@
     <Compile Include="00_Drivers\Switches\POUs\fbMonoSwitchCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="01_Devices\Shutters\DUTs\eShutterCmdSource.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="01_Devices\Shutters\DUTs\eShutterCmdType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -72,10 +75,6 @@
     </Compile>
     <Compile Include="01_Devices\Shutters\DUTs\stShutterState.TcDUT">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="01_Devices\Shutters\gvlShutters.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="01_Devices\Shutters\ITFs\iShutterCmdSource.TcIO">
       <SubType>Code</SubType>

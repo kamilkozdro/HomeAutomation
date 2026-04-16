@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="eShutterCmdSource" Id="{e1d68600-0f36-4136-8459-342dec891c86}">
+    <Declaration><![CDATA[TYPE eShutterCmdSource :
+(
+    NONE,
+    SWITCH,
+    HA,
+    SCHEDULER
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

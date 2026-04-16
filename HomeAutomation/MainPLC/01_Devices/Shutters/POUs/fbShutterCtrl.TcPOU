@@ -2,15 +2,8 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterCtrl" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCtrl
-VAR
-	ShutterAct : REFERENCE TO fbShutterAct;
-	NewCommandSet : BOOL := FALSE;
-	MovingToPosition : BOOL := FALSE;
-	TargetPosition : stShutterPosition;
-END_VAR
-VAR CONSTANT
-	Hysteresis: USINT := 1;
-	MoveStep : USINT := 10;
+VAR_IN_OUT
+	CmdEvent : stShutterCmdEvent;
 END_VAR
 VAR_OUTPUT
 	// Commands exposed as read only in OUTPUT and not as Property.Get
@@ -19,7 +12,17 @@ VAR_OUTPUT
 	CurrentCommand : stShutterCmd;
 	PreviousCommand : stShutterCmd;
 	CurrentPosition : stShutterPosition;
-END_VAR]]></Declaration>
+END_VAR
+VAR
+	ShutterAct : REFERENCE TO fbShutterAct;
+	MovingToPosition : BOOL := FALSE;
+	TargetPosition : stShutterPosition;
+END_VAR
+VAR CONSTANT
+	Hysteresis: USINT := 1;
+	MoveStep : USINT := 10;
+END_VAR
+]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 
 	Shutter Controller Function Block
@@ -30,9 +33,11 @@ END_VAR]]></Declaration>
 *)
 					
 // Handle new command
-IF NewCommandSet THEN
-	NewCommandSet := FALSE;
-	CASE CurrentCommand.CommandType OF
+IF CmdEvent.Execute THEN
+	CmdEvent.Execute := FALSE;
+	PreviousCommand := CurrentCommand;
+    CurrentCommand := CmdEvent.Cmd;
+	CASE CurrentCommand.CmdType OF
 		eShutterCmdType.STOP:
 			MovingToPosition := FALSE;
 			ShutterAct.Stop();
@@ -49,15 +54,15 @@ IF NewCommandSet THEN
 			
 		eShutterCmdType.STEP_OPEN:
 			MovingToPosition := TRUE;
-			TargetPosition := ShutterAct.Position;
+			TargetPosition := ShutterAct.State.Position;
 			// First open fins by angle step
-			IF ShutterAct.Position.Angle <= 100 - MoveStep THEN
-				TargetPosition.Angle := ShutterAct.Position.Angle + MoveStep;
+			IF ShutterAct.State.Position.Angle <= 100 - MoveStep THEN
+				TargetPosition.Angle := ShutterAct.State.Position.Angle + MoveStep;
 			// If fins are fully open -> move position
 			ELSE
 				TargetPosition.Angle := 100;
-				IF ShutterAct.Position.Height < 100 - MoveStep THEN
-					TargetPosition.Height := ShutterAct.Position.Height + MoveStep;
+				IF ShutterAct.State.Position.Height < 100 - MoveStep THEN
+					TargetPosition.Height := ShutterAct.State.Position.Height + MoveStep;
 				ELSE
 					TargetPosition.Height := 100;
 				END_IF
@@ -65,15 +70,15 @@ IF NewCommandSet THEN
 			
 		eShutterCmdType.STEP_CLOSE:
 			MovingToPosition := TRUE;
-			TargetPosition := ShutterAct.Position;
+			TargetPosition := ShutterAct.State.Position;
 			// First close fins by angle step
-			IF ShutterAct.Position.Angle >= 0 + MoveStep THEN
-				TargetPosition.Angle := ShutterAct.Position.Angle - MoveStep;
+			IF ShutterAct.State.Position.Angle >= 0 + MoveStep THEN
+				TargetPosition.Angle := ShutterAct.State.Position.Angle - MoveStep;
 			// If fins are fully closed -> move position
 			ELSE
 				TargetPosition.Angle := 0;
-				IF ShutterAct.Position.Height >= 0 + MoveStep THEN
-					TargetPosition.Height := ShutterAct.Position.Height - MoveStep;
+				IF ShutterAct.State.Position.Height >= 0 + MoveStep THEN
+					TargetPosition.Height := ShutterAct.State.Position.Height - MoveStep;
 				ELSE
 					TargetPosition.Height := 0;
 				END_IF
@@ -88,17 +93,18 @@ IF NewCommandSet THEN
 	END_CASE;
 END_IF
 
+// Drive actuator towards target each cycle
 IF MovingToPosition THEN	
 	// Move to target vertical position first
-	IF ShutterAct.Position.Height + Hysteresis < TargetPosition.Height THEN
+	IF ShutterAct.State.Position.Height + Hysteresis < TargetPosition.Height THEN
 		ShutterAct.Open();
-	ELSIF ShutterAct.Position.Height > TargetPosition.Height + Hysteresis THEN
+	ELSIF ShutterAct.State.Position.Height > TargetPosition.Height + Hysteresis THEN
 		ShutterAct.Close();
 	ELSE
 		// Then move to target angle
-		IF ShutterAct.Position.Angle + Hysteresis < TargetPosition.Angle THEN
+		IF ShutterAct.State.Position.Angle + Hysteresis < TargetPosition.Angle THEN
 			ShutterAct.Open();
-		ELSIF ShutterAct.Position.Angle > TargetPosition.Angle + Hysteresis THEN
+		ELSIF ShutterAct.State.Position.Angle > TargetPosition.Angle + Hysteresis THEN
 			ShutterAct.Close();
 		ELSE
 			// Target Position and Angle achieved
@@ -108,7 +114,7 @@ IF MovingToPosition THEN
 	END_IF
 END_IF
 
-CurrentPosition := ShutterAct.Position;]]></ST>
+CurrentPosition := ShutterAct.State.Position;]]></ST>
     </Implementation>
     <Method Name="FB_Init" Id="{dc7607a4-407d-4d2f-a395-87e7bfbb24f9}">
       <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
@@ -125,19 +131,6 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.ShutterAct REF= ShutterActuator;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="SetCommand" Id="{3d42c165-d268-469c-a969-e4963ab6a807}">
-      <Declaration><![CDATA[METHOD PUBLIC SetCommand
-VAR_INPUT
-	NewCmd : stShutterCmd;
-END_VAR
-
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.PreviousCommand := THIS^.CurrentCommand;
-THIS^.CurrentCommand := NewCmd;
-This^.NewCommandSet := TRUE;]]></ST>
       </Implementation>
     </Method>
   </POU>

@@ -3,7 +3,7 @@
   <DUT Name="stShutterCmd" Id="{23984a6c-c09a-4012-8087-64a064ebe57b}">
     <Declaration><![CDATA[TYPE stShutterCmd :
 STRUCT
-    CommandType  : eShutterCmdType;	// Command type
+    CmdType  : eShutterCmdType;	// Command type
     Position : stShutterPosition;
 END_STRUCT
 END_TYPE

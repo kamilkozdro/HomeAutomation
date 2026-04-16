@@ -4,14 +4,14 @@
     <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitchCtrl
 VAR_INPUT
 	Switch : iSwitch;
-	Config : stSwitchConfig;
 END_VAR
 VAR_OUTPUT
-	State        : stSwitchState;         // Current processed state
-    PreviousState       : stSwitchState;         // Previous state
-	StateChanged        : BOOL;                // State change flag
+	State  : stSwitchState;         // Current processed state
+    PreviousState  : stSwitchState;         // Previous state
+	StateChanged : BOOL;                // State change flag
 END_VAR
 VAR
+	Config : stSwitchConfig;
 	// edge detection
     PressTimerQRise : R_TRIG;
 	PressTimerQFall : F_TRIG;
@@ -103,5 +103,21 @@ IF ClickType <> State.StateType THEN
 	TempPressCount := 0;
 END_IF]]></ST>
     </Implementation>
+    <Method Name="FB_Init" Id="{28f611f1-94e0-46c8-8964-9a7ef4f55926}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+	Config : stSwitchConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Config := Config;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

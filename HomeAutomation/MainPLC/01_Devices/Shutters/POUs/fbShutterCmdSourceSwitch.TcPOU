@@ -50,30 +50,31 @@ END_IF
 
 // If shutter is moving and any switch was pressed
 IF ShutterStateType <> eShutterStateType.IDLE THEN
-    CmdEvent.Cmd.CommandType := eShutterCmdType.STOP;
+    CmdEvent.Cmd.CmdType := eShutterCmdType.STOP;
 // Double Open click
 ELSIF (OpenSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (OpenSwitchState.PressCount = 2) THEN
-    CmdEvent.Cmd.CommandType := eShutterCmdType.OPEN;
+    CmdEvent.Cmd.CmdType := eShutterCmdType.OPEN;
 // Double Close click
 ELSIF (CloseSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (CloseSwitchState.PressCount = 2) THEN
-    CmdEvent.Cmd.CommandType := eShutterCmdType.CLOSE;
+    CmdEvent.Cmd.CmdType := eShutterCmdType.CLOSE;
 // Short Open click
 ELSIF OpenSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
-    CmdEvent.Cmd.CommandType := eShutterCmdType.STEP_OPEN;
+    CmdEvent.Cmd.CmdType := eShutterCmdType.STEP_OPEN;
 // Short Close click
 ELSIF CloseSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
-    CmdEvent.Cmd.CommandType := eShutterCmdType.STEP_CLOSE;
+    CmdEvent.Cmd.CmdType := eShutterCmdType.STEP_CLOSE;
 // Long Open click
 ELSIF OpenSwitchState.StateType = eSwitchStateType.LONG_CLICK THEN
-    CmdEvent.Cmd.CommandType := eShutterCmdType.MOVE_TO_POSITION;
+    CmdEvent.Cmd.CmdType := eShutterCmdType.MOVE_TO_POSITION;
     CmdEvent.Cmd.Position := OpenLongClickPosition;
 // Long Close click
 ELSIF CloseSwitchState.StateType = eSwitchStateType.LONG_CLICK THEN
-    CmdEvent.Cmd.CommandType := eShutterCmdType.MOVE_TO_POSITION;
+    CmdEvent.Cmd.CmdType := eShutterCmdType.MOVE_TO_POSITION;
     CmdEvent.Cmd.Position := CloseLongClickPosition;
 END_IF
 
-CmdEvent.Execute := TRUE;]]></ST>
+CmdEvent.Execute := TRUE;
+CmdEvent.Source := eShutterCmdSource.SWITCH;]]></ST>
       </Implementation>
     </Method>
   </POU>

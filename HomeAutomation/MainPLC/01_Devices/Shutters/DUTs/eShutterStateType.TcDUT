@@ -7,8 +7,8 @@
 TYPE eShutterStateType :
 (
     IDLE,            // Not moving
-    MOVING_UP,       // Moving upward (opening)
-    MOVING_DOWN      // Moving downward (closing)
+    OPENING,       // Moving upward (opening)
+    CLOSING      // Moving downward (closing)
 );
 END_TYPE
 ]]></Declaration>

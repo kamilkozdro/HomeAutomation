@@ -14,82 +14,19 @@ END_VAR
 VAR CONSTANT
 	ShutterCleanCmdEvent : stShutterCmdEvent := (
         Execute := FALSE,
-        Cmd := ( CommandType := eShutterCmdType.NONE, Position := (Height := 0, Angle := 0 ) ) );
+        Cmd := ( CmdType := eShutterCmdType.NONE, Position := (Height := 0, Angle := 0 ) ) );
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 IF PlcFirstCycle THEN
 	// Place for code done in first plc cycle
-	InitShutters();
 	
 	PlcFirstCycle := FALSE;
 END_IF
 
 
-ProcessSwitches();
-
-ProcessShutters();
 
 ]]></ST>
     </Implementation>
-    <Method Name="InitShutters" Id="{77be604f-da8d-4e75-b130-ba3fee5bf11a}">
-      <Declaration><![CDATA[METHOD InitShutters
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[gvlShutters.ShutterR1Act.Init(OpenRelay := gvlRelays.Shutter1OpenRelay,
-								CloseRelay := gvlRelays.Shutter1CloseRelay,
-								Config := gvlShutters.ShutterR1Config);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="ProcessShutters" Id="{53b50510-867d-49e2-b836-5172be91fbed}">
-      <Declaration><![CDATA[METHOD ProcessShutters
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
-// Clear Shutter Commands
-ShutterR1CmdEvent := ShutterCleanCmdEvent;
-
-// ------ Run Shutter Commands from Auto sources ------
-
-	// ------ Home Assistant Source ------
-gvlShutters.ShutterR1Ha.Process(CmdEvent := ShutterR1CmdEvent);
-
-	// ------ Scheduler Source ------
-IF gvlHA.Shutter1EveningScheduleSet THEN
-	gvlScheduler.Shutter1EveningScheduler.SetConfig(gvlHA.Shutter1EveningScheduleConfig);
-	gvlHA.Shutter1EveningScheduleSet := FALSE;
-END_IF
-
-
-
-
-
-// ------ Run Shutter Commands from Switches ------
-
-gvlShutters.ShutterR1Switch.Process(CmdEvent := ShutterR1CmdEvent);
-
-// ------ Run Shutter Commands from Safety sources ------
-
-// ------ Run Shutter Controllers ------
-gvlShutters.ShutterR1Ctrl();
-
-// ------ Run Shutter Actuators ------
-gvlShutters.ShutterR1Act();]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="ProcessSwitches" Id="{4e4b9dfc-24c7-4c04-a218-cd0097ca15e4}">
-      <Declaration><![CDATA[METHOD ProcessSwitches
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// ------ Run Switches ------
-gvlSwitches.SwitchR1Open();
-gvlSwitches.SwitchR1Close();
-
-
-// ------ Run Switche Controllers ------
-gvlSwitches.SwitchR1OpenCtrl();
-gvlSwitches.SwitchR1CloseCtrl();]]></ST>
-      </Implementation>
-    </Method>
   </POU>
 </TcPlcObject>
