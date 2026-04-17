@@ -3,9 +3,9 @@
   <POU Name="fbShutterCmdSourceSwitch" Id="{c862dcf9-c651-483d-a78a-0c62d3a73fd7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceSwitch IMPLEMENTS iShutterCmdSource
 VAR_INPUT
-    OpenSwitchState : stSwitchState;
-    CloseSwitchState : stSwitchState;
-    ShutterStateType : eShutterStateType;
+    OpenSwitchState : REFERENCE TO stSwitchState;
+    CloseSwitchState : REFERENCE TO stSwitchState;
+    ShutterStateType : REFERENCE TO eShutterStateType;
 END_VAR
 VAR PERSISTENT
     OpenLongClickPosition : stShutterPosition := (Height := 50, Angle := 100);

@@ -6,7 +6,8 @@
     NONE,
     SWITCH,
     HA,
-    SCHEDULER
+    SCHEDULER,
+	ROOM
 );
 END_TYPE]]></Declaration>
   </DUT>

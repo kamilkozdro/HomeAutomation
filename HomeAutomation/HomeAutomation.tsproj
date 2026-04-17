@@ -16,9 +16,16 @@
 		</System>
 		<Plc>
 			<Project GUID="{F19B6445-F9FB-4350-82DA-0CB2ABA4EFAC}" Name="MainPLC" PrjFilePath="MainPLC\MainPLC.plcproj" TmcFilePath="MainPLC\MainPLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{C2471009-8365-6654-AF18-17B6010C2D4A}" TmcPath="MainPLC\MainPLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F2F6E288-91D8-EF25-D69A-CC8361DE44EE}" TmcPath="MainPLC\MainPLC.tmc">
 					<Name>MainPLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.Test</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
 					<UnrestoredVarLinks ImportTime="2026-04-04T16:02:43">
 						<OwnerA Name="InputDst" Prefix="TIPC^MainPLC^MainPLC Instance" Type="1">
 							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1100)^Term 5 (EL1008)">
@@ -929,4 +936,12 @@
 			</Device>
 		</Io>
 	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
+		<OwnerA Name="TIPC^MainPLC^MainPLC Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1100)^Term 5 (EL1008)">
+				<Link VarA="PlcTask Inputs^MAIN.Test" VarB="Channel 1^Input"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
 </TcSmProject>

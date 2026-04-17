@@ -3,12 +3,10 @@
   <POU Name="MAIN" Id="{b477ade9-5e41-44da-827a-03687596879d}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	
+	Test AT %I* : BOOL;
 	PlcFirstCycle : BOOL := TRUE;
 	
-	// SHUTTERS
-	
-	ShutterR1CmdEvent : stShutterCmdEvent;
+	Home : fbHome;
 
 END_VAR
 VAR CONSTANT

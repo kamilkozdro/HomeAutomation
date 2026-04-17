@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbRoomLiving" Id="{74a16cd5-868a-413e-b1b4-1075b610be2f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbRoomLiving IMPLEMENTS iRoom
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="LightsOff" Id="{262cd78d-a037-4ac4-890b-0001e3f12830}">
+      <Declaration><![CDATA[METHOD LightsOff
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Light1Ctrl.TurnOff();
+// Light2Ctrl.TurnOff();
+// Light3Ctrl.TurnOff();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LightsOn" Id="{ff3dfedc-8e50-4daa-a0a5-a2f01180a960}">
+      <Declaration><![CDATA[METHOD LightsOn
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Light1Ctrl.TurnOn();
+// Light2Ctrl.TurnOn();
+// Light3Ctrl.TurnOn();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ShuttersClose" Id="{fb9fcdd0-daee-4038-9b3b-8a88f7bea9a5}">
+      <Declaration><![CDATA[METHOD ShuttersClose]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ShuttersOpen" Id="{d21a0eb5-595a-4dea-8b06-37dc33bd6a36}">
+      <Declaration><![CDATA[METHOD ShuttersOpen]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -91,6 +91,15 @@
     <Compile Include="01_Devices\Shutters\POUs\fbShutterCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="02_Rooms\ITFs\iRoom.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="02_Rooms\POUs\fbRoomLiving.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="03_Home\POUs\fbHome.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="04_Application\gvlMain.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -135,8 +144,11 @@
     <Folder Include="00_Drivers" />
     <Folder Include="02_Rooms" />
     <Folder Include="02_Rooms\DUTs" />
+    <Folder Include="02_Rooms\ITFs" />
     <Folder Include="02_Rooms\POUs" />
     <Folder Include="03_Home" />
+    <Folder Include="03_Home\DUTs" />
+    <Folder Include="03_Home\POUs" />
     <Folder Include="04_Application" />
     <Folder Include="Template" />
     <Folder Include="Template\DUTs" />
