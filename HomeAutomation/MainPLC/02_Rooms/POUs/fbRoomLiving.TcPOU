@@ -3,6 +3,21 @@
   <POU Name="fbRoomLiving" Id="{74a16cd5-868a-413e-b1b4-1075b610be2f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbRoomLiving IMPLEMENTS iRoom
 VAR
+	
+	ShutterR1OpenRelay : fbMonostableRelay;
+	ShutterR1CloseRelay : fbMonostableRelay;
+	
+	ShutterR1OpenSwitch : fbMonoSwitch;
+	ShutterR1OpenSwitchCtrl : fbMonoSwitchCtrl(Switch := ShutterR1OpenSwitch,
+												Config := gvlSwitches.GeneralSwitchConfig);
+	
+	ShutterR1Act : fbShutterAct(OpenRelay := ShutterR1OpenRelay,
+								CloseRelay := ShutterR1CloseRelay,
+								Config := gvlShutters.ShutterR1Config);
+								
+	ShutterR1Ctrl : fbShutterCtrl(ShutterActuator := ShutterR1Act);
+	ShutterR1CmdSwitch : fbShutterCmdSourceSwitch;
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>

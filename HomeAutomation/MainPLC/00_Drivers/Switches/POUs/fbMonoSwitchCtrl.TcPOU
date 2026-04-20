@@ -3,7 +3,7 @@
   <POU Name="fbMonoSwitchCtrl" Id="{d36a5674-47b7-4d99-8111-38bc99505a2d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitchCtrl
 VAR_INPUT
-	Switch : iSwitch;
+	//Switch : iSwitch;
 END_VAR
 VAR_OUTPUT
 	State  : stSwitchState;         // Current processed state
@@ -11,6 +11,7 @@ VAR_OUTPUT
 	StateChanged : BOOL;                // State change flag
 END_VAR
 VAR
+	Switch : iSwitch;
 	Config : stSwitchConfig;
 	// edge detection
     PressTimerQRise : R_TRIG;
@@ -47,6 +48,8 @@ State.PressCount hold amount of switch releases for MULTI_CLICK
 -----------------------------
 *)
 
+Switch.Run();
+
 ClickType := eSwitchStateType.IDLE;
 StateChanged := FALSE;
 PressTimerQRise(CLK := PressTimer.Q);
@@ -54,7 +57,6 @@ PressTimerQFall(CLK := PressTimer.Q);
 
 IF Switch.OnPressed THEN
     PressTimer(IN := TRUE, PT := Config.LongClickMaxTime);
-
 END_IF
 
 PressTimer();
@@ -113,10 +115,12 @@ VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
     bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
 	Config : stSwitchConfig;
+	Switch : iSwitch;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.Config := Config;]]></ST>
+        <ST><![CDATA[THIS^.Config := Config;
+THIS^.Switch := Switch;]]></ST>
       </Implementation>
     </Method>
   </POU>

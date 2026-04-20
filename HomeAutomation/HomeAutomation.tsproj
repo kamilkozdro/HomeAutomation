@@ -16,9 +16,20 @@
 		</System>
 		<Plc>
 			<Project GUID="{F19B6445-F9FB-4350-82DA-0CB2ABA4EFAC}" Name="MainPLC" PrjFilePath="MainPLC\MainPLC.plcproj" TmcFilePath="MainPLC\MainPLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F2F6E288-91D8-EF25-D69A-CC8361DE44EE}" TmcPath="MainPLC\MainPLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1B77AEEB-FB48-4A02-5FDA-AB53D14BB95D}" TmcPath="MainPLC\MainPLC.tmc">
 					<Name>MainPLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN.Home.LivingRoom.ShutterR1OpenRelay.RelayOutput</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.Home.LivingRoom.ShutterR1CloseRelay.RelayOutput</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>

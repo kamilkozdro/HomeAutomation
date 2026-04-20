@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="gvlSwitches" Id="{e6e0d0e9-0431-466b-ba2e-1acdfc72ee46}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+
+VAR_GLOBAL PERSISTENT
+	GeneralSwitchConfig : stSwitchConfig :=(ShortClickMaxTime := T#300MS,
+									ShortClickDelayTime := T#400MS,
+									LongClickMaxTime := T#1000MS);
+									
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

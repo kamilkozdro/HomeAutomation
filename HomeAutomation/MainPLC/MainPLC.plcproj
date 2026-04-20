@@ -43,6 +43,10 @@
     <Compile Include="00_Drivers\Switches\DUTs\stSwitchState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="00_Drivers\Switches\gvlSwitches.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="00_Drivers\Switches\ITFs\iSwitch.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -76,6 +80,10 @@
     <Compile Include="01_Devices\Shutters\DUTs\stShutterState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="01_Devices\Shutters\gvlShutters.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="01_Devices\Shutters\ITFs\iShutterCmdSource.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -91,6 +99,9 @@
     <Compile Include="01_Devices\Shutters\POUs\fbShutterCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="01_Devices\Shutters\POUs\fShutterCmdSwitch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="02_Rooms\ITFs\iRoom.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -103,6 +114,9 @@
     <Compile Include="04_Application\gvlMain.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="04_Application\iCyclic.TcIO">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="04_Application\MAIN.TcPOU">
       <SubType>Code</SubType>

@@ -3,9 +3,9 @@
   <POU Name="fbShutterCmdSourceSwitch" Id="{c862dcf9-c651-483d-a78a-0c62d3a73fd7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceSwitch IMPLEMENTS iShutterCmdSource
 VAR_INPUT
-    OpenSwitchState : REFERENCE TO stSwitchState;
-    CloseSwitchState : REFERENCE TO stSwitchState;
-    ShutterStateType : REFERENCE TO eShutterStateType;
+    OpenSwitchState : stSwitchState;
+    CloseSwitchState : stSwitchState;
+    ShutterStateType : eShutterStateType;
 END_VAR
 VAR PERSISTENT
     OpenLongClickPosition : stShutterPosition := (Height := 50, Angle := 100);
@@ -23,16 +23,11 @@ END_VAR
 METHOD FB_Init: BOOL
 VAR_INPUT
     bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)
-    OpenSwitchState : REFERENCE TO stSwitchState;
-    CloseSwitchState : REFERENCE TO stSwitchState;
-    ShutterStateType : REFERENCE TO eShutterStateType;   
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.OpenSwitchState REF= OpenSwitchState;
-THIS^.CloseSwitchState REF= CloseSwitchState;
-THIS^.ShutterStateType REF= ShutterStateType;]]></ST>
+        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="Process" Id="{bb7c2f45-924d-4762-a2d7-89765f3d0a73}">

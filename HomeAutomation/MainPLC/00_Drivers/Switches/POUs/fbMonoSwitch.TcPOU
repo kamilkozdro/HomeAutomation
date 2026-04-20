@@ -55,5 +55,11 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="Run" Id="{e6269931-d60e-4530-b9c3-d8ed0808f8a3}">
+      <Declaration><![CDATA[METHOD Run]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[PrevInput := Input;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

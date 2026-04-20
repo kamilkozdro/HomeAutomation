@@ -114,6 +114,7 @@ IF MovingToPosition THEN
 	END_IF
 END_IF
 
+ShutterAct();
 CurrentPosition := ShutterAct.State.Position;]]></ST>
     </Implementation>
     <Method Name="FB_Init" Id="{dc7607a4-407d-4d2f-a395-87e7bfbb24f9}">
