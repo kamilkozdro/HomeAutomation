@@ -1,10 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbMonoSwitchCtrl" Id="{d36a5674-47b7-4d99-8111-38bc99505a2d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitchCtrl
-VAR_INPUT
-	//Switch : iSwitch;
-END_VAR
+    <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitchCtrl IMPLEMENTS iCyclic
 VAR_OUTPUT
 	State  : stSwitchState;         // Current processed state
     PreviousState  : stSwitchState;         // Previous state
@@ -13,6 +10,7 @@ END_VAR
 VAR
 	Switch : iSwitch;
 	Config : stSwitchConfig;
+	
 	// edge detection
     PressTimerQRise : R_TRIG;
 	PressTimerQFall : F_TRIG;
@@ -33,7 +31,32 @@ VAR PERSISTENT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* 
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{10a0f871-4c3d-4156-93cf-be8016a4d7f3}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+	
+	Switch : iSwitch;
+	Config : stSwitchConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Switch := Switch;
+THIS^.Config := Config]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Run" Id="{ef42fdab-4ebf-47a8-836e-071bdce32d7f}">
+      <Declaration><![CDATA[METHOD Run
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* 
 -----------------------------
 fbSwitchController:
 Set State output based on Config.Input.
@@ -104,23 +127,6 @@ IF ClickType <> State.StateType THEN
 	TotalPresses     := TotalPresses + 1;
 	TempPressCount := 0;
 END_IF]]></ST>
-    </Implementation>
-    <Method Name="FB_Init" Id="{28f611f1-94e0-46c8-8964-9a7ef4f55926}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
-METHOD FB_Init: BOOL
-VAR_INPUT
-    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
-	Config : stSwitchConfig;
-	Switch : iSwitch;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.Config := Config;
-THIS^.Switch := Switch;]]></ST>
       </Implementation>
     </Method>
   </POU>

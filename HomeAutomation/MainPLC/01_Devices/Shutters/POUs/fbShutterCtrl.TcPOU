@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterCtrl" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCtrl
+    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCtrl IMPLEMENTS iCyclic
 VAR_IN_OUT
 	CmdEvent : stShutterCmdEvent;
 END_VAR
@@ -24,7 +24,30 @@ VAR CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* 
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{dc7607a4-407d-4d2f-a395-87e7bfbb24f9}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
+
+	ShutterAct : REFERENCE TO fbShutterAct; 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.ShutterAct REF= ShutterAct;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Run" Id="{bc131770-192b-4b5f-b533-0c75bec53928}">
+      <Declaration><![CDATA[METHOD Run
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* 
 	Shutter Controller Function Block
 	
 	100 - fully open position/angle
@@ -114,24 +137,8 @@ IF MovingToPosition THEN
 	END_IF
 END_IF
 
-ShutterAct();
+ShutterAct.Run();
 CurrentPosition := ShutterAct.State.Position;]]></ST>
-    </Implementation>
-    <Method Name="FB_Init" Id="{dc7607a4-407d-4d2f-a395-87e7bfbb24f9}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
-METHOD FB_Init: BOOL
-VAR_INPUT
-    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
-
-	ShutterActuator : REFERENCE TO fbShutterAct; 
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.ShutterAct REF= ShutterActuator;]]></ST>
       </Implementation>
     </Method>
   </POU>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="iRoom" Id="{50cbef3a-567f-429c-942e-dee4c1d64343}">
-    <Declaration><![CDATA[INTERFACE iRoom
+    <Declaration><![CDATA[INTERFACE iRoom EXTENDS iCyclic
 ]]></Declaration>
     <Method Name="LightsOff" Id="{0d1e2a1f-7258-4ee6-ac7a-f11e25a09f6f}">
       <Declaration><![CDATA[METHOD LightsOff
@@ -13,6 +13,10 @@ END_VAR
       <Declaration><![CDATA[METHOD LightsOn
 VAR_INPUT
 END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Run" Id="{7e0d5bb6-04c6-4395-98eb-7d4eacbb709e}">
+      <Declaration><![CDATA[METHOD Run
 ]]></Declaration>
     </Method>
     <Method Name="ShuttersClose" Id="{7866c99d-9838-49be-8223-9db3c85ef106}">

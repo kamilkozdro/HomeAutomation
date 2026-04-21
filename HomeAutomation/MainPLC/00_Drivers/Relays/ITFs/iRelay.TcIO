@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="iRelay" Id="{e3cfaf5b-d97f-49b8-86e4-4a18e56172f6}">
-    <Declaration><![CDATA[INTERFACE iRelay
+    <Declaration><![CDATA[INTERFACE iRelay EXTENDS iCyclic
 ]]></Declaration>
     <Property Name="IsSet" Id="{8a4b2fff-124d-4401-8d2b-2ab114f764de}">
       <Declaration><![CDATA[PROPERTY PUBLIC IsSet : BOOL]]></Declaration>
@@ -15,6 +15,10 @@ END_VAR
       <Declaration><![CDATA[METHOD Reset
 VAR_INPUT
 END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Run" Id="{be544ff3-be50-4e20-9b41-5184a44dbf86}">
+      <Declaration><![CDATA[METHOD Run
 ]]></Declaration>
     </Method>
     <Method Name="Set" Id="{f9dfc50d-19c3-4d2f-9afa-e89c4ffba0a7}">

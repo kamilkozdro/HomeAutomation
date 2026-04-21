@@ -20,27 +20,7 @@ VAR PERSISTENT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Interlock commands
-IF CmdReset THEN
-	CmdSet := FALSE;
-	RelaySet := FALSE;
-ELSIF CmdSet THEN
-	CmdReset := FALSE;
-	RelaySet := TRUE;
-END_IF
-
-
-SetPulseTP(IN := CmdSet, PT := PulseTime);
-ResetPulseTP(IN := CmdReset, PT := PulseTime);
-
-// Pulse physical outputs
-RelaySetOutput := SetPulseTP.Q;
-RelayResetOutput := ResetPulseTP.Q;
-
-// Reset commands
-CmdSet := FALSE;
-CmdReset := FALSE;
-]]></ST>
+      <ST><![CDATA[]]></ST>
     </Implementation>
     <Property Name="IsSet" Id="{c31de52c-601a-4de2-9ac8-9f8bfedf0563}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
@@ -61,6 +41,33 @@ METHOD Reset
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[CmdReset := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Run" Id="{08493ca8-6235-46e1-91fc-35951c84eded}">
+      <Declaration><![CDATA[METHOD Run
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Interlock commands
+IF CmdReset THEN
+	CmdSet := FALSE;
+	RelaySet := FALSE;
+ELSIF CmdSet THEN
+	CmdReset := FALSE;
+	RelaySet := TRUE;
+END_IF
+
+
+SetPulseTP(IN := CmdSet, PT := PulseTime);
+ResetPulseTP(IN := CmdReset, PT := PulseTime);
+
+// Pulse physical outputs
+RelaySetOutput := SetPulseTP.Q;
+RelayResetOutput := ResetPulseTP.Q;
+
+// Reset commands
+CmdSet := FALSE;
+CmdReset := FALSE;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="Set" Id="{276ef09e-4879-413f-bd8a-3a7e49269787}">

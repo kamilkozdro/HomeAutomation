@@ -4,18 +4,28 @@
     <Declaration><![CDATA[FUNCTION_BLOCK fbRoomLiving IMPLEMENTS iRoom
 VAR
 	
+//  ----------- RELAYS -----------
 	ShutterR1OpenRelay : fbMonostableRelay;
 	ShutterR1CloseRelay : fbMonostableRelay;
 	
+//  ----------- SWITCHES -----------
 	ShutterR1OpenSwitch : fbMonoSwitch;
-	ShutterR1OpenSwitchCtrl : fbMonoSwitchCtrl(Switch := ShutterR1OpenSwitch,
-												Config := gvlSwitches.GeneralSwitchConfig);
+	ShutterR1CloseSwitch : fbMonoSwitch;
 	
+//  ----------- SWITCH CONTROLLERS -----------	
+	ShutterR1OpenSwitchCtrl : fbMonoSwitchCtrl(Switch := ShutterR1OpenSwitch,
+												Config := gvlSwitches.GeneralSwitchConfig);	
+	ShutterR1CloseSwitchCtrl : fbMonoSwitchCtrl(Switch := ShutterR1CloseSwitch,
+												Config := gvlSwitches.GeneralSwitchConfig);
+//  ----------- SHUTTER ACTUATORS -----------													
 	ShutterR1Act : fbShutterAct(OpenRelay := ShutterR1OpenRelay,
 								CloseRelay := ShutterR1CloseRelay,
 								Config := gvlShutters.ShutterR1Config);
-								
-	ShutterR1Ctrl : fbShutterCtrl(ShutterActuator := ShutterR1Act);
+	
+//  ----------- SHUTTER CONTROLLERS -----------	
+	ShutterR1Ctrl : fbShutterCtrl(ShutterAct := ShutterR1Act);
+	
+//  ----------- SHUTTER CMD SOURCES -----------
 	ShutterR1CmdSwitch : fbShutterCmdSourceSwitch;
 
 END_VAR]]></Declaration>
@@ -38,6 +48,14 @@ END_VAR]]></Declaration>
         <ST><![CDATA[// Light1Ctrl.TurnOn();
 // Light2Ctrl.TurnOn();
 // Light3Ctrl.TurnOn();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Run" Id="{e60a7814-3820-497e-913d-a9707cb1e27b}">
+      <Declaration><![CDATA[METHOD Run
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ShutterR1OpenSwitchCtrl.Run();
+ShutterR1CloseSwitchCtrl.Run();]]></ST>
       </Implementation>
     </Method>
     <Method Name="ShuttersClose" Id="{fb9fcdd0-daee-4038-9b3b-8a88f7bea9a5}">

@@ -27,8 +27,9 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="Run" Id="{17706589-9459-4e4f-9f99-316c783fb317}">
-      <Declaration><![CDATA[METHOD Run]]></Declaration>
+    <Method Name="Run" Id="{a6a3fed1-6ca3-4330-a22a-d28587d6b2b0}">
+      <Declaration><![CDATA[METHOD Run
+]]></Declaration>
     </Method>
   </Itf>
 </TcPlcObject>
