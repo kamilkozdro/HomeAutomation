@@ -49,7 +49,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.Switch := Switch;
-THIS^.Config := Config]]></ST>
+THIS^.Config := Config;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Run" Id="{ef42fdab-4ebf-47a8-836e-071bdce32d7f}">

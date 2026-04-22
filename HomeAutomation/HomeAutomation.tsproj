@@ -16,7 +16,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{F19B6445-F9FB-4350-82DA-0CB2ABA4EFAC}" Name="MainPLC" PrjFilePath="MainPLC\MainPLC.plcproj" TmcFilePath="MainPLC\MainPLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{1B77AEEB-FB48-4A02-5FDA-AB53D14BB95D}" TmcPath="MainPLC\MainPLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{38FA1698-CE7D-62C8-087C-7F1F2A3F22BD}" TmcPath="MainPLC\MainPLC.tmc">
 					<Name>MainPLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -34,6 +34,14 @@
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>MAIN.Test</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.Home.LivingRoom.ShutterR1OpenSwitch.Input</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.Home.LivingRoom.ShutterR1CloseSwitch.Input</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>

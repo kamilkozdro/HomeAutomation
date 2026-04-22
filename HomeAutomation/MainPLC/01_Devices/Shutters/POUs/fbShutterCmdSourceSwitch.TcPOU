@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterCmdSourceSwitch" Id="{c862dcf9-c651-483d-a78a-0c62d3a73fd7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceSwitch IMPLEMENTS iShutterCmdSource
-VAR_INPUT
+VAR
     OpenSwitchState : stSwitchState;
     CloseSwitchState : stSwitchState;
     ShutterStateType : eShutterStateType;
@@ -15,21 +15,6 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="FB_Init" Id="{fff114ce-5fd2-46ef-8f18-76cafa481a71}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
-METHOD FB_Init: BOOL
-VAR_INPUT
-    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="Process" Id="{bb7c2f45-924d-4762-a2d7-89765f3d0a73}">
       <Declaration><![CDATA[METHOD Process
 VAR_IN_OUT
@@ -70,6 +55,20 @@ END_IF
 
 CmdEvent.Execute := TRUE;
 CmdEvent.Source := eShutterCmdSource.SWITCH;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Run" Id="{82fd8fd7-2865-4796-a218-427d46166783}">
+      <Declaration><![CDATA[METHOD Run
+VAR_INPUT
+	OpenSwitchState : stSwitchState;
+    CloseSwitchState : stSwitchState;
+    ShutterStateType : eShutterStateType;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.OpenSwitchState := OpenSwitchState;
+THIS^.CloseSwitchState := CloseSwitchState;
+THIS^.ShutterStateType := ShutterStateType;]]></ST>
       </Implementation>
     </Method>
   </POU>
