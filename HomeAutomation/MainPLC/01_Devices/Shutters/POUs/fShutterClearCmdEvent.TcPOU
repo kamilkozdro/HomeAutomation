@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fShutterClearCmdEvent" Id="{69f85fae-a3b1-4ee7-9b9c-9af6a75f9ee6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION fShutterClearCmdEvent
+VAR_IN_OUT
+	ShutterCmdEvent : stShutterCmdEvent;
+END_VAR
+VAR CONSTANT
+	ShutterCleanCmdEvent : stShutterCmdEvent := (
+        Execute := FALSE,
+        Cmd := ( CmdType := eShutterCmdType.NONE, Position := (Height := 0, Angle := 0 ) ) );
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ShutterCmdEvent := ShutterCleanCmdEvent;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

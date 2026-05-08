@@ -28,7 +28,9 @@ VAR
 //  ----------- SHUTTER CMD SOURCES -----------
 	ShutterR1CmdEvent : stShutterCmdEvent;
 	ShutterR1CmdSwitch : fbShutterCmdSourceSwitch;
-
+	ShutterR1CmdHa : fbShutterCmdSourceHa( HaCmdEvent := gvlHA.Shutter1CmdEvent) ;
+	
+	
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -61,9 +63,15 @@ ShutterR1CloseSwitchCtrl.Run();
 ShutterR1CmdSwitch.Run( OpenSwitchState := ShutterR1OpenSwitchCtrl.State,
 						CloseSwitchState := ShutterR1CloseSwitchCtrl.State,
 						ShutterStateType := ShutterR1Act.State.StateType);
+						
+
+fShutterClearCmdEvent(ShutterCmdEvent := ShutterR1CmdEvent);
+
+ShutterR1CmdHa.Process(ShutterR1CmdEvent);
 ShutterR1CmdSwitch.Process(ShutterR1CmdEvent);
 
-ShutterR1Ctrl.Process(ShutterR1CmdEvent);]]></ST>
+ShutterR1Ctrl.Process(ShutterR1CmdEvent);
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="ShuttersClose" Id="{fb9fcdd0-daee-4038-9b3b-8a88f7bea9a5}">

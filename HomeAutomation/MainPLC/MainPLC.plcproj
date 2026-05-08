@@ -99,6 +99,9 @@
     <Compile Include="01_Devices\Shutters\POUs\fbShutterCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="01_Devices\Shutters\POUs\fShutterClearCmdEvent.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="01_Devices\Shutters\POUs\fShutterCmdSwitch.TcPOU">
       <SubType>Code</SubType>
     </Compile>
