@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="fbMonoSwitchCtrl" Id="{d36a5674-47b7-4d99-8111-38bc99505a2d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK fbMonoSwitchCtrl IMPLEMENTS iCyclic
+  <POU Name="fbSwitchCtrl" Id="{d36a5674-47b7-4d99-8111-38bc99505a2d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbSwitchCtrl IMPLEMENTS iCyclic
 VAR_OUTPUT
 	State  : stSwitchState;         // Current processed state
     PreviousState  : stSwitchState;         // Previous state
@@ -25,7 +25,7 @@ VAR
 	ClickType : eSwitchStateType := eSwitchStateType.IDLE;
 	
 END_VAR
-VAR PERSISTENT
+VAR RETAIN
 		// Counters
     TotalPresses        : UDINT := 0;          // Total number of clicks
 END_VAR

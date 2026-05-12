@@ -12,7 +12,9 @@ TYPE eShutterCmdType :
 	STEP_OPEN,		// Open by step 10%
 	STEP_CLOSE,		// Close by step 10%
     STOP,           // Stop command
-    MOVE_TO_POSITION // Move to specific position
+    MOVE_TO_POSITION, // Move to specific position
+	SAVE_POS1,
+	SAVE_POS2
 );
 END_TYPE
 ]]></Declaration>

@@ -14,7 +14,7 @@ END_VAR
 VAR CONSTANT
     PulseTime : TIME := T#200MS;
 END_VAR
-VAR PERSISTENT
+VAR RETAIN
 	RelaySet : BOOL;
 END_VAR]]></Declaration>
     <Implementation>

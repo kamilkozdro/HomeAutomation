@@ -10,7 +10,7 @@ VAR
 	TimeDiff : DINT;
 	ActiveRTrigger : R_TRIG;
 END_VAR
-VAR PERSISTENT
+VAR RETAIN
     _Enabled : BOOL := FALSE;
     _Config : stSchedulerConfig;
 END_VAR

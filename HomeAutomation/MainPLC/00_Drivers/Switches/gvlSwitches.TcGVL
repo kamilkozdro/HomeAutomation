@@ -3,7 +3,7 @@
   <GVL Name="gvlSwitches" Id="{e6e0d0e9-0431-466b-ba2e-1acdfc72ee46}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 
-VAR_GLOBAL PERSISTENT
+VAR_GLOBAL RETAIN
 	GeneralSwitchConfig : stSwitchConfig :=(ShortClickMaxTime := T#300MS,
 									ShortClickDelayTime := T#400MS,
 									LongClickMaxTime := T#1000MS);

@@ -18,7 +18,7 @@ END_VAR
 VAR CONSTANT
 	OutputCheckCycleTime: TIME := T#50MS;
 END_VAR
-VAR PERSISTENT
+VAR RETAIN
 	HeightTime: TIME := T#0S;
 	AngleTime: TIME := T#0S;
 END_VAR

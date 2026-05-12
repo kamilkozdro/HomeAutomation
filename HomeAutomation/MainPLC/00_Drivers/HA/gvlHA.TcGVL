@@ -20,7 +20,7 @@ VAR_GLOBAL
 	Shutter1EveningScheduleSet : BOOL := FALSE;
 END_VAR
 
-VAR_GLOBAL PERSISTENT
+VAR_GLOBAL RETAIN
 	
 	// Schedulers
 	ScheduleMonths   : ARRAY[1..12] OF BOOL := [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];

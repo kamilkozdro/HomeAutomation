@@ -13,17 +13,17 @@ VAR
 	ShutterR1CloseSwitch : fbMonoSwitch;
 	
 //  ----------- SWITCH CONTROLLERS -----------	
-	ShutterR1OpenSwitchCtrl : fbMonoSwitchCtrl(Switch := ShutterR1OpenSwitch,
+	ShutterR1OpenSwitchCtrl : fbSwitchCtrl(Switch := ShutterR1OpenSwitch,
 												Config := gvlSwitches.GeneralSwitchConfig);	
-	ShutterR1CloseSwitchCtrl : fbMonoSwitchCtrl(Switch := ShutterR1CloseSwitch,
+	ShutterR1CloseSwitchCtrl : fbSwitchCtrl(Switch := ShutterR1CloseSwitch,
 												Config := gvlSwitches.GeneralSwitchConfig);
 //  ----------- SHUTTER ACTUATORS -----------													
-	ShutterR1Act : fbShutterAct(OpenRelay := ShutterR1OpenRelay,
-								CloseRelay := ShutterR1CloseRelay,
-								Config := gvlShutters.ShutterR1Config);
+
 	
 //  ----------- SHUTTER CONTROLLERS -----------	
-	ShutterR1Ctrl : fbShutterCtrl(ShutterAct := ShutterR1Act);
+	ShutterR1Ctrl : fbShutterCtrl(ShutterOpenRelay := ShutterR1OpenRelay,
+									ShutterCloseRelay := ShutterR1CloseRelay,
+									ShutterConfig := gvlShutters.ShutterR1Config);
 	
 //  ----------- SHUTTER CMD SOURCES -----------
 	ShutterR1CmdEvent : stShutterCmdEvent;
@@ -62,15 +62,14 @@ ShutterR1CloseSwitchCtrl.Run();
 
 ShutterR1CmdSwitch.Run( OpenSwitchState := ShutterR1OpenSwitchCtrl.State,
 						CloseSwitchState := ShutterR1CloseSwitchCtrl.State,
-						ShutterStateType := ShutterR1Act.State.StateType);
+						ShutterStateType := ShutterR1Ctrl.CurrentState.StateType,
+						ShutterConfig := gvlShutters.ShutterR1Config);
 						
 
-fShutterClearCmdEvent(ShutterCmdEvent := ShutterR1CmdEvent);
+ShutterR1CmdHa.Process(CmdEvent := ShutterR1CmdEvent);
+ShutterR1CmdSwitch.Process(CmdEvent := ShutterR1CmdEvent);
 
-ShutterR1CmdHa.Process(ShutterR1CmdEvent);
-ShutterR1CmdSwitch.Process(ShutterR1CmdEvent);
-
-ShutterR1Ctrl.Process(ShutterR1CmdEvent);
+ShutterR1Ctrl.Run(CmdEvent := ShutterR1CmdEvent);
 ]]></ST>
       </Implementation>
     </Method>

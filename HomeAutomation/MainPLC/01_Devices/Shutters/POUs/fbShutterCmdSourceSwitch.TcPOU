@@ -6,10 +6,7 @@ VAR
     OpenSwitchState : stSwitchState;
     CloseSwitchState : stSwitchState;
     ShutterStateType : eShutterStateType;
-END_VAR
-VAR PERSISTENT
-    OpenLongClickPosition : stShutterPosition := (Height := 50, Angle := 100);
-    CloseLongClickPosition : stShutterPosition := (Height := 0, Angle := 100);
+	ShutterConfig : stShutterConfig;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -37,6 +34,12 @@ ELSIF (OpenSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (OpenSwitch
 // Double Close click
 ELSIF (CloseSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (CloseSwitchState.PressCount = 2) THEN
     CmdEvent.Cmd.CmdType := eShutterCmdType.CLOSE;
+// Triple Open click
+ELSIF (OpenSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (OpenSwitchState.PressCount = 3) THEN
+    CmdEvent.Cmd.CmdType := eShutterCmdType.SAVE_POS1;
+// Triple Close click
+ELSIF (CloseSwitchState.StateType = eSwitchStateType.MULTI_CLICK) AND (CloseSwitchState.PressCount = 3) THEN
+    CmdEvent.Cmd.CmdType := eShutterCmdType.SAVE_POS2;
 // Short Open click
 ELSIF OpenSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
     CmdEvent.Cmd.CmdType := eShutterCmdType.STEP_OPEN;
@@ -46,11 +49,11 @@ ELSIF CloseSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
 // Long Open click
 ELSIF OpenSwitchState.StateType = eSwitchStateType.LONG_CLICK THEN
     CmdEvent.Cmd.CmdType := eShutterCmdType.MOVE_TO_POSITION;
-    CmdEvent.Cmd.Position := OpenLongClickPosition;
+    CmdEvent.Cmd.Position := ShutterConfig.SavedPosition1;
 // Long Close click
 ELSIF CloseSwitchState.StateType = eSwitchStateType.LONG_CLICK THEN
     CmdEvent.Cmd.CmdType := eShutterCmdType.MOVE_TO_POSITION;
-    CmdEvent.Cmd.Position := CloseLongClickPosition;
+    CmdEvent.Cmd.Position := ShutterConfig.SavedPosition2;
 END_IF
 
 CmdEvent.Execute := TRUE;
@@ -63,12 +66,14 @@ VAR_INPUT
 	OpenSwitchState : stSwitchState;
     CloseSwitchState : stSwitchState;
     ShutterStateType : eShutterStateType;
+	ShutterConfig : stShutterConfig;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.OpenSwitchState := OpenSwitchState;
 THIS^.CloseSwitchState := CloseSwitchState;
-THIS^.ShutterStateType := ShutterStateType;]]></ST>
+THIS^.ShutterStateType := ShutterStateType;
+THIS^.ShutterConfig := ShutterConfig;]]></ST>
       </Implementation>
     </Method>
   </POU>

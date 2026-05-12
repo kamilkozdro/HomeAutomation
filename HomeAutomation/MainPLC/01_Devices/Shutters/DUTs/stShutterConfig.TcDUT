@@ -6,6 +6,8 @@ STRUCT
     HeightTravelTime : TIME := T#30S;			// Time for full open/close vertical movement
 	AngleTravelTime : TIME := T#3S;			// Time for fins to make full rotation
 	HeightTravelTimeOverstep : TIME := T#500MS;		// High state output signal time allowed to be maintain after reaching full open position
+	SavedPosition1 : stShutterPosition;
+	SavedPosition2 : stShutterPosition;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

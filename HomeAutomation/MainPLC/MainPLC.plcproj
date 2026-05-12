@@ -53,7 +53,7 @@
     <Compile Include="00_Drivers\Switches\POUs\fbMonoSwitch.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="00_Drivers\Switches\POUs\fbMonoSwitchCtrl.TcPOU">
+    <Compile Include="00_Drivers\Switches\POUs\fbSwitchCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Devices\Shutters\DUTs\eShutterCmdSource.TcDUT">
