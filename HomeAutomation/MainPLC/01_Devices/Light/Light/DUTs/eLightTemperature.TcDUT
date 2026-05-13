@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="eLightTemperature" Id="{5d20d888-4a19-456f-8a97-f7a4b57f15fc}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eLightTemperature :
+(
+	WARM,
+	NEUTRAL,
+	COLD
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

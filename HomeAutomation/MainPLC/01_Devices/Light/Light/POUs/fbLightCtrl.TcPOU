@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbLightCtrl" Id="{f48d238b-7380-457c-b942-fe12e57d6263}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbLightCtrl
+VAR_INPUT
+	LightRelay : iRelay;
+	Cmd : stLightCmd;
+	Smoothing : BOOL;
+END_VAR
+VAR_OUTPUT
+	State : stLightState;
+END_VAR
+VAR
+END_VAR
+VAR RETAIN
+	SavedState : stLightState;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

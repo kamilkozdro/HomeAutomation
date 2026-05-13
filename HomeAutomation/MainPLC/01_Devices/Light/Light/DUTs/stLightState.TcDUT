@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stLightState" Id="{90c9e709-c995-434d-b1ec-c79b08482bcc}">
+    <Declaration><![CDATA[TYPE stLightState :
+STRUCT
+	On : BOOL;
+	Color : stLightColor;
+	Temperature : eLightTemperature;
+	Brightness : USINT;		// 0 - 100%
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

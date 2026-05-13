@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stLightCmd" Id="{b3ebb80a-5323-4b41-8ea8-2a1f2cbf09f2}">
+    <Declaration><![CDATA[TYPE stLightCmd :
+STRUCT
+	Execute : BOOL;
+	TargetState : stLightState;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
