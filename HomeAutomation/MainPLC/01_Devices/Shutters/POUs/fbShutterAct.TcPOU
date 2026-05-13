@@ -4,13 +4,14 @@
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterAct
 VAR_INPUT
 	Config :  stShutterConfig;
+	OpenRelay : iRelay;
+	CloseRelay : iRelay;
 END_VAR
 VAR_OUTPUT
 	State : stShutterState;
 END_VAR
 VAR_IN_OUT
-	OpenRelay : iRelay;
-	CloseRelay : iRelay;
+
 END_VAR
 VAR
 	CmdOpen : BOOL;

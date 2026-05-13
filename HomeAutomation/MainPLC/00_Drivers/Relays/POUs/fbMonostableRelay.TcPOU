@@ -27,13 +27,6 @@ END_VAR
         <ST><![CDATA[RelayOutput := FALSE;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Run" Id="{3eef12b4-8e4a-46ec-a554-50b030cb8301}">
-      <Declaration><![CDATA[METHOD Run
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="Set" Id="{8b890796-e473-4154-bfe5-d2bb589f8e04}">
       <Declaration><![CDATA[METHOD Set
 ]]></Declaration>

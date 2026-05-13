@@ -2,31 +2,21 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterCmdSourceHa" Id="{bea2cbb9-d6f5-424c-a4c2-d3e45d744a98}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceHa IMPLEMENTS iShutterCmdSource
-VAR
-	HaCmdEvent : REFERENCE TO stShutterCmdEvent;
+VAR_IN_OUT
+	HaCmdEvent : stShutterCmdEvent;
 END_VAR
-]]></Declaration>
+VAR
+	HaCmdCache : stShutterCmdEvent;
+END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[HaCmdCache := HaCmdEvent;
+
+IF HaCmdEvent.Execute THEN
+	HaCmdEvent.Execute := FALSE;
+END_IF
 
 ]]></ST>
     </Implementation>
-    <Method Name="FB_Init" Id="{1ca06f7b-a527-452b-b8c9-d0eb45c85ff4}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
-METHOD FB_Init: BOOL
-VAR_INPUT
-    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
-	HaCmdEvent : REFERENCE TO stShutterCmdEvent; 
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.HaCmdEvent REF= HaCmdEvent;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="Process" Id="{577ae5fb-79da-4adc-9275-af801257441c}">
       <Declaration><![CDATA[METHOD Process
 VAR_IN_OUT
@@ -34,10 +24,10 @@ VAR_IN_OUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF HaCmdEvent.Execute THEN
-	CmdEvent := HaCmdEvent;
+        <ST><![CDATA[IF HaCmdCache.Execute THEN
+	CmdEvent := HaCmdCache;
 	CmdEvent.Source := eShutterCmdSource.HA;
-	HaCmdEvent.Execute := FALSE;
+	HaCmdCache.Execute := FALSE;
 END_IF
 
 ]]></ST>

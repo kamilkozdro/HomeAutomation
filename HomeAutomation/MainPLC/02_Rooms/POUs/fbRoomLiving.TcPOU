@@ -13,27 +13,43 @@ VAR
 	ShutterR1CloseSwitch : fbMonoSwitch;
 	
 //  ----------- SWITCH CONTROLLERS -----------	
-	ShutterR1OpenSwitchCtrl : fbSwitchCtrl(Switch := ShutterR1OpenSwitch,
-												Config := gvlSwitches.GeneralSwitchConfig);	
-	ShutterR1CloseSwitchCtrl : fbSwitchCtrl(Switch := ShutterR1CloseSwitch,
-												Config := gvlSwitches.GeneralSwitchConfig);
-//  ----------- SHUTTER ACTUATORS -----------													
+	ShutterR1OpenSwitchCtrl : fbSwitchCtrl;	
+	ShutterR1CloseSwitchCtrl : fbSwitchCtrl;												
 
 	
 //  ----------- SHUTTER CONTROLLERS -----------	
-	ShutterR1Ctrl : fbShutterCtrl(ShutterOpenRelay := ShutterR1OpenRelay,
-									ShutterCloseRelay := ShutterR1CloseRelay,
-									ShutterConfig := gvlShutters.ShutterR1Config);
+	ShutterR1Ctrl : fbShutterCtrl;
 	
 //  ----------- SHUTTER CMD SOURCES -----------
 	ShutterR1CmdEvent : stShutterCmdEvent;
 	ShutterR1CmdSwitch : fbShutterCmdSourceSwitch;
-	ShutterR1CmdHa : fbShutterCmdSourceHa( HaCmdEvent := gvlHA.Shutter1CmdEvent) ;
+	ShutterR1CmdHa : fbShutterCmdSourceHa;
 	
 	
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[ShutterR1OpenSwitch();
+ShutterR1CloseSwitch();
+
+ShutterR1OpenSwitchCtrl(Switch := ShutterR1OpenSwitch,
+						Config := gvlSwitches.GeneralSwitchConfig);
+ShutterR1CloseSwitchCtrl(Switch := ShutterR1CloseSwitch,
+						Config := gvlSwitches.GeneralSwitchConfig);
+
+ShutterR1CmdSwitch( OpenSwitchState := ShutterR1OpenSwitchCtrl.State,
+						CloseSwitchState := ShutterR1CloseSwitchCtrl.State,
+						ShutterStateType := ShutterR1Ctrl.CurrentState.StateType,
+						ShutterConfig := gvlShutters.ShutterR1Config);
+ShutterR1CmdSwitch.Process(CmdEvent := ShutterR1CmdEvent);
+
+ShutterR1CmdHa( HaCmdEvent := gvlHA.Shutter1CmdEvent) ;
+ShutterR1CmdHa.Process(CmdEvent := ShutterR1CmdEvent);
+
+ShutterR1Ctrl(ShutterOpenRelay := ShutterR1OpenRelay,
+			ShutterCloseRelay := ShutterR1CloseRelay,
+			ShutterConfig := gvlShutters.ShutterR1Config,
+			CmdEvent := ShutterR1CmdEvent);
+]]></ST>
     </Implementation>
     <Method Name="LightsOff" Id="{262cd78d-a037-4ac4-890b-0001e3f12830}">
       <Declaration><![CDATA[METHOD LightsOff
@@ -51,25 +67,6 @@ END_VAR]]></Declaration>
         <ST><![CDATA[// Light1Ctrl.TurnOn();
 // Light2Ctrl.TurnOn();
 // Light3Ctrl.TurnOn();]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Run" Id="{e60a7814-3820-497e-913d-a9707cb1e27b}">
-      <Declaration><![CDATA[METHOD Run
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[ShutterR1OpenSwitchCtrl.Run();
-ShutterR1CloseSwitchCtrl.Run();
-
-ShutterR1CmdSwitch.Run( OpenSwitchState := ShutterR1OpenSwitchCtrl.State,
-						CloseSwitchState := ShutterR1CloseSwitchCtrl.State,
-						ShutterStateType := ShutterR1Ctrl.CurrentState.StateType,
-						ShutterConfig := gvlShutters.ShutterR1Config);
-
-ShutterR1CmdHa.Process(CmdEvent := ShutterR1CmdEvent);
-ShutterR1CmdSwitch.Process(CmdEvent := ShutterR1CmdEvent);
-
-ShutterR1Ctrl.Run(CmdEvent := ShutterR1CmdEvent);
-]]></ST>
       </Implementation>
     </Method>
     <Method Name="ShuttersClose" Id="{fb9fcdd0-daee-4038-9b3b-8a88f7bea9a5}">

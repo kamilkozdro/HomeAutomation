@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="iSwitch" Id="{2b8cdf8a-a619-4e44-ba18-5ff28feae6d7}">
-    <Declaration><![CDATA[INTERFACE iSwitch EXTENDS iCyclic
+    <Declaration><![CDATA[INTERFACE iSwitch
 ]]></Declaration>
     <Property Name="IsPressed" Id="{36296afe-da41-4462-99a5-b93534c8f214}">
       <Declaration><![CDATA[PROPERTY IsPressed : BOOL]]></Declaration>
@@ -27,9 +27,5 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="Run" Id="{a6a3fed1-6ca3-4330-a22a-d28587d6b2b0}">
-      <Declaration><![CDATA[METHOD Run
-]]></Declaration>
-    </Method>
   </Itf>
 </TcPlcObject>

@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterCmdSourceSwitch" Id="{c862dcf9-c651-483d-a78a-0c62d3a73fd7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCmdSourceSwitch IMPLEMENTS iShutterCmdSource
-VAR
+VAR_INPUT
     OpenSwitchState : stSwitchState;
     CloseSwitchState : stSwitchState;
     ShutterStateType : eShutterStateType;
@@ -58,22 +58,6 @@ END_IF
 
 CmdEvent.Execute := TRUE;
 CmdEvent.Source := eShutterCmdSource.SWITCH;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Run" Id="{82fd8fd7-2865-4796-a218-427d46166783}">
-      <Declaration><![CDATA[METHOD Run
-VAR_INPUT
-	OpenSwitchState : stSwitchState;
-    CloseSwitchState : stSwitchState;
-    ShutterStateType : eShutterStateType;
-	ShutterConfig : stShutterConfig;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.OpenSwitchState := OpenSwitchState;
-THIS^.CloseSwitchState := CloseSwitchState;
-THIS^.ShutterStateType := ShutterStateType;
-THIS^.ShutterConfig := ShutterConfig;]]></ST>
       </Implementation>
     </Method>
   </POU>

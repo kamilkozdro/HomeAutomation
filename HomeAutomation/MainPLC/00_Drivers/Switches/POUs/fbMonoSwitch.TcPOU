@@ -9,7 +9,7 @@ VAR
     PrevInput : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[PrevInput := Input;]]></ST>
     </Implementation>
     <Property Name="IsPressed" Id="{3ddc41e3-a43a-457c-8835-114dca2b3407}">
       <Declaration><![CDATA[PROPERTY IsPressed : BOOL]]></Declaration>
@@ -55,12 +55,5 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="Run" Id="{7422b2f4-7f4f-45bd-b767-cf5626bace0a}">
-      <Declaration><![CDATA[METHOD Run
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[PrevInput := Input;]]></ST>
-      </Implementation>
-    </Method>
   </POU>
 </TcPlcObject>

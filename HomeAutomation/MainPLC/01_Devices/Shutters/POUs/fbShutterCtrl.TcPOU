@@ -2,7 +2,10 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterCtrl" Id="{f0ca0ac4-2fc3-4b9b-9b38-c97d3aa4583e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbShutterCtrl
-
+VAR_INPUT
+	ShutterOpenRelay : iRelay;
+	ShutterCloseRelay : iRelay;
+END_VAR
 VAR_OUTPUT
 	// Commands exposed as read only in OUTPUT and not as Property.Get
 	// TwinCAT doesn't allow access to copied structure members in Property.Get, only when passed by REF (Not read only). 
@@ -11,11 +14,11 @@ VAR_OUTPUT
 	PreviousCommand : stShutterCmd;
 	CurrentState : stShutterState;
 END_VAR
+VAR_IN_OUT
+	ShutterConfig : stShutterConfig;
+	CmdEvent : stShutterCmdEvent;
+END_VAR
 VAR
-	ShutterOpenRelay : iRelay;
-	ShutterCloseRelay : iRelay;
-	ShutterConfig : REFERENCE TO stShutterConfig;
-
 	ShutterAct : fbShutterAct;
 								
 	MovingToPosition : BOOL := FALSE;
@@ -31,36 +34,7 @@ VAR CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
-    </Implementation>
-    <Method Name="FB_Init" Id="{dc7607a4-407d-4d2f-a395-87e7bfbb24f9}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
-METHOD FB_Init: BOOL
-VAR_INPUT
-    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)  
-
-	ShutterOpenRelay : iRelay;
-	ShutterCloseRelay : iRelay;
-	ShutterConfig : REFERENCE TO stShutterConfig; 
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.ShutterOpenRelay  := ShutterOpenRelay;
-THIS^.ShutterCloseRelay := ShutterCloseRelay;
-THIS^.ShutterConfig REF= ShutterConfig;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Run" Id="{6e679eb3-0260-4e28-9d37-b44860f97657}">
-      <Declaration><![CDATA[METHOD Run
-VAR_IN_OUT
-	CmdEvent : stShutterCmdEvent;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[(* 
+      <ST><![CDATA[(* 
 	Shutter Controller Function Block
 	
 	100 - fully open position/angle
@@ -161,7 +135,6 @@ ShutterAct(OpenRelay := ShutterOpenRelay,
 			Config := ShutterConfig);
 CurrentState := ShutterAct.State;
 CmdEvent := ShutterCleanCmdEvent;]]></ST>
-      </Implementation>
-    </Method>
+    </Implementation>
   </POU>
 </TcPlcObject>

@@ -20,34 +20,7 @@ VAR RETAIN
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
-    </Implementation>
-    <Property Name="IsSet" Id="{c31de52c-601a-4de2-9ac8-9f8bfedf0563}">
-      <Declaration><![CDATA[{warning 'Add property implementation'}
-PROPERTY IsSet : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{9d09fda1-2f39-4c3c-8790-750d752761be}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[IsSet := RelaySet;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Method Name="Reset" Id="{cad43598-7528-4a0d-9bc6-4e05f8803093}">
-      <Declaration><![CDATA[{warning 'Add method implementation '}
-METHOD Reset
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[CmdReset := TRUE;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Run" Id="{08493ca8-6235-46e1-91fc-35951c84eded}">
-      <Declaration><![CDATA[METHOD Run
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[// Interlock commands
+      <ST><![CDATA[// Interlock commands
 IF CmdReset THEN
 	CmdSet := FALSE;
 	RelaySet := FALSE;
@@ -68,6 +41,26 @@ RelayResetOutput := ResetPulseTP.Q;
 CmdSet := FALSE;
 CmdReset := FALSE;
 ]]></ST>
+    </Implementation>
+    <Property Name="IsSet" Id="{c31de52c-601a-4de2-9ac8-9f8bfedf0563}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY IsSet : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{9d09fda1-2f39-4c3c-8790-750d752761be}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsSet := RelaySet;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{cad43598-7528-4a0d-9bc6-4e05f8803093}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CmdReset := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Set" Id="{276ef09e-4879-413f-bd8a-3a7e49269787}">

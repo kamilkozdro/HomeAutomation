@@ -18,7 +18,24 @@ VAR RETAIN
 	RelaySet : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[(* 
+	NOTE:
+	After power reset, state of the relay is unknown and RelaySet variable may keep wrong value. 
+	If RelaySet doesn't reflect the actual, physical state of relay, methods Reset() and Set() will have reverse effect.
+	
+	POSSIBLE SOLUTIONS:
+	- relay state feedback as physical input signal
+	- additional variable/method to toggle RelaySet without changing physical output RelayOutput
+		implemented ToggleVirtualState(Execute : BOOL)
+*)
+
+PulseTP(IN := PulseReq, PT := PulseTime);
+RelayOutput := PulseTP.Q;
+
+IF PulseReq AND PulseTP.Q THEN
+	RelaySet := NOT RelaySet;
+	PulseReq := FALSE;
+END_IF]]></ST>
     </Implementation>
     <Property Name="IsSet" Id="{6eb00f3d-c6aa-447e-be14-295ed0b97da3}">
       <Declaration><![CDATA[{warning 'Add property implementation'}
@@ -40,30 +57,6 @@ METHOD Reset
       <Implementation>
         <ST><![CDATA[IF RelaySet THEN
 	PulseReq := TRUE;	
-END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Run" Id="{6c4f1e2d-5b6d-4b86-9c8f-d86396793c39}">
-      <Declaration><![CDATA[METHOD Run
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[(* 
-	NOTE:
-	After power reset, state of the relay is unknown and RelaySet variable may keep wrong value. 
-	If RelaySet doesn't reflect the actual, physical state of relay, methods Reset() and Set() will have reverse effect.
-	
-	POSSIBLE SOLUTIONS:
-	- relay state feedback as physical input signal
-	- additional variable/method to toggle RelaySet without changing physical output RelayOutput
-		implemented ToggleVirtualState(Execute : BOOL)
-*)
-
-PulseTP(IN := PulseReq, PT := PulseTime);
-RelayOutput := PulseTP.Q;
-
-IF PulseReq AND PulseTP.Q THEN
-	RelaySet := NOT RelaySet;
-	PulseReq := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
