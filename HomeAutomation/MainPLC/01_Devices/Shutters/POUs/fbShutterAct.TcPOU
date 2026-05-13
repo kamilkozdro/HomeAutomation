@@ -1,15 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbShutterAct" Id="{1ba23f45-b0eb-421e-9a3b-6a879c5afe8f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterAct IMPLEMENTS iCyclic
+    <Declaration><![CDATA[FUNCTION_BLOCK fbShutterAct
+VAR_INPUT
+	Config :  stShutterConfig;
+END_VAR
 VAR_OUTPUT
 	State : stShutterState;
 END_VAR
-VAR
+VAR_IN_OUT
 	OpenRelay : iRelay;
 	CloseRelay : iRelay;
-	Config : stShutterConfig;
-	
+END_VAR
+VAR
 	CmdOpen : BOOL;
 	CmdClose : BOOL;
 	OutputCheckTimer : TON;
@@ -24,50 +27,7 @@ VAR RETAIN
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
-    </Implementation>
-    <Method Name="Close" Id="{f613d1a9-dcd5-4ce8-bd35-546352718445}">
-      <Declaration><![CDATA[METHOD Close
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[CmdOpen := FALSE;
-CmdClose := TRUE;
-]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="FB_Init" Id="{31ec02a0-b2ce-4a63-8d95-fa90f757f01c}">
-      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
-//The return value is not evaluated. For a specific influence, you can also declare the
-//methods explicitly and provide additional code there with the standard initialization
-//code. You can evaluate the return value.
-METHOD FB_Init: BOOL
-VAR_INPUT
-    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
-    OpenRelay    : iRelay;
-    CloseRelay   : iRelay;
-	Config : stShutterConfig;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.OpenRelay  := OpenRelay;
-THIS^.CloseRelay := CloseRelay;
-THIS^.Config := Config;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Open" Id="{1dda91e8-cd15-4a31-9096-5e1a4c5f89a9}">
-      <Declaration><![CDATA[METHOD Open
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[CmdClose := FALSE;
-CmdOpen := TRUE;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Run" Id="{530f447f-e27e-4b87-afdb-fd9d052d51f4}">
-      <Declaration><![CDATA[METHOD Run
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[
+      <ST><![CDATA[
 // Both signals must not be set at the same time
 IF CmdOpen AND CmdClose THEN
 	CmdOpen := FALSE;
@@ -128,6 +88,22 @@ State.Position.Height := TimeToPosition(CurrentPosTime := HeightTime, TravelTime
 State.Position.Angle := TimeToPosition(CurrentPosTime := AngleTime, TravelTime := Config.AngleTravelTime);
 
 ]]></ST>
+    </Implementation>
+    <Method Name="Close" Id="{f613d1a9-dcd5-4ce8-bd35-546352718445}">
+      <Declaration><![CDATA[METHOD Close
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CmdOpen := FALSE;
+CmdClose := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open" Id="{1dda91e8-cd15-4a31-9096-5e1a4c5f89a9}">
+      <Declaration><![CDATA[METHOD Open
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CmdClose := FALSE;
+CmdOpen := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Stop" Id="{17cc93a3-e742-4197-a775-db53f236a55d}">

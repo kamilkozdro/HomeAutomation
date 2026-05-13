@@ -1,12 +1,207 @@
 <?xml version="1.0"?>
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.20">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{F8A2502F-F9E4-13AD-1AA7-B1A866EDDB08}" AutoDeleteType="true">stSchedulerConfig</Name>
+			<BitSize>352</BitSize>
+			<SubItem>
+				<Name>WeekDays</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>7</Elements>
+				</ArrayInfo>
+				<Comment><![CDATA[ 1=Sunday ... 7=Saturday]]></Comment>
+				<BitSize>56</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Months</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>12</Elements>
+				</ArrayInfo>
+				<Comment><![CDATA[ 1=January ... 12=December]]></Comment>
+				<BitSize>96</BitSize>
+				<BitOffs>56</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Times</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000004B}">TIME_OF_DAY</Type>
+				<ArrayInfo>
+					<LBound>1</LBound>
+					<Elements>6</Elements>
+				</ArrayInfo>
+				<BitSize>192</BitSize>
+				<BitOffs>160</BitOffs>
+				<Default>
+					<SubItem>
+						<Name>[1]</Name>
+						<DateTime>TOD#00:00</DateTime>
+					</SubItem>
+					<SubItem>
+						<Name>[2]</Name>
+						<DateTime>TOD#00:00</DateTime>
+					</SubItem>
+					<SubItem>
+						<Name>[3]</Name>
+						<DateTime>TOD#00:00</DateTime>
+					</SubItem>
+					<SubItem>
+						<Name>[4]</Name>
+						<DateTime>TOD#00:00</DateTime>
+					</SubItem>
+					<SubItem>
+						<Name>[5]</Name>
+						<DateTime>TOD#00:00</DateTime>
+					</SubItem>
+					<SubItem>
+						<Name>[6]</Name>
+						<DateTime>TOD#00:00</DateTime>
+					</SubItem>
+				</Default>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{B2C1CEBE-6B42-0EDD-4D57-E542FA08420B}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..12] OF BOOL</Name>
+			<BitSize>96</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>12</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{D6AB1CC4-F58C-73FF-0C57-1EC90BFEFDDB}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..7] OF BOOL</Name>
+			<BitSize>56</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>7</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{05045571-B4F8-7BB7-297C-179B5BFAACDE}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..6] OF TIME_OF_DAY</Name>
+			<BitSize>192</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-00000000004B}">TIME_OF_DAY</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>6</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{DD1BDFB2-1715-6D6E-E5DB-12612C845810}" AutoDeleteType="true">stSwitchConfig</Name>
+			<BitSize>96</BitSize>
+			<SubItem>
+				<Name>ShortClickMaxTime</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[ Max time for short click]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+				<Default>
+					<DateTime>T#300MS</DateTime>
+				</Default>
+			</SubItem>
+			<SubItem>
+				<Name>ShortClickDelayTime</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[ Max time between short clicks]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+				<Default>
+					<DateTime>T#300MS</DateTime>
+				</Default>
+			</SubItem>
+			<SubItem>
+				<Name>LongClickMaxTime</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[ Max time for long click]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+				<Default>
+					<DateTime>T#1000MS</DateTime>
+				</Default>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{9A277E73-49A5-7302-A39D-590AB8BFD1BB}" AutoDeleteType="true">stShutterPosition</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Height</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<Comment><![CDATA[ Current position [%] (0=closed, 100=open)]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>0</BitOffs>
+				<Default>
+					<Value>0</Value>
+				</Default>
+			</SubItem>
+			<SubItem>
+				<Name>Angle</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<Comment><![CDATA[ Current angle [%] (0=closed, 100=open)]]></Comment>
+				<BitSize>8</BitSize>
+				<BitOffs>8</BitOffs>
+				<Default>
+					<Value>0</Value>
+				</Default>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{7082DDC0-EAC4-0AAA-467D-5EF5D140240B}" AutoDeleteType="true">stShutterConfig</Name>
+			<BitSize>128</BitSize>
+			<SubItem>
+				<Name>HeightTravelTime</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[ Time for full open/close vertical movement]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+				<Default>
+					<DateTime>T#30S</DateTime>
+				</Default>
+			</SubItem>
+			<SubItem>
+				<Name>AngleTravelTime</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[ Time for fins to make full rotation]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+				<Default>
+					<DateTime>T#3S</DateTime>
+				</Default>
+			</SubItem>
+			<SubItem>
+				<Name>HeightTravelTimeOverstep</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000048}">TIME</Type>
+				<Comment><![CDATA[ High state output signal time allowed to be maintain after reaching full open position]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+				<Default>
+					<DateTime>T#500MS</DateTime>
+				</Default>
+			</SubItem>
+			<SubItem>
+				<Name>SavedPosition1</Name>
+				<Type GUID="{9A277E73-49A5-7302-A39D-590AB8BFD1BB}">stShutterPosition</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SavedPosition2</Name>
+				<Type GUID="{9A277E73-49A5-7302-A39D-590AB8BFD1BB}">stShutterPosition</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>112</BitOffs>
+			</SubItem>
+		</DataType>
+	</DataTypes>
 	<ImageDatas>
 		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1001">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1002">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1003">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{60DFE250-D89B-41ED-8675-DFD11DB367AE}" TargetNetId="192.168.1.99.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
+	<Project ProjectGUID="{60DFE250-D89B-41ED-8675-DFD11DB367AE}" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
 			<Tasks>
 				<Task Id="3" Priority="20" CycleTime="500000" AmsPort="350" AdtTasks="true">
@@ -16,11 +211,23 @@
 		</System>
 		<Plc>
 			<Project GUID="{F19B6445-F9FB-4350-82DA-0CB2ABA4EFAC}" Name="MainPLC" PrjFilePath="MainPLC\MainPLC.plcproj" TmcFilePath="MainPLC\MainPLC.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{72EBF8C5-850A-25AC-568E-2F268AA650E7}" TmcPath="MainPLC\MainPLC.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{4519804E-ACC5-0D65-E714-4C1232E2D08F}" TmcPath="MainPLC\MainPLC.tmc">
 					<Name>MainPLC Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="8" AreaNo="4">
 						<Name>PlcTask Retains</Name>
+						<Var>
+							<Name>MAIN.Home.LivingRoom.ShutterR1OpenSwitchCtrl.TotalPresses</Name>
+							<Comment><![CDATA[ Total number of clicks]]></Comment>
+							<Type>UDINT</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>MAIN.Home.LivingRoom.ShutterR1CloseSwitchCtrl.TotalPresses</Name>
+							<Comment><![CDATA[ Total number of clicks]]></Comment>
+							<Type>UDINT</Type>
+							<InOut>7</InOut>
+						</Var>
 						<Var>
 							<Name>MAIN.Home.LivingRoom.ShutterR1Ctrl.ShutterAct.HeightTime</Name>
 							<Type>TIME</Type>
@@ -29,6 +236,57 @@
 						<Var>
 							<Name>MAIN.Home.LivingRoom.ShutterR1Ctrl.ShutterAct.AngleTime</Name>
 							<Type>TIME</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlScheduler.Shutter1MorningScheduler._Enabled</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlScheduler.Shutter1MorningScheduler._Config</Name>
+							<Type GUID="{F8A2502F-F9E4-13AD-1AA7-B1A866EDDB08}">stSchedulerConfig</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlScheduler.Shutter1EveningScheduler._Enabled</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlScheduler.Shutter1EveningScheduler._Config</Name>
+							<Type GUID="{F8A2502F-F9E4-13AD-1AA7-B1A866EDDB08}">stSchedulerConfig</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlHA.ScheduleMonths</Name>
+							<Comment><![CDATA[ Schedulers]]></Comment>
+							<Type GUID="{B2C1CEBE-6B42-0EDD-4D57-E542FA08420B}">ARRAY [1..12] OF BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlHA.ScheduleWeekDays</Name>
+							<Type GUID="{D6AB1CC4-F58C-73FF-0C57-1EC90BFEFDDB}">ARRAY [1..7] OF BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlHA.ScheduleTimes</Name>
+							<Type GUID="{05045571-B4F8-7BB7-297C-179B5BFAACDE}">ARRAY [1..6] OF TIME_OF_DAY</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlHA.Shutter1EveningScheduleConfig</Name>
+							<Type GUID="{F8A2502F-F9E4-13AD-1AA7-B1A866EDDB08}">stSchedulerConfig</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlSwitches.GeneralSwitchConfig</Name>
+							<Type GUID="{DD1BDFB2-1715-6D6E-E5DB-12612C845810}">stSwitchConfig</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>gvlShutters.ShutterR1Config</Name>
+							<Type GUID="{7082DDC0-EAC4-0AAA-467D-5EF5D140240B}">stShutterConfig</Type>
 							<InOut>7</InOut>
 						</Var>
 					</Vars>
@@ -45,10 +303,6 @@
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>MAIN.Test</Name>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>MAIN.Home.LivingRoom.ShutterR1OpenSwitch.Input</Name>
 							<Type>BOOL</Type>
@@ -80,6 +334,13 @@
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2026-05-13T08:14:07">
+						<OwnerA Name="InputDst" Prefix="TIPC^MainPLC^MainPLC Instance" Type="1">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1100)^Term 5 (EL1008)">
+								<Link VarA="MAIN.Test" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<Contexts>
 						<Context>
 							<Id>0</Id>
@@ -98,7 +359,7 @@
 			</Project>
 		</Plc>
 		<Io>
-			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="192.168.1.94.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2">
+			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="192.168.1.94.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2" SimulationMode="true">
 				<Name>Device 1 (EtherCAT)</Name>
 				<AddressInfo>
 					<Pnp>
@@ -968,12 +1229,4 @@
 			</Device>
 		</Io>
 	</Project>
-	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
-		<OwnerA Name="TIPC^MainPLC^MainPLC Instance">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 4 (EK1100)^Term 5 (EL1008)">
-				<Link VarA="PlcTask Inputs^MAIN.Test" VarB="Channel 1^Input"/>
-			</OwnerB>
-		</OwnerA>
-	</Mappings>
 </TcSmProject>

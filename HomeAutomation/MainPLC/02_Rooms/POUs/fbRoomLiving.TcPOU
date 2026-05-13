@@ -64,7 +64,6 @@ ShutterR1CmdSwitch.Run( OpenSwitchState := ShutterR1OpenSwitchCtrl.State,
 						CloseSwitchState := ShutterR1CloseSwitchCtrl.State,
 						ShutterStateType := ShutterR1Ctrl.CurrentState.StateType,
 						ShutterConfig := gvlShutters.ShutterR1Config);
-						
 
 ShutterR1CmdHa.Process(CmdEvent := ShutterR1CmdEvent);
 ShutterR1CmdSwitch.Process(CmdEvent := ShutterR1CmdEvent);
