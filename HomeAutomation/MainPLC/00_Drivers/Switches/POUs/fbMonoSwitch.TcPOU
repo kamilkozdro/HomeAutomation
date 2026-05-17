@@ -6,10 +6,12 @@ VAR_INPUT
 	Input AT %I* : BOOL;
 END_VAR					// Physical switch input
 VAR
-    PrevInput : BOOL;
+	RTrigInput : R_TRIG;
+	FTrigInput : F_TRIG;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[PrevInput := Input;]]></ST>
+      <ST><![CDATA[RTrigInput(CLK := Input);
+FTrigInput(CLK := Input);]]></ST>
     </Implementation>
     <Property Name="IsPressed" Id="{3ddc41e3-a43a-457c-8835-114dca2b3407}">
       <Declaration><![CDATA[PROPERTY IsPressed : BOOL]]></Declaration>
@@ -40,7 +42,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[OnPressed := Input AND NOT PrevInput;]]></ST>
+          <ST><![CDATA[OnPressed := RTrigInput.Q;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -51,7 +53,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[OnReleased := NOT Input AND PrevInput;]]></ST>
+          <ST><![CDATA[OnReleased := FTrigInput.Q;]]></ST>
         </Implementation>
       </Get>
     </Property>
