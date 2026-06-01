@@ -2,22 +2,85 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="fbLightCtrl" Id="{f48d238b-7380-457c-b942-fe12e57d6263}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbLightCtrl
+
 VAR_INPUT
 	LightRelay : iRelay;
-	Cmd : stLightCmd;
+	Config : stLightConfig;
 	Smoothing : BOOL;
 END_VAR
 VAR_OUTPUT
 	State : stLightState;
+	Brightness : USINT;
+END_VAR
+VAR_IN_OUT
+	Cmd : stLightCmd;
 END_VAR
 VAR
+	TargetState : stLightState;
+    BrightnessStep : USINT;
+	CyclicTON : TON;
+END_VAR
+VAR CONSTANT
+    CycleTime : TIME := T#50MS;
+	BrightnessMaxValue : USINT := 100;
+	CleanState : stLightState := (
+        On := FALSE,
+        Color := (Red := 255, Green := 255, Blue := 255),
+        Temperature := eLightTemperature.NEUTRAL,
+        Brightness := 0 );
 END_VAR
 VAR RETAIN
-	SavedState : stLightState;
+	SavedState : stLightState := CleanState;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[
+IF Cmd.Execute THEN
+	TargetState := Cmd.TargetState;
+END_IF
+
+// Turn on light
+IF NOT State.On AND TargetState.On THEN
+	LightRelay.Set();
+END_IF
+
+BrightnessStep := BrightnessMaxValue / UDINT_TO_USINT( TIME_TO_UDINT(Config.BrightnessSmoothTime) / TIME_TO_UDINT(CycleTime));
+CyclicTON(IN := TRUE, PT := CycleTime);
+IF CyclicTON.Q THEN
+	
+	
+
+	IF State.Brightness < TargetState.Brightness THEN
+		Brightness := Brightness + BrightnessStep;
+	END_IF
+	IF State.Brightness > TargetState.Brightness THEN
+		Brightness := Brightness - BrightnessStep;
+	END_IF
+	
+	CyclicTON(IN := FALSE);
+END_IF
+
+// Turn off light
+IF State.On AND NOT TargetState.On THEN
+	LightRelay.Reset();
+END_IF
+
+// Change Temperature
+IF State.Temperature <> TargetState.Temperature THEN
+	State.Temperature := TargetState.Temperature;
+END_IF
+
+// Change Color
+IF State.Color.Blue <> TargetState.Color.Blue THEN
+	State.Color.Blue := TargetState.Color.Blue;
+END_IF
+IF State.Color.Red <> TargetState.Color.Red THEN
+	State.Color.Red := TargetState.Color.Red;
+END_IF
+IF State.Color.Green <> TargetState.Color.Green THEN
+	State.Color.Green := TargetState.Color.Green;
+END_IF
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

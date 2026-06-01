@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbStepToTarget" Id="{139c758d-a096-42f2-b819-2ba7838a396f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbStepToTarget
+VAR_INPUT
+    TargetVal : REAL;
+    StepVal : REAL;
+    CycleTime : TIME;
+END_VAR
+VAR_IN_OUT
+    Value : REAL;
+END_VAR
+VAR_OUTPUT
+    Reached : BOOL;
+END_VAR
+VAR
+    StepTimer : TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+	Increment/Decrement Value by StepVal every CycleTime until it reaches TargetVal.
+	
+*)
+
+
+
+
+
+Reached := FALSE;
+
+IF StepVal <= 0.0 THEN
+    RETURN;
+END_IF
+
+StepTimer(IN := TRUE, PT := CycleTime);
+
+IF Value < TargetVal THEN
+    IF StepTimer.Q THEN
+        Value := Value + StepVal;
+        IF Value >= TargetVal THEN
+            Value := TargetVal;
+            Reached := TRUE;
+        END_IF
+        StepTimer(IN := FALSE);
+    END_IF
+
+ELSIF Value > TargetVal THEN
+    IF StepTimer.Q THEN
+        Value := Value - StepVal;
+        IF Value <= TargetVal THEN
+            Value := TargetVal;
+            Reached := TRUE;
+        END_IF
+        StepTimer(IN := FALSE);
+    END_IF
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

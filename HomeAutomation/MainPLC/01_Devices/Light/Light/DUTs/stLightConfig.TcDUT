@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="stLightConfig" Id="{52e1058c-f365-49f2-9c9d-7fb722dfb0a0}">
+    <Declaration><![CDATA[TYPE stLightConfig :
+STRUCT
+	BrightnessSmoothTime : TIME := T#2s;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -22,6 +22,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="00_Drivers\Other\POUs\fbStepToTarget.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="00_Drivers\Relays\ITFs\iRelay.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -63,6 +66,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Devices\Light\Light\DUTs\stLightColor.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Devices\Light\Light\DUTs\stLightConfig.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Devices\Light\Light\DUTs\stLightState.TcDUT">
@@ -157,6 +163,8 @@
   <ItemGroup>
     <Folder Include="00_Drivers\HA" />
     <Folder Include="00_Drivers\HA\DUTs" />
+    <Folder Include="00_Drivers\Other" />
+    <Folder Include="00_Drivers\Other\POUs" />
     <Folder Include="00_Drivers\Relays" />
     <Folder Include="00_Drivers\Relays\DUTs" />
     <Folder Include="00_Drivers\Relays\ITFs" />
