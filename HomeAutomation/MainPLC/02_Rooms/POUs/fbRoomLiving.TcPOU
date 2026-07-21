@@ -7,35 +7,49 @@ VAR
 //  ----------- RELAYS -----------
 	ShutterR1OpenRelay : fbMonostableRelay;
 	ShutterR1CloseRelay : fbMonostableRelay;
+	LightH1Relay : fbBistableSingleCoilRelay;
 	
 //  ----------- SWITCHES -----------
 	ShutterR1OpenSwitch : fbMonoSwitch;
 	ShutterR1CloseSwitch : fbMonoSwitch;
+	LightH1Switch : fbMonoSwitch;
 	
 //  ----------- SWITCH CONTROLLERS -----------	
 	ShutterR1OpenSwitchCtrl : fbSwitchCtrl;	
-	ShutterR1CloseSwitchCtrl : fbSwitchCtrl;												
+	ShutterR1CloseSwitchCtrl : fbSwitchCtrl;	
+	LightH1SwitchCtrl : fbSwitchCtrl;											
 
 	
 //  ----------- SHUTTER CONTROLLERS -----------	
 	ShutterR1Ctrl : fbShutterCtrl;
+	
+//  ----------- LIGHT CONTROLLERS -----------	
+	LightH1Ctrl : fbLightCtrl;	
+	
 	
 //  ----------- SHUTTER CMD SOURCES -----------
 	ShutterR1CmdEvent : stShutterCmdEvent;
 	ShutterR1CmdSwitch : fbShutterCmdSourceSwitch;
 	ShutterR1CmdHa : fbShutterCmdSourceHa;
 	
-	
+//  ----------- SHUTTER CMD SOURCES -----------
+	LightH1CmdEvent : stLightCmdEvent;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[ShutterR1OpenSwitch();
+      <ST><![CDATA[
+//  ----------- RUN SWITCHES -----------	
+ShutterR1OpenSwitch();
 ShutterR1CloseSwitch();
+LightH1Switch();
 
+//  ----------- RUN SWITCH CONTROLLERS -----------
 ShutterR1OpenSwitchCtrl(Switch := ShutterR1OpenSwitch,
 						Config := gvlSwitches.GeneralSwitchConfig);
 ShutterR1CloseSwitchCtrl(Switch := ShutterR1CloseSwitch,
 						Config := gvlSwitches.GeneralSwitchConfig);
 
+
+//  ----------- RUN SHUTTER CMD SOURCES -----------
 ShutterR1CmdSwitch( OpenSwitchState := ShutterR1OpenSwitchCtrl.State,
 						CloseSwitchState := ShutterR1CloseSwitchCtrl.State,
 						ShutterStateType := ShutterR1Ctrl.CurrentState.StateType,
@@ -45,11 +59,21 @@ ShutterR1CmdSwitch.Process(CmdEvent := ShutterR1CmdEvent);
 ShutterR1CmdHa( HaCmdEvent := gvlHA.Shutter1CmdEvent) ;
 ShutterR1CmdHa.Process(CmdEvent := ShutterR1CmdEvent);
 
+
+
+//  ----------- RUN SHUTTER CONTROLLERS -----------
 ShutterR1Ctrl(ShutterOpenRelay := ShutterR1OpenRelay,
 			ShutterCloseRelay := ShutterR1CloseRelay,
 			ShutterConfig := gvlShutters.ShutterR1Config,
 			CmdEvent := ShutterR1CmdEvent);
-]]></ST>
+
+//  ----------- RUN LIGHT CONTROLLERS -----------
+LightH1Ctrl( LightRelay :=LightH1Relay,
+				Config := gvlLights.LightH1Config,
+				Smoothing := TRUE,
+				State :=,
+				Brightness :=,
+				CmdEvent := );]]></ST>
     </Implementation>
     <Method Name="LightsOff" Id="{262cd78d-a037-4ac4-890b-0001e3f12830}">
       <Declaration><![CDATA[METHOD LightsOff

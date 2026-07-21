@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbLightCmdSourceSwitch" Id="{bc181d62-640f-4c09-87eb-270fda66e5c5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbLightCmdSourceSwitch IMPLEMENTS iLightCmdSource
+VAR_INPUT
+    LightSwitchState : stSwitchState;
+	LightState : stLightState;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Process" Id="{761c8d2f-dff1-4a45-bbb9-75d87bb337f7}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Process
+VAR_IN_OUT
+	CmdEvent	: stLightCmdEvent;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// Exit if switch is idle
+IF LightSwitchState.StateType = eSwitchStateType.IDLE THEN
+    RETURN;
+END_IF
+
+// Short click -> Toggle Light On/Off
+IF LightSwitchState.StateType = eSwitchStateType.SHORT_CLICK THEN
+	CmdEvent.TargetState.On := NOT LightState.On;
+END_IF
+
+
+
+CmdEvent.Execute := TRUE;
+CmdEvent.Source := eLightCmdSource.SWITCH;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

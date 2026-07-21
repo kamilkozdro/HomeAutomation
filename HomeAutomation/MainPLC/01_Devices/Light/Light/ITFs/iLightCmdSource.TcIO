@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="iLightCmdSource" Id="{dbabc1f4-79bd-44f7-9985-dadc5324c1ab}">
+    <Declaration><![CDATA[INTERFACE iLightCmdSource
+]]></Declaration>
+    <Method Name="Process" Id="{020f83b5-ca73-4be5-8db2-53f02b4a1991}">
+      <Declaration><![CDATA[METHOD Process
+VAR_IN_OUT
+	CmdEvent : stLightCmdEvent;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

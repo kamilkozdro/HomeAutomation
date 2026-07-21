@@ -10,15 +10,15 @@ VAR_INPUT
 END_VAR
 VAR_OUTPUT
 	State : stLightState;
-	Brightness : USINT;
+	Brightness : REAL;
 END_VAR
 VAR_IN_OUT
-	Cmd : stLightCmd;
+	CmdEvent : stLightCmdEvent;
 END_VAR
 VAR
 	TargetState : stLightState;
     BrightnessStep : USINT;
-	CyclicTON : TON;
+	StepToBrightness : fbStepToTarget;
 END_VAR
 VAR CONSTANT
     CycleTime : TIME := T#50MS;
@@ -28,6 +28,10 @@ VAR CONSTANT
         Color := (Red := 255, Green := 255, Blue := 255),
         Temperature := eLightTemperature.NEUTRAL,
         Brightness := 0 );
+	CleanCmdEvent : stLightCmdEvent := (
+		Execute := FALSE,
+		TargetState := CleanState,
+		Source := eLightCmdSource.NONE);
 END_VAR
 VAR RETAIN
 	SavedState : stLightState := CleanState;
@@ -35,34 +39,31 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-IF Cmd.Execute THEN
-	TargetState := Cmd.TargetState;
+// Execute commands only if light is turned ON
+IF CmdEvent.Execute THEN
+	TargetState := CmdEvent.TargetState;
 END_IF
 
 // Turn on light
 IF NOT State.On AND TargetState.On THEN
 	LightRelay.Set();
-END_IF
-
-BrightnessStep := BrightnessMaxValue / UDINT_TO_USINT( TIME_TO_UDINT(Config.BrightnessSmoothTime) / TIME_TO_UDINT(CycleTime));
-CyclicTON(IN := TRUE, PT := CycleTime);
-IF CyclicTON.Q THEN
-	
-	
-
-	IF State.Brightness < TargetState.Brightness THEN
-		Brightness := Brightness + BrightnessStep;
-	END_IF
-	IF State.Brightness > TargetState.Brightness THEN
-		Brightness := Brightness - BrightnessStep;
-	END_IF
-	
-	CyclicTON(IN := FALSE);
+	State.On := TRUE;
 END_IF
 
 // Turn off light
 IF State.On AND NOT TargetState.On THEN
 	LightRelay.Reset();
+	Brightness := 0;
+	State.On := FALSE;
+END_IF
+
+// Increment/decrement brightness each CycleTime untill TargetState.Brightness is reached
+IF State.On AND State.Brightness <> TargetState.Brightness THEN
+	BrightnessStep := BrightnessMaxValue / UDINT_TO_USINT( TIME_TO_UDINT(Config.BrightnessSmoothTime) / TIME_TO_UDINT(CycleTime));
+	StepToBrightness(TargetVal := USINT_TO_REAL(TargetState.Brightness),
+					StepVal := BrightnessStep,
+					CycleTime := THIS^.CycleTime,
+					Value := Brightness);
 END_IF
 
 // Change Temperature
@@ -80,6 +81,8 @@ END_IF
 IF State.Color.Green <> TargetState.Color.Green THEN
 	State.Color.Green := TargetState.Color.Green;
 END_IF
+
+CmdEvent := CleanCmdEvent;
 ]]></ST>
     </Implementation>
   </POU>

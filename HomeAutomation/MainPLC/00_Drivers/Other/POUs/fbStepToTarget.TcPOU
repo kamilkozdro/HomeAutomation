@@ -20,12 +20,8 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(*
 	Increment/Decrement Value by StepVal every CycleTime until it reaches TargetVal.
-	
+	After reaching TargetVal set Reached for one cycle
 *)
-
-
-
-
 
 Reached := FALSE;
 

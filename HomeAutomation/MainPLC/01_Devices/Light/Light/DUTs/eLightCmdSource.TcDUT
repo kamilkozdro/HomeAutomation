@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="eLightCmdSource" Id="{eabe1d87-a0b8-4beb-aa3e-3cd1c99bbe9f}">
+    <Declaration><![CDATA[TYPE eLightCmdSource :
+(
+    NONE,
+    SWITCH,
+    HA,
+    SCHEDULER,
+	ROOM
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>
