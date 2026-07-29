@@ -6,7 +6,7 @@ STRUCT
 	On : BOOL;
 	Color : stLightColor;
 	Temperature : eLightTemperature;
-	Brightness : USINT;		// 0 - 100%
+	Brightness : USINT;		// 20 - 100%
 END_STRUCT
 END_TYPE
 ]]></Declaration>

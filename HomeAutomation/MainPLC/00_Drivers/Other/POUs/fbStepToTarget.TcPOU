@@ -3,12 +3,12 @@
   <POU Name="fbStepToTarget" Id="{139c758d-a096-42f2-b819-2ba7838a396f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK fbStepToTarget
 VAR_INPUT
-    TargetVal : REAL;
-    StepVal : REAL;
+    TargetVal : USINT;
+    StepVal : USINT;
     CycleTime : TIME;
 END_VAR
 VAR_IN_OUT
-    Value : REAL;
+    Value : USINT;
 END_VAR
 VAR_OUTPUT
     Reached : BOOL;

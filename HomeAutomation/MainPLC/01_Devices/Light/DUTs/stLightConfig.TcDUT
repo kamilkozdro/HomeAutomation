@@ -3,6 +3,7 @@
   <DUT Name="stLightConfig" Id="{52e1058c-f365-49f2-9c9d-7fb722dfb0a0}">
     <Declaration><![CDATA[TYPE stLightConfig :
 STRUCT
+	Smoothing : BOOL := FALSE;
 	BrightnessSmoothTime : TIME := T#2s;
 END_STRUCT
 END_TYPE

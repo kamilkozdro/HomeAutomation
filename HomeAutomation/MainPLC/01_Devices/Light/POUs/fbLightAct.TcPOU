@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="fbLightAct" Id="{b3771d91-f85a-45c2-be56-d9716500abad}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbLightAct IMPLEMENTS iLightAct
+VAR
+	LightRelay : iRelay;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="Brightness" Id="{9a50512e-ff0e-4cc1-a8a2-fe65a2cc88f5}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Brightness : USINT
+]]></Declaration>
+      <Get Name="Get" Id="{bdfe604a-e88d-4851-a902-e27032ab4f2f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{cde666ab-848f-410a-aea5-3e0aafc6d01d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Color" Id="{669b9e36-4a6c-4870-972c-d899a7a41853}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Color : stLightColor
+]]></Declaration>
+      <Get Name="Get" Id="{f7cdb86a-2f99-49a0-992b-c1c13378bdf6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{824bdd7b-6d9b-4ee1-ad6f-fe8f1918cc00}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="IsOn" Id="{fdf1f5c0-1d34-44d9-9a3c-98aeec8ce493}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY IsOn : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{4d9809c0-2f84-495f-af80-3b10be486202}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsOn := LightRelay.IsSet;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0dff9594-ad36-443b-9a85-7e97544acc5e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF IsOn THEN
+	LightRelay.Set();
+ELSE
+	LightRelay.Reset();
+END_IF]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Temperature" Id="{1caad42e-b27b-4bbb-b193-29e6618abf25}">
+      <Declaration><![CDATA[{warning 'Add property implementation'}
+PROPERTY Temperature : eLightTemperature
+]]></Declaration>
+      <Get Name="Get" Id="{dc743be1-d880-4e1f-95a4-1f0654f2c5f5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a3c532ab-16d8-4f5b-97ca-557f2f7ac311}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

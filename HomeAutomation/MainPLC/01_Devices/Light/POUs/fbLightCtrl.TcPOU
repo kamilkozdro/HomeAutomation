@@ -4,18 +4,16 @@
     <Declaration><![CDATA[FUNCTION_BLOCK fbLightCtrl
 
 VAR_INPUT
-	LightRelay : iRelay;
 	Config : stLightConfig;
-	Smoothing : BOOL;
 END_VAR
 VAR_OUTPUT
 	State : stLightState;
-	Brightness : REAL;
 END_VAR
 VAR_IN_OUT
 	CmdEvent : stLightCmdEvent;
 END_VAR
 VAR
+	LightAct : fbLightAct;
 	TargetState : stLightState;
     BrightnessStep : USINT;
 	StepToBrightness : fbStepToTarget;
@@ -45,25 +43,27 @@ IF CmdEvent.Execute THEN
 END_IF
 
 // Turn on light
-IF NOT State.On AND TargetState.On THEN
-	LightRelay.Set();
-	State.On := TRUE;
+IF NOT LightAct.IsOn AND TargetState.On THEN
+	LightAct.IsOn := TRUE;
 END_IF
 
 // Turn off light
-IF State.On AND NOT TargetState.On THEN
-	LightRelay.Reset();
-	Brightness := 0;
-	State.On := FALSE;
+IF LightAct.IsOn AND NOT TargetState.On THEN
+	LightAct.IsOn := FALSE;
 END_IF
 
-// Increment/decrement brightness each CycleTime untill TargetState.Brightness is reached
-IF State.On AND State.Brightness <> TargetState.Brightness THEN
-	BrightnessStep := BrightnessMaxValue / UDINT_TO_USINT( TIME_TO_UDINT(Config.BrightnessSmoothTime) / TIME_TO_UDINT(CycleTime));
-	StepToBrightness(TargetVal := USINT_TO_REAL(TargetState.Brightness),
-					StepVal := BrightnessStep,
-					CycleTime := THIS^.CycleTime,
-					Value := Brightness);
+// Change Brightness
+IF LightAct.IsOn AND LightAct.Brightness <> TargetState.Brightness THEN
+	IF Config.Smoothing THEN
+		// Increment/decrement brightness each CycleTime untill TargetState.Brightness is reached
+		BrightnessStep := BrightnessMaxValue / UDINT_TO_USINT( TIME_TO_UDINT(Config.BrightnessSmoothTime) / TIME_TO_UDINT(CycleTime));
+		StepToBrightness(TargetVal := TargetState.Brightness,
+						StepVal := BrightnessStep,
+						CycleTime := THIS^.CycleTime,
+						Value := LightAct.Brightness);
+	ELSE
+		LightAct.Brightness := TargetState.Brightness;
+	END_IF
 END_IF
 
 // Change Temperature
@@ -83,7 +83,10 @@ IF State.Color.Green <> TargetState.Color.Green THEN
 END_IF
 
 CmdEvent := CleanCmdEvent;
-]]></ST>
+State.On := LightAct.IsOn;
+State.Brightness := LightAct.Brightness;
+State.Temperature := LightAct.Temperature;
+State.Color := LightAct.Color;]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
