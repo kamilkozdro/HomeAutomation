@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="760e8ced-0aa6-445f-bcf3-434ed39113ce">TOGGLE</Type>
+      <From>Toggle</From>
+      <To>TogglePower</To>
+    </RenamedType>
+    <RenamedType>
+      <Type guid="6e087cfd-4b16-4449-8c78-3d613dc94601">TOGGLE</Type>
+      <From>Toggle</From>
+      <To>TogglePower</To>
+    </RenamedType>
+  </Renames>
+</Refactors>

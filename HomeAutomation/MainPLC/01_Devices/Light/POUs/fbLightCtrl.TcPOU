@@ -4,25 +4,26 @@
     <Declaration><![CDATA[FUNCTION_BLOCK fbLightCtrl
 
 VAR_INPUT
+	CurrentState : stLightState;
 	Config : stLightConfig;
 END_VAR
 VAR_OUTPUT
-	State : stLightState;
+	ControlState : stLightState := CleanState;
 END_VAR
 VAR_IN_OUT
 	CmdEvent : stLightCmdEvent;
 END_VAR
 VAR
-	LightAct : fbLightAct;
-	TargetState : stLightState;
-    BrightnessStep : USINT;
-	StepToBrightness : fbStepToTarget;
+	TargetState : stLightState := CleanState;
+    BrightnessRampTarget  : USINT := BrightnessMin;
+    BrightnessStep : USINT := 0;
 END_VAR
 VAR CONSTANT
     CycleTime : TIME := T#50MS;
-	BrightnessMaxValue : USINT := 100;
+	BrightnessMin : USINT := 0;
+	BrightnessMax : USINT := 100;
 	CleanState : stLightState := (
-        On := FALSE,
+        PowerOn := FALSE,
         Color := (Red := 255, Green := 255, Blue := 255),
         Temperature := eLightTemperature.NEUTRAL,
         Brightness := 0 );
@@ -40,53 +41,58 @@ END_VAR
 // Execute commands only if light is turned ON
 IF CmdEvent.Execute THEN
 	TargetState := CmdEvent.TargetState;
+	TargetState.Brightness := LIMIT(BrightnessMin, CmdEvent.TargetState.Brightness, BrightnessMax);
+	IF CmdEvent.TargetState.PowerOn THEN
+		TargetState := SavedState;
+	ELSE
+		SavedState :=  CmdEvent.TargetState;
+	END_IF
 END_IF
 
 // Turn on light
-IF NOT LightAct.IsOn AND TargetState.On THEN
-	LightAct.IsOn := TRUE;
-END_IF
-
+IF TargetState.PowerOn THEN
+	ControlState.PowerOn := TRUE;
 // Turn off light
-IF LightAct.IsOn AND NOT TargetState.On THEN
-	LightAct.IsOn := FALSE;
+ELSE
+	//TargetState.Brightness := BrightnessMin;
+	IF ControlState.Brightness = BrightnessMin THEN
+		ControlState.PowerOn := FALSE;
+	ELSE
+		ControlState.PowerOn := TRUE;
+	END_IF
 END_IF
 
 // Change Brightness
-IF LightAct.IsOn AND LightAct.Brightness <> TargetState.Brightness THEN
-	IF Config.Smoothing THEN
-		// Increment/decrement brightness each CycleTime untill TargetState.Brightness is reached
-		BrightnessStep := BrightnessMaxValue / UDINT_TO_USINT( TIME_TO_UDINT(Config.BrightnessSmoothTime) / TIME_TO_UDINT(CycleTime));
-		StepToBrightness(TargetVal := TargetState.Brightness,
-						StepVal := BrightnessStep,
-						CycleTime := THIS^.CycleTime,
-						Value := LightAct.Brightness);
-	ELSE
-		LightAct.Brightness := TargetState.Brightness;
+
+
+	// If Config.BrightnessRamp is NOT active
+	// Change brightness immediately
+IF NOT Config.BrightnessRamp THEN
+	ControlState.Brightness := TargetState.Brightness;
+ELSIF Config.BrightnessRampTime <= CycleTime THEN
+	ControlState.Brightness := TargetState.Brightness;
+	// If Config.BrightnessRamp is active
+	// Increment/decrement brightness each CycleTime untill TargetState.Brightness is reached
+ELSE
+	BrightnessStep := UDINT_TO_USINT(BrightnessMax * TIME_TO_UDINT(CycleTime) / TIME_TO_UDINT(Config.BrightnessRampTime));
+	IF ControlState.Brightness < TargetState.Brightness THEN
+		ControlState.Brightness := MIN(ControlState.Brightness + BrightnessStep, 
+								TargetState.Brightness);
+	ELSIF ControlState.Brightness > TargetState.Brightness THEN
+		ControlState.Brightness := MAX(ControlState.Brightness - BrightnessStep, 
+								TargetState.Brightness);
 	END_IF
 END_IF
 
 // Change Temperature
-IF State.Temperature <> TargetState.Temperature THEN
-	State.Temperature := TargetState.Temperature;
-END_IF
+ControlState.Temperature := TargetState.Temperature;
 
 // Change Color
-IF State.Color.Blue <> TargetState.Color.Blue THEN
-	State.Color.Blue := TargetState.Color.Blue;
-END_IF
-IF State.Color.Red <> TargetState.Color.Red THEN
-	State.Color.Red := TargetState.Color.Red;
-END_IF
-IF State.Color.Green <> TargetState.Color.Green THEN
-	State.Color.Green := TargetState.Color.Green;
-END_IF
+ControlState.Color.Blue := TargetState.Color.Blue;
+ControlState.Color.Red := TargetState.Color.Red;
+ControlState.Color.Green := TargetState.Color.Green;
 
-CmdEvent := CleanCmdEvent;
-State.On := LightAct.IsOn;
-State.Brightness := LightAct.Brightness;
-State.Temperature := LightAct.Temperature;
-State.Color := LightAct.Color;]]></ST>
+CmdEvent := CleanCmdEvent;]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

@@ -3,7 +3,7 @@
   <DUT Name="stLightState" Id="{90c9e709-c995-434d-b1ec-c79b08482bcc}">
     <Declaration><![CDATA[TYPE stLightState :
 STRUCT
-	On : BOOL;
+	PowerOn : BOOL;
 	Color : stLightColor;
 	Temperature : eLightTemperature;
 	Brightness : USINT;		// 20 - 100%
