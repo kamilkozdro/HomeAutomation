@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1">
-  <GVL Name="GVL_Shutters" Id="{7a0c2c86-f13b-43d1-9cdd-d1f7080b47ea}">
-    <Declaration><![CDATA[{attribute 'qualified_only'}
-VAR_GLOBAL
-	gvShutter1Up AT %Q* : BOOL;
-END_VAR]]></Declaration>
-  </GVL>
-</TcPlcObject>
