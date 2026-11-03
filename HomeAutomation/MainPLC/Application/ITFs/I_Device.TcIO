@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+<TcPlcObject Version="1.1.0.1">
   <Itf Name="I_Device" Id="{33333333-3333-4333-8333-333333333333}">
     <Declaration><![CDATA[INTERFACE I_Device
-
-    PROPERTY DeviceId : ST_DeviceId
-        GET
-        END_GET
-    END_PROPERTY
-
-END_INTERFACE
 ]]></Declaration>
+    <Property Name="DeviceId" Id="{5e0ea2d3-5ebe-4720-9370-01c88b4afeb2}">
+      <Declaration><![CDATA[PROPERTY DeviceId : ST_DeviceId]]></Declaration>
+      <Get Name="Get" Id="{c595d6a1-ee48-4641-b1fb-ac450db55d1d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
   </Itf>
 </TcPlcObject>

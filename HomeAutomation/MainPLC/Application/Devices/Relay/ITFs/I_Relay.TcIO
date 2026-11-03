@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+<TcPlcObject Version="1.1.0.1">
   <Itf Name="I_Relay" Id="{55555555-5555-4555-8555-555555555555}">
     <Declaration><![CDATA[INTERFACE I_Relay EXTENDS I_Device
-
-    PROPERTY IsOn : BOOL
-        GET
-        END_GET
-    END_PROPERTY
-
-    METHOD TurnOn
-    END_METHOD
-
-    METHOD TurnOff
-    END_METHOD
-
-    METHOD Toggle
-    END_METHOD
-
-END_INTERFACE
 ]]></Declaration>
+    <Property Name="IsOn" Id="{a2c1d4e6-8f10-4a22-9b33-1c4d5e6f7081}">
+      <Declaration><![CDATA[PROPERTY IsOn : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b3d2e5f7-9011-4b33-ac44-2d5e6f708192}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="TurnOn" Id="{c4e3f608-a122-4c44-bd55-3e6f708192a3}">
+      <Declaration><![CDATA[METHOD TurnOn]]></Declaration>
+    </Method>
+    <Method Name="TurnOff" Id="{d5f40719-b233-4d55-8e66-4f708192a3b4}">
+      <Declaration><![CDATA[METHOD TurnOff]]></Declaration>
+    </Method>
+    <Method Name="Toggle" Id="{e605182a-c344-4e66-9f77-508192a3b4c5}">
+      <Declaration><![CDATA[METHOD Toggle]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

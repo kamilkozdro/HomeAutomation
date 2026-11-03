@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+<TcPlcObject Version="1.1.0.1">
   <Itf Name="I_Switch" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E1001}">
     <Declaration><![CDATA[INTERFACE I_Switch EXTENDS I_Device
-
-    PROPERTY IsPressed : BOOL
-        GET
-        END_GET
-    END_PROPERTY
-
-    PROPERTY Pressed : BOOL
-        GET
-        END_GET
-    END_PROPERTY
-
-    PROPERTY Released : BOOL
-        GET
-        END_GET
-    END_PROPERTY
-
-END_INTERFACE
 ]]></Declaration>
+    <Property Name="IsPressed" Id="{a716293b-d455-4f77-a088-6192a3b4c5d6}">
+      <Declaration><![CDATA[PROPERTY IsPressed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b8273a4c-e566-4088-b199-72a3b4c5d6e7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Pressed" Id="{c9384b5d-f677-4199-82aa-83b4c5d6e7f8}">
+      <Declaration><![CDATA[PROPERTY Pressed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{da495c6e-0788-42aa-93bb-94c5d6e7f809}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Released" Id="{eb5a6d7f-1899-43bb-a4cc-a5d6e7f8091a}">
+      <Declaration><![CDATA[PROPERTY Released : BOOL]]></Declaration>
+      <Get Name="Get" Id="{fc6b7e80-29aa-44cc-b5dd-b6e7f8091a2b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
   </Itf>
 </TcPlcObject>
