@@ -3,12 +3,7 @@
   <Itf Name="I_Device" Id="{33333333-3333-4333-8333-333333333333}">
     <Declaration><![CDATA[INTERFACE I_Device
 
-    PROPERTY Identity : ST_DeviceIdentity
-        GET
-        END_GET
-    END_PROPERTY
-
-    PROPERTY Metadata : ST_DeviceMetadata
+    PROPERTY DeviceId : ST_DeviceId
         GET
         END_GET
     END_PROPERTY

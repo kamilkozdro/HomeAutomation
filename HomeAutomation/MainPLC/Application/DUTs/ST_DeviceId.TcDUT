@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
-  <DUT Name="ST_DeviceMetadata" Id="{22222222-2222-4222-8222-222222222222}">
-    <Declaration><![CDATA[TYPE ST_DeviceMetadata :
+  <DUT Name="ST_DeviceId" Id="{44444444-4444-4444-8444-444444444444}">
+    <Declaration><![CDATA[TYPE ST_DeviceId :
 STRUCT
-    sName : STRING(64);
-    sRoom : STRING(64);
+    sId      : UINT;
+    sName    : STRING(32);
+    sRoom    : STRING(32);
     bEnabled : BOOL := TRUE;
 END_STRUCT
 END_TYPE

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="FB_RelayBistableSetReset" Id="{77777777-7777-4777-8777-777777777770}">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_RelayBistableSetReset IMPLEMENTS I_Relay
+VAR_INPUT
+    stDeviceId : ST_DeviceId;
+END_VAR
+VAR
+    bRequestedState : BOOL;
+    bCurrentState   : BOOL;
+    bPulseToSet     : BOOL;
+    fbTrigger       : R_TRIG;
+    fbPulse         : TP;
+END_VAR
+VAR_OUTPUT
+    bSetPulse   : BOOL;
+    bResetPulse : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT fbPulse.Q AND (bRequestedState <> bCurrentState) THEN
+    bPulseToSet := bRequestedState;
+END_IF
+
+fbTrigger(CLK := (bRequestedState <> bCurrentState) AND NOT fbPulse.Q);
+fbPulse(IN := fbTrigger.Q, PT := T#100MS);
+
+IF fbTrigger.Q THEN
+    bCurrentState := bRequestedState;
+END_IF
+
+bSetPulse := fbPulse.Q AND bPulseToSet;
+bResetPulse := fbPulse.Q AND NOT bPulseToSet;
+]]></ST>
+    </Implementation>
+    <Property Name="DeviceId" Id="{77777777-7777-4777-8777-777777777771}">
+      <Declaration><![CDATA[PROPERTY DeviceId : ST_DeviceId
+GET
+END_GET
+END_PROPERTY
+]]></Declaration>
+      <Get>
+        <Implementation>
+          <ST><![CDATA[DeviceId := stDeviceId;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsOn" Id="{77777777-7777-4777-8777-777777777772}">
+      <Declaration><![CDATA[PROPERTY IsOn : BOOL
+GET
+END_GET
+END_PROPERTY
+]]></Declaration>
+      <Get>
+        <Implementation>
+          <ST><![CDATA[IsOn := bCurrentState;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="TurnOn" Id="{77777777-7777-4777-8777-777777777773}">
+      <Declaration><![CDATA[METHOD PUBLIC TurnOn
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bRequestedState := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TurnOff" Id="{77777777-7777-4777-8777-777777777774}">
+      <Declaration><![CDATA[METHOD PUBLIC TurnOff
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bRequestedState := FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Toggle" Id="{77777777-7777-4777-8777-777777777775}">
+      <Declaration><![CDATA[METHOD PUBLIC Toggle
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bRequestedState := NOT bRequestedState;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

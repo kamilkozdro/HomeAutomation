@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="FB_RelayMonostable" Id="{66666666-6666-4666-8666-666666666660}">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_RelayMonostable IMPLEMENTS I_Relay
+VAR_INPUT
+    stDeviceId : ST_DeviceId;
+END_VAR
+VAR_OUTPUT
+    bOutput : BOOL;
+END_VAR
+VAR
+    bRequestedState : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bOutput := bRequestedState;
+]]></ST>
+    </Implementation>
+    <Property Name="DeviceId" Id="{66666666-6666-4666-8666-666666666661}">
+      <Declaration><![CDATA[PROPERTY DeviceId : ST_DeviceId
+GET
+END_GET
+END_PROPERTY
+]]></Declaration>
+      <Get>
+        <Implementation>
+          <ST><![CDATA[DeviceId := stDeviceId;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsOn" Id="{66666666-6666-4666-8666-666666666662}">
+      <Declaration><![CDATA[PROPERTY IsOn : BOOL
+GET
+END_GET
+END_PROPERTY
+]]></Declaration>
+      <Get>
+        <Implementation>
+          <ST><![CDATA[IsOn := bOutput;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="TurnOn" Id="{66666666-6666-4666-8666-666666666663}">
+      <Declaration><![CDATA[METHOD PUBLIC TurnOn
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bRequestedState := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TurnOff" Id="{66666666-6666-4666-8666-666666666664}">
+      <Declaration><![CDATA[METHOD PUBLIC TurnOff
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bRequestedState := FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Toggle" Id="{66666666-6666-4666-8666-666666666665}">
+      <Declaration><![CDATA[METHOD PUBLIC Toggle
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bRequestedState := NOT bRequestedState;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
