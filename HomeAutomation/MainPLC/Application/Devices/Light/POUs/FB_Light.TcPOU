@@ -45,7 +45,7 @@ END_VAR
     </Method>
     <Method Name="TurnOff" Id="{B2B2B2B2-B2B2-42B2-82B2-B2B2B2B2B2B6}">
       <Declaration><![CDATA[METHOD PUBLIC TurnOff
-]]></ST></Declaration>
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[iRelay.TurnOff();
 ]]></ST>
@@ -53,7 +53,7 @@ END_VAR
     </Method>
     <Method Name="Toggle" Id="{B2B2B2B2-B2B2-42B2-82B2-B2B2B2B2B2B7}">
       <Declaration><![CDATA[METHOD PUBLIC Toggle
-]]></ST></Declaration>
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[iRelay.Toggle();
 ]]></ST>
