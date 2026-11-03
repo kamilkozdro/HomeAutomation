@@ -2,11 +2,13 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
   <POU Name="FB_RelayMonostable" Id="{66666666-6666-4666-8666-666666666660}">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_RelayMonostable IMPLEMENTS I_Relay
+VAR_INPUT
+    stDeviceId : ST_DeviceId;
+END_VAR
 VAR_OUTPUT
     bOutput : BOOL;
 END_VAR
 VAR
-    stDeviceId      : ST_DeviceId;
     bRequestedState : BOOL;
 END_VAR
 ]]></Declaration>
@@ -16,11 +18,10 @@ END_VAR
     </Implementation>
     <Property Name="DeviceId" Id="{66666666-6666-4666-8666-666666666661}">
       <Declaration><![CDATA[PROPERTY DeviceId : ST_DeviceId
-GET
-END_GET
-END_PROPERTY
 ]]></Declaration>
-      <Get>
+      <Get Name="Get" Id="{66666666-6666-4666-8666-666666666671}">
+        <Declaration><![CDATA[
+]]></Declaration>
         <Implementation>
           <ST><![CDATA[DeviceId := stDeviceId;
 ]]></ST>
@@ -29,11 +30,10 @@ END_PROPERTY
     </Property>
     <Property Name="IsOn" Id="{66666666-6666-4666-8666-666666666662}">
       <Declaration><![CDATA[PROPERTY IsOn : BOOL
-GET
-END_GET
-END_PROPERTY
 ]]></Declaration>
-      <Get>
+      <Get Name="Get" Id="{66666666-6666-4666-8666-666666666672}">
+        <Declaration><![CDATA[
+]]></Declaration>
         <Implementation>
           <ST><![CDATA[IsOn := bOutput;
 ]]></ST>

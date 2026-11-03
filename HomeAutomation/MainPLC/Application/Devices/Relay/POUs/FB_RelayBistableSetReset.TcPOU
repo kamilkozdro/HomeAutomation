@@ -35,11 +35,10 @@ bResetPulse := fbPulse.Q AND NOT bPulseToSet;
     </Implementation>
     <Property Name="DeviceId" Id="{77777777-0000-4000-8000-000000000001}">
       <Declaration><![CDATA[PROPERTY DeviceId : ST_DeviceId
-GET
-END_GET
-END_PROPERTY
 ]]></Declaration>
-      <Get>
+      <Get Name="Get" Id="{77777777-0000-4000-8000-000000000011}">
+        <Declaration><![CDATA[
+]]></Declaration>
         <Implementation>
           <ST><![CDATA[DeviceId := stDeviceId;
 ]]></ST>
@@ -48,11 +47,10 @@ END_PROPERTY
     </Property>
     <Property Name="IsOn" Id="{77777777-0000-4000-8000-000000000002}">
       <Declaration><![CDATA[PROPERTY IsOn : BOOL
-GET
-END_GET
-END_PROPERTY
 ]]></Declaration>
-      <Get>
+      <Get Name="Get" Id="{77777777-0000-4000-8000-000000000012}">
+        <Declaration><![CDATA[
+]]></Declaration>
         <Implementation>
           <ST><![CDATA[IsOn := bCurrentState;
 ]]></ST>
