@@ -48,7 +48,7 @@
     <Compile Include="Application\Devices\Switch\POUs\FB_SwitchMonostable.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\Devices\Switch\POUs\FB_ClickDetector.TcPOU">
+    <Compile Include="Application\Devices\Switch\POUs\FB_SwitchController.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\Devices\Light\POUs\FB_Light.TcPOU">
