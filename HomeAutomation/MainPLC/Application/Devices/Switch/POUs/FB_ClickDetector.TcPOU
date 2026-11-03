@@ -25,6 +25,7 @@ VAR
     bPressActive           : BOOL;
     bShortThresholdReached : BOOL;
     bHoldDetected          : BOOL;
+    bShortClickSequencePending : BOOL;
 
     nPendingShortClicks    : USINT;
 END_VAR
@@ -58,14 +59,15 @@ ELSE
     // Resolve an expired sequence before processing a new press.
     // This gives the multi-click timeout priority at the scan boundary.
     fbMultiClickTimer(
-        IN := (nPendingShortClicks > 0) AND NOT bPressActive,
+        IN := bShortClickSequencePending AND NOT bPressActive,
         PT := tMultiClickTimeout
     );
 
-    IF fbMultiClickTimer.Q AND (nPendingShortClicks > 0) AND NOT bPressActive THEN
+    IF fbMultiClickTimer.Q AND bShortClickSequencePending AND NOT bPressActive THEN
         nShortClickCount := nPendingShortClicks;
         bShortClick := TRUE;
         nPendingShortClicks := 0;
+        bShortClickSequencePending := FALSE;
     END_IF
 
     // Start measuring a new physical press.
@@ -92,10 +94,11 @@ ELSE
     IF fbShortPressTimer.Q THEN
         bShortThresholdReached := TRUE;
 
-        IF nPendingShortClicks > 0 THEN
+        IF bShortClickSequencePending THEN
             nShortClickCount := nPendingShortClicks;
             bShortClick := TRUE;
             nPendingShortClicks := 0;
+            bShortClickSequencePending := FALSE;
         END_IF
     END_IF
 
@@ -118,6 +121,7 @@ ELSE
         ELSE
             // USINT is intentionally not saturated.
             nPendingShortClicks := nPendingShortClicks + 1;
+            bShortClickSequencePending := TRUE;
         END_IF
 
         bPressActive := FALSE;
