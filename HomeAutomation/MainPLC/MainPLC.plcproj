@@ -33,6 +33,12 @@
     <Compile Include="Application\Devices\Relay\ITFs\I_Relay.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Application\Devices\Switch\ITFs\I_Switch.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\Devices\Switch\POUs\FB_SwitchMonostable.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Application\Devices\Relay\POUs\FB_RelayMonostable.TcPOU">
       <SubType>Code</SubType>
     </Compile>

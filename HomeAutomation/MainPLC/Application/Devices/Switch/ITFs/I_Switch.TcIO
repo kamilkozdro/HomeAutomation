@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <Itf Name="I_Switch" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E1001}">
+    <Declaration><![CDATA[INTERFACE I_Switch EXTENDS I_Device
+
+    PROPERTY IsPressed : BOOL
+        GET
+        END_GET
+    END_PROPERTY
+
+    PROPERTY Pressed : BOOL
+        GET
+        END_GET
+    END_PROPERTY
+
+    PROPERTY Released : BOOL
+        GET
+        END_GET
+    END_PROPERTY
+
+END_INTERFACE
+]]></Declaration>
+  </Itf>
+</TcPlcObject>

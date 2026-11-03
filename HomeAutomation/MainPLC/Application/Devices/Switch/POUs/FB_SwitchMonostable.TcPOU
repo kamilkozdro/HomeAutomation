@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="FB_SwitchMonostable" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2001}">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SwitchMonostable IMPLEMENTS I_Switch
+VAR_INPUT
+    stDeviceId : ST_DeviceId;
+    bInput     : BOOL;
+END_VAR
+VAR
+    bPreviousInput : BOOL;
+    bPressed       : BOOL;
+    bReleased      : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bPressed := bInput AND NOT bPreviousInput;
+bReleased := NOT bInput AND bPreviousInput;
+
+bPreviousInput := bInput;
+]]></ST>
+    </Implementation>
+    <Property Name="DeviceId" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2011}">
+      <Declaration><![CDATA[PROPERTY DeviceId : ST_DeviceId
+]]></Declaration>
+      <Get Name="Get" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2012}">
+        <Declaration><![CDATA[
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceId := stDeviceId;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsPressed" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2021}">
+      <Declaration><![CDATA[PROPERTY IsPressed : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2022}">
+        <Declaration><![CDATA[
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsPressed := bInput;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Pressed" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2031}">
+      <Declaration><![CDATA[PROPERTY Pressed : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2032}">
+        <Declaration><![CDATA[
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Pressed := bPressed;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Released" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2041}">
+      <Declaration><![CDATA[PROPERTY Released : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7B1F2D31-7A6B-4C2D-9F31-2A8C5D1E2042}">
+        <Declaration><![CDATA[
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Released := bReleased;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>
