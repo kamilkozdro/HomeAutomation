@@ -24,6 +24,9 @@
     <Compile Include="Application\Home\POUs\FB_EventRouter.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Application\Controllers\Light\POUs\FB_LightController.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Application\POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
