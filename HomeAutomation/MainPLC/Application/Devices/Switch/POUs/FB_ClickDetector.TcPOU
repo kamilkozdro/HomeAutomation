@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="FB_ClickDetector" Id="{A42D8C31-7B6E-4C10-9D25-6F0A1B2C3001}">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ClickDetector
+VAR_INPUT
+    iSwitch                : I_Switch;
+    tShortClickTimeout     : TIME := T#250MS;
+    tLongClickTimeout      : TIME := T#1000MS;
+    tMultiClickTimeout     : TIME := T#350MS;
+END_VAR
+VAR_OUTPUT
+    bShortClick            : BOOL;
+    nShortClickCount       : USINT;
+    bLongClick             : BOOL;
+    bIsHeld                : BOOL;
+    bHoldReleased          : BOOL;
+END_VAR
+VAR
+    fbShortPressTimer      : TON;
+    fbLongPressTimer       : TON;
+    fbMultiClickTimer      : TON;
+
+    bInitialized           : BOOL;
+    bIgnoreUntilReleased   : BOOL;
+    bPressActive           : BOOL;
+    bShortThresholdReached : BOOL;
+    bHoldDetected          : BOOL;
+
+    nPendingShortClicks    : USINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Reset pulse outputs at the beginning of every PLC cycle.
+bShortClick := FALSE;
+bLongClick := FALSE;
+bHoldReleased := FALSE;
+
+// Ignore a button that is already pressed when this FB starts.
+IF NOT bInitialized THEN
+    bInitialized := TRUE;
+    bIgnoreUntilReleased := iSwitch.IsPressed;
+END_IF
+
+IF bIgnoreUntilReleased THEN
+    bPressActive := FALSE;
+    bShortThresholdReached := FALSE;
+    bHoldDetected := FALSE;
+    bIsHeld := FALSE;
+
+    fbShortPressTimer(IN := FALSE, PT := tShortClickTimeout);
+    fbLongPressTimer(IN := FALSE, PT := tLongClickTimeout);
+    fbMultiClickTimer(IN := FALSE, PT := tMultiClickTimeout);
+
+    IF NOT iSwitch.IsPressed THEN
+        bIgnoreUntilReleased := FALSE;
+    END_IF
+ELSE
+    // Resolve an expired sequence before processing a new press.
+    // This gives the multi-click timeout priority at the scan boundary.
+    fbMultiClickTimer(
+        IN := (nPendingShortClicks > 0) AND NOT bPressActive,
+        PT := tMultiClickTimeout
+    );
+
+    IF fbMultiClickTimer.Q AND (nPendingShortClicks > 0) AND NOT bPressActive THEN
+        nShortClickCount := nPendingShortClicks;
+        bShortClick := TRUE;
+        nPendingShortClicks := 0;
+    END_IF
+
+    // Start measuring a new physical press.
+    IF iSwitch.Pressed AND NOT bPressActive THEN
+        bPressActive := TRUE;
+        bShortThresholdReached := FALSE;
+        bHoldDetected := FALSE;
+    END_IF
+
+    // Keep the press timers active through the release cycle so their
+    // elapsed state is available when the release event is processed.
+    fbShortPressTimer(
+        IN := bPressActive,
+        PT := tShortClickTimeout
+    );
+
+    fbLongPressTimer(
+        IN := bPressActive,
+        PT := tLongClickTimeout
+    );
+
+    // A press that crosses the short threshold is no longer a short click.
+    // Complete any previous short-click sequence before classifying it.
+    IF fbShortPressTimer.Q THEN
+        bShortThresholdReached := TRUE;
+
+        IF nPendingShortClicks > 0 THEN
+            nShortClickCount := nPendingShortClicks;
+            bShortClick := TRUE;
+            nPendingShortClicks := 0;
+        END_IF
+    END_IF
+
+    // Hold takes precedence over Long Click.
+    IF fbLongPressTimer.Q THEN
+        bHoldDetected := TRUE;
+
+        IF iSwitch.IsPressed THEN
+            bIsHeld := TRUE;
+        END_IF
+    END_IF
+
+    // Classify the press when the switch is released.
+    IF iSwitch.Released AND bPressActive THEN
+        IF bHoldDetected THEN
+            bIsHeld := FALSE;
+            bHoldReleased := TRUE;
+        ELSIF bShortThresholdReached THEN
+            bLongClick := TRUE;
+        ELSE
+            // USINT is intentionally not saturated.
+            nPendingShortClicks := nPendingShortClicks + 1;
+        END_IF
+
+        bPressActive := FALSE;
+        bShortThresholdReached := FALSE;
+        bHoldDetected := FALSE;
+    END_IF
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
