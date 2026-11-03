@@ -5,16 +5,16 @@
 VAR_INPUT
     stDeviceId : ST_DeviceId;
 END_VAR
+VAR_OUTPUT
+    bSetPulse   : BOOL;
+    bResetPulse : BOOL;
+END_VAR
 VAR
     bRequestedState : BOOL;
     bCurrentState   : BOOL;
     bPulseToSet     : BOOL;
     fbTrigger       : R_TRIG;
     fbPulse         : TP;
-END_VAR
-VAR_OUTPUT
-    bSetPulse   : BOOL;
-    bResetPulse : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -33,7 +33,7 @@ bSetPulse := fbPulse.Q AND bPulseToSet;
 bResetPulse := fbPulse.Q AND NOT bPulseToSet;
 ]]></ST>
     </Implementation>
-    <Property Name="DeviceId" Id="{77777777-7777-4777-8777-777777777771}">
+    <Property Name="DeviceId" Id="{77777777-0000-4000-8000-000000000001}">
       <Declaration><![CDATA[PROPERTY DeviceId : ST_DeviceId
 GET
 END_GET
@@ -46,7 +46,7 @@ END_PROPERTY
         </Implementation>
       </Get>
     </Property>
-    <Property Name="IsOn" Id="{77777777-7777-4777-8777-777777777772}">
+    <Property Name="IsOn" Id="{77777777-0000-4000-8000-000000000002}">
       <Declaration><![CDATA[PROPERTY IsOn : BOOL
 GET
 END_GET
@@ -59,7 +59,7 @@ END_PROPERTY
         </Implementation>
       </Get>
     </Property>
-    <Method Name="TurnOn" Id="{77777777-7777-4777-8777-777777777773}">
+    <Method Name="TurnOn" Id="{77777777-0000-4000-8000-000000000003}">
       <Declaration><![CDATA[METHOD PUBLIC TurnOn
 ]]></Declaration>
       <Implementation>
@@ -67,7 +67,7 @@ END_PROPERTY
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TurnOff" Id="{77777777-7777-4777-8777-777777777774}">
+    <Method Name="TurnOff" Id="{77777777-0000-4000-8000-000000000004}">
       <Declaration><![CDATA[METHOD PUBLIC TurnOff
 ]]></Declaration>
       <Implementation>
@@ -75,7 +75,7 @@ END_PROPERTY
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Toggle" Id="{77777777-7777-4777-8777-777777777775}">
+    <Method Name="Toggle" Id="{77777777-0000-4000-8000-000000000005}">
       <Declaration><![CDATA[METHOD PUBLIC Toggle
 ]]></Declaration>
       <Implementation>
