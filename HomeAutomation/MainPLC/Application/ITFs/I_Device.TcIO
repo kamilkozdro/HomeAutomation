@@ -5,10 +5,12 @@
 
     PROPERTY Identity : ST_DeviceIdentity
         GET
+        END_GET
     END_PROPERTY
 
     PROPERTY Metadata : ST_DeviceMetadata
         GET
+        END_GET
     END_PROPERTY
 
 END_INTERFACE
