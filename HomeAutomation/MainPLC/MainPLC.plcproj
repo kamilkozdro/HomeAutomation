@@ -33,6 +33,12 @@
     <Compile Include="Application\Devices\Relay\ITFs\I_Relay.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Application\Devices\Light\ITFs\I_Light.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\Devices\Light\POUs\FB_Light.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Application\Devices\Switch\ITFs\I_Switch.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -40,6 +46,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\Devices\Switch\POUs\FB_ClickDetector.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\Devices\Light\POUs\FB_Light.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\Devices\Relay\POUs\FB_RelayMonostable.TcPOU">

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_Light" Id="{77777777-7777-4777-8777-777777777770}">
+    <Declaration><![CDATA[INTERFACE I_Light EXTENDS I_Device
+]]></Declaration>
+    <Property Name="IsOn" Id="{77777777-7777-4777-8777-777777777771}">
+      <Declaration><![CDATA[PROPERTY IsOn : BOOL]]></Declaration>
+      <Get Name="Get" Id="{77777777-7777-4777-8777-777777777772}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="TurnOn" Id="{77777777-7777-4777-8777-777777777773}">
+      <Declaration><![CDATA[METHOD TurnOn]]></Declaration>
+    </Method>
+    <Method Name="TurnOff" Id="{77777777-7777-4777-8777-777777777774}">
+      <Declaration><![CDATA[METHOD TurnOff]]></Declaration>
+    </Method>
+    <Method Name="Toggle" Id="{77777777-7777-4777-8777-777777777775}">
+      <Declaration><![CDATA[METHOD Toggle]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

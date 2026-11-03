@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="FB_Light" Id="{88888888-8888-4888-8888-888888888880}">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Light IMPLEMENTS I_Light
+VAR_INPUT
+    stDeviceId : ST_DeviceId;
+    iRelay     : I_Relay;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// FB_Light delegates relay operations through I_Relay.
+]]></ST>
+    </Implementation>
+    <Property Name="DeviceId" Id="{88888888-8888-4888-8888-888888888881}">
+      <Declaration><![CDATA[PROPERTY DeviceId : ST_DeviceId
+]]></Declaration>
+      <Get Name="Get" Id="{88888888-8888-4888-8888-888888888882}">
+        <Declaration><![CDATA[
+]]></Declaration>
+        <Implementation><ST><![CDATA[DeviceId := stDeviceId;
+]]></ST></Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsOn" Id="{88888888-8888-4888-8888-888888888883}">
+      <Declaration><![CDATA[PROPERTY IsOn : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{88888888-8888-4888-8888-888888888884}">
+        <Declaration><![CDATA[
+]]></Declaration>
+        <Implementation><ST><![CDATA[IsOn := iRelay.IsOn;
+]]></ST></Implementation>
+      </Get>
+    </Property>
+    <Method Name="TurnOn" Id="{88888888-8888-4888-8888-888888888885}">
+      <Declaration><![CDATA[METHOD PUBLIC TurnOn
+]]></Declaration>
+      <Implementation><ST><![CDATA[iRelay.TurnOn();
+]]></ST></Implementation>
+    </Method>
+    <Method Name="TurnOff" Id="{88888888-8888-4888-8888-888888888886}">
+      <Declaration><![CDATA[METHOD PUBLIC TurnOff
+]]></Declaration>
+      <Implementation><ST><![CDATA[iRelay.TurnOff();
+]]></ST></Implementation>
+    </Method>
+    <Method Name="Toggle" Id="{88888888-8888-4888-8888-888888888887}">
+      <Declaration><![CDATA[METHOD PUBLIC Toggle
+]]></ST></Declaration>
+      <Implementation><ST><![CDATA[iRelay.Toggle();
+]]></ST></Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
