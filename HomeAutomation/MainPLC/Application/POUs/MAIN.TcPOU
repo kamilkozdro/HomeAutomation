@@ -17,7 +17,15 @@ VAR
     fbLight            : FB_Light;
     fbLightController  : FB_LightController;
 
-    aLights : ARRAY[1..10] OF I_Light;
+    nSwitchInputCount : USINT := 1;
+    nRuleCount        : USINT := 2;
+    nLightCount       : USINT := 1;
+    nGroupCount       : USINT := 1;
+
+    aSwitchInputs : ARRAY[1..10] OF ST_SwitchControlInput;
+    aLightRules   : ARRAY[1..50] OF ST_LightControlRule;
+    aLights       : ARRAY[1..20] OF I_Light;
+    aLightGroups  : ARRAY[1..10] OF ST_LightGroup;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -34,13 +42,13 @@ stLightId.sId := 3;
 stLightId.sName := 'Ceiling Light';
 stLightId.sRoom := 'Living Room';
 
-// 1. Physical/logical switch input.
+// 1. Read the physical/logical switch input.
 fbSwitch(
     stDeviceId := stSwitchId,
     bInput := bSwitchInput
 );
 
-// 2. Interpret switch transitions and generate control data.
+// 2. Interpret switch transitions and generate event data.
 fbSwitchController(
     iSwitch := fbSwitch
 );
@@ -51,17 +59,48 @@ fbLight(
     iRelay := fbRelay
 );
 
-// 4. Register the light in the collection controlled by FB_LightController.
+// 4. Register devices and publish the switch event input.
 aLights[1] := fbLight;
+aSwitchInputs[1].nSwitchId := stSwitchId.sId;
+aSwitchInputs[1].stControlData := fbSwitchController.stControlData;
 
-// 5. Convert a single short click into a light toggle command.
+// 5. Configure static event-to-action rules.
+// One short click toggles the ceiling light.
+aLightRules[1].nSwitchId := stSwitchId.sId;
+aLightRules[1].eEvent := E_SwitchEventType.ShortClick;
+aLightRules[1].nShortClickCount := 1;
+aLightRules[1].eTargetType := E_LightTargetType.Light;
+aLightRules[1].nTargetId := stLightId.sId;
+aLightRules[1].eAction := E_LightAction.Toggle;
+aLightRules[1].bEnabled := TRUE;
+
+// Four short clicks turn off every light in the AllLights group.
+aLightRules[2].nSwitchId := stSwitchId.sId;
+aLightRules[2].eEvent := E_SwitchEventType.ShortClick;
+aLightRules[2].nShortClickCount := 4;
+aLightRules[2].eTargetType := E_LightTargetType.Group;
+aLightRules[2].nTargetId := 1;
+aLightRules[2].eAction := E_LightAction.TurnOff;
+aLightRules[2].bEnabled := TRUE;
+
+// Static group membership. The example group currently contains one light.
+aLightGroups[1].nGroupId := 1;
+aLightGroups[1].nLightCount := 1;
+aLightGroups[1].aLightIds[1] := stLightId.sId;
+
+// 6. Match events against rules and execute actions on their targets.
 fbLightController(
-    stSwitchControlData := fbSwitchController.stControlData,
-    nLightCount := 1,
-    aLights := aLights
+    nSwitchInputCount := nSwitchInputCount,
+    nRuleCount := nRuleCount,
+    nLightCount := nLightCount,
+    nGroupCount := nGroupCount,
+    aSwitchInputs := aSwitchInputs,
+    aRules := aLightRules,
+    aLights := aLights,
+    aGroups := aLightGroups
 );
 
-// 6. Execute the relay FB after controller commands so its output is updated in this scan.
+// 7. Execute the relay FB after controller commands so its output is updated in this scan.
 fbRelay(
     stDeviceId := stRelayId
 );
