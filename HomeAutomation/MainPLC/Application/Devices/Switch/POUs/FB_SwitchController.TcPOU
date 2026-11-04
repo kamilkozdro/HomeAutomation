@@ -9,11 +9,7 @@ VAR_INPUT
     tMultiClickTimeout     : TIME := T#350MS;
 END_VAR
 VAR_OUTPUT
-    bShortClick            : BOOL;
-    nShortClickCount       : USINT;
-    bLongClick             : BOOL;
-    bIsHeld                : BOOL;
-    bHoldReleased          : BOOL;
+    stControlData          : ST_SwitchControlData;
 END_VAR
 VAR
     fbShortPressTimer      : TON;
@@ -32,9 +28,9 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// Reset pulse outputs at the beginning of every PLC cycle.
-bShortClick := FALSE;
-bLongClick := FALSE;
-bHoldReleased := FALSE;
+stControlData.bShortClick := FALSE;
+stControlData.bLongClick := FALSE;
+stControlData.bHoldReleased := FALSE;
 
 // Ignore a button that is already pressed when this FB starts.
 IF NOT bInitialized THEN
@@ -46,7 +42,7 @@ IF bIgnoreUntilReleased THEN
     bPressActive := FALSE;
     bShortThresholdReached := FALSE;
     bHoldDetected := FALSE;
-    bIsHeld := FALSE;
+    stControlData.bIsHeld := FALSE;
 
     fbShortPressTimer(IN := FALSE, PT := tShortClickTimeout);
     fbLongPressTimer(IN := FALSE, PT := tLongClickTimeout);
@@ -64,8 +60,8 @@ ELSE
     );
 
     IF fbMultiClickTimer.Q AND bShortClickSequencePending AND NOT bPressActive THEN
-        nShortClickCount := nPendingShortClicks;
-        bShortClick := TRUE;
+        stControlData.nShortClickCount := nPendingShortClicks;
+        stControlData.bShortClick := TRUE;
         nPendingShortClicks := 0;
         bShortClickSequencePending := FALSE;
     END_IF
@@ -95,8 +91,8 @@ ELSE
         bShortThresholdReached := TRUE;
 
         IF bShortClickSequencePending THEN
-            nShortClickCount := nPendingShortClicks;
-            bShortClick := TRUE;
+            stControlData.nShortClickCount := nPendingShortClicks;
+            stControlData.bShortClick := TRUE;
             nPendingShortClicks := 0;
             bShortClickSequencePending := FALSE;
         END_IF
@@ -107,15 +103,15 @@ ELSE
         bHoldDetected := TRUE;
 
         IF iSwitch.IsPressed THEN
-            bIsHeld := TRUE;
+            stControlData.bIsHeld := TRUE;
         END_IF
     END_IF
 
     // Classify the press when the switch is released.
     IF iSwitch.Released AND bPressActive THEN
         IF bHoldDetected THEN
-            bIsHeld := FALSE;
-            bHoldReleased := TRUE;
+            stControlData.bIsHeld := FALSE;
+            stControlData.bHoldReleased := TRUE;
         ELSIF bShortThresholdReached THEN
             bLongClick := TRUE;
         ELSE
