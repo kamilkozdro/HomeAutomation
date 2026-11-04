@@ -33,6 +33,9 @@
     <Compile Include="Application\DUTs\ST_DeviceId.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Application\DUTs\ST_SwitchControlData.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Application\ITFs\I_Device.TcIO">
       <SubType>Code</SubType>
     </Compile>
