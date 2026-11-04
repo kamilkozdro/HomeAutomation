@@ -6,6 +6,7 @@ STRUCT
     bShortClick      : BOOL;
     nShortClickCount : USINT;
     bLongClick       : BOOL;
+    bHoldStarted     : BOOL;
     bIsHeld          : BOOL;
     bHoldReleased    : BOOL;
 END_STRUCT
