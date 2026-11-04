@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_LightControlRule" Id="{D1A10005-0A11-4A11-8A11-000000000005}">
+    <Declaration><![CDATA[TYPE ST_LightControlRule :
+STRUCT
+    nSwitchId        : UINT;
+    eEvent           : E_SwitchEventType;
+    nShortClickCount : USINT;
+    eTargetType      : E_LightTargetType;
+    nTargetId        : UINT;
+    eAction          : E_LightAction;
+    bEnabled         : BOOL := TRUE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
