@@ -113,7 +113,7 @@ ELSE
             stControlData.bIsHeld := FALSE;
             stControlData.bHoldReleased := TRUE;
         ELSIF bShortThresholdReached THEN
-            bLongClick := TRUE;
+            stControlData.bLongClick := TRUE;
         ELSE
             // USINT is intentionally not saturated.
             nPendingShortClicks := nPendingShortClicks + 1;
