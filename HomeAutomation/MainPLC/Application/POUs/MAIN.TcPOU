@@ -3,10 +3,71 @@
   <POU Name="MAIN" Id="{99999999-9999-4999-8999-999999999999}">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
+    // Temporary logical I/O variables. Map these to physical terminals in the I/O configuration.
+    bSwitchInput : BOOL;
+    bRelayOutput : BOOL;
+
+    stSwitchId : ST_DeviceId;
+    stRelayId  : ST_DeviceId;
+    stLightId  : ST_DeviceId;
+
+    fbSwitch           : FB_SwitchMonostable;
+    fbSwitchController : FB_SwitchController;
+    fbRelay            : FB_RelayMonostable;
+    fbLight            : FB_Light;
+    fbLightController  : FB_LightController;
+
+    aLights : ARRAY[1..10] OF I_Light;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Main PLC program entry point.
+      <ST><![CDATA[// Device identities.
+stSwitchId.sId := 1;
+stSwitchId.sName := 'Wall Switch';
+stSwitchId.sRoom := 'Living Room';
+
+stRelayId.sId := 2;
+stRelayId.sName := 'Light Relay';
+stRelayId.sRoom := 'Living Room';
+
+stLightId.sId := 3;
+stLightId.sName := 'Ceiling Light';
+stLightId.sRoom := 'Living Room';
+
+// 1. Physical/logical switch input.
+fbSwitch(
+    stDeviceId := stSwitchId,
+    bInput := bSwitchInput
+);
+
+// 2. Interpret switch transitions and generate control data.
+fbSwitchController(
+    iSwitch := fbSwitch
+);
+
+// 3. Compose the light with its relay.
+fbLight(
+    stDeviceId := stLightId,
+    iRelay := fbRelay
+);
+
+// 4. Register the light in the collection controlled by FB_LightController.
+aLights[1] := fbLight;
+
+// 5. Convert a single short click into a light toggle command.
+fbLightController(
+    stSwitchControlData := fbSwitchController.stControlData,
+    nLightCount := 1,
+    aLights := aLights
+);
+
+// 6. Execute the relay FB after controller commands so its output is updated in this scan.
+fbRelay(
+    stDeviceId := stRelayId
+);
+
+// Temporary logical output. Map bRelayOutput to a physical output terminal.
+bRelayOutput := fbRelay.bOutput;
 ]]></ST>
     </Implementation>
   </POU>
