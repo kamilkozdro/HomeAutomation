@@ -3,8 +3,7 @@
   <POU Name="FB_LightController" Id="{C51D8A20-3F74-4D19-9A62-5B7C8D9E1001}">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_LightController
 VAR_INPUT
-    bShortClick      : BOOL;
-    nShortClickCount : USINT;
+    stSwitchControlData : ST_SwitchControlData;
     nLightCount      : USINT;
 END_VAR
 VAR_IN_OUT
@@ -17,7 +16,8 @@ END_VAR
     <Implementation>
       <ST><![CDATA[// A single short click toggles every light assigned to this controller.
 // Other click patterns are intentionally ignored by this initial implementation.
-IF bShortClick AND (nShortClickCount = 1) THEN
+IF stSwitchControlData.bShortClick
+    AND (stSwitchControlData.nShortClickCount = 1) THEN
     FOR nIndex := 1 TO 10 DO
         IF nIndex <= nLightCount THEN
             aLights[nIndex].Toggle();
