@@ -30,6 +30,7 @@ END_VAR
       <ST><![CDATA[// Reset pulse outputs at the beginning of every PLC cycle.
 stControlData.bShortClick := FALSE;
 stControlData.bLongClick := FALSE;
+stControlData.bHoldStarted := FALSE;
 stControlData.bHoldReleased := FALSE;
 
 // Ignore a button that is already pressed when this FB starts.
@@ -98,9 +99,13 @@ ELSE
         END_IF
     END_IF
 
-    // Hold takes precedence over Long Click.
+    // Hold takes precedence over Long Click. Publish a one-cycle event
+    // only when the hold threshold is crossed.
     IF fbLongPressTimer.Q THEN
-        bHoldDetected := TRUE;
+        IF NOT bHoldDetected THEN
+            bHoldDetected := TRUE;
+            stControlData.bHoldStarted := TRUE;
+        END_IF
 
         IF iSwitch.IsPressed THEN
             stControlData.bIsHeld := TRUE;
