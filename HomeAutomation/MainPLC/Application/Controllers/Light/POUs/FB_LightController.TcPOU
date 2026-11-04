@@ -3,27 +3,103 @@
   <POU Name="FB_LightController" Id="{C51D8A20-3F74-4D19-9A62-5B7C8D9E1001}">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_LightController
 VAR_INPUT
-    stSwitchControlData : ST_SwitchControlData;
-    nLightCount      : USINT;
+    nSwitchInputCount : USINT;
+    nRuleCount        : USINT;
+    nLightCount       : USINT;
+    nGroupCount       : USINT;
 END_VAR
 VAR_IN_OUT
-    aLights          : ARRAY[1..10] OF I_Light;
+    aSwitchInputs : ARRAY[1..10] OF ST_SwitchControlInput;
+    aRules        : ARRAY[1..50] OF ST_LightControlRule;
+    aLights       : ARRAY[1..20] OF I_Light;
+    aGroups       : ARRAY[1..10] OF ST_LightGroup;
 END_VAR
 VAR
-    nIndex           : USINT;
+    nSwitchIndex      : USINT;
+    nRuleIndex        : USINT;
+    nLightIndex       : USINT;
+    nGroupIndex       : USINT;
+    nGroupLightIndex  : USINT;
+    bEventMatches     : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// A single short click toggles every light assigned to this controller.
-// Other click patterns are intentionally ignored by this initial implementation.
-IF stSwitchControlData.bShortClick
-    AND (stSwitchControlData.nShortClickCount = 1) THEN
-    FOR nIndex := 1 TO 10 DO
-        IF nIndex <= nLightCount THEN
-            aLights[nIndex].Toggle();
+      <ST><![CDATA[// Evaluate each switch event against the statically configured rules.
+FOR nSwitchIndex := 1 TO nSwitchInputCount DO
+    FOR nRuleIndex := 1 TO nRuleCount DO
+        bEventMatches := FALSE;
+
+        IF aRules[nRuleIndex].bEnabled
+            AND (aRules[nRuleIndex].nSwitchId = aSwitchInputs[nSwitchIndex].nSwitchId) THEN
+
+            CASE aRules[nRuleIndex].eEvent OF
+                E_SwitchEventType.ShortClick:
+                    bEventMatches :=
+                        aSwitchInputs[nSwitchIndex].stControlData.bShortClick
+                        AND (aSwitchInputs[nSwitchIndex].stControlData.nShortClickCount =
+                             aRules[nRuleIndex].nShortClickCount);
+
+                E_SwitchEventType.LongClick:
+                    bEventMatches := aSwitchInputs[nSwitchIndex].stControlData.bLongClick;
+
+                E_SwitchEventType.HoldStarted:
+                    bEventMatches := aSwitchInputs[nSwitchIndex].stControlData.bHoldStarted;
+
+                E_SwitchEventType.HoldReleased:
+                    bEventMatches := aSwitchInputs[nSwitchIndex].stControlData.bHoldReleased;
+            END_CASE
+        END_IF
+
+        IF bEventMatches THEN
+            CASE aRules[nRuleIndex].eTargetType OF
+                E_LightTargetType.Light:
+                    // Resolve the target light by its device ID.
+                    FOR nLightIndex := 1 TO nLightCount DO
+                        IF aLights[nLightIndex] <> 0 THEN
+                            IF aLights[nLightIndex].DeviceId.bEnabled
+                                AND (aLights[nLightIndex].DeviceId.sId = aRules[nRuleIndex].nTargetId) THEN
+
+                                CASE aRules[nRuleIndex].eAction OF
+                                    E_LightAction.Toggle:
+                                        aLights[nLightIndex].Toggle();
+                                    E_LightAction.TurnOn:
+                                        aLights[nLightIndex].TurnOn();
+                                    E_LightAction.TurnOff:
+                                        aLights[nLightIndex].TurnOff();
+                                END_CASE
+                            END_IF
+                        END_IF
+                    END_FOR
+
+                E_LightTargetType.Group:
+                    // Resolve the group, then apply the action to each member light.
+                    FOR nGroupIndex := 1 TO nGroupCount DO
+                        IF aGroups[nGroupIndex].nGroupId = aRules[nRuleIndex].nTargetId THEN
+                            FOR nGroupLightIndex := 1 TO aGroups[nGroupIndex].nLightCount DO
+                                FOR nLightIndex := 1 TO nLightCount DO
+                                    IF aLights[nLightIndex] <> 0 THEN
+                                        IF aLights[nLightIndex].DeviceId.bEnabled
+                                            AND (aLights[nLightIndex].DeviceId.sId =
+                                                 aGroups[nGroupIndex].aLightIds[nGroupLightIndex]) THEN
+
+                                            CASE aRules[nRuleIndex].eAction OF
+                                                E_LightAction.Toggle:
+                                                    aLights[nLightIndex].Toggle();
+                                                E_LightAction.TurnOn:
+                                                    aLights[nLightIndex].TurnOn();
+                                                E_LightAction.TurnOff:
+                                                    aLights[nLightIndex].TurnOff();
+                                            END_CASE
+                                        END_IF
+                                    END_IF
+                                END_FOR
+                            END_FOR
+                        END_IF
+                    END_FOR
+            END_CASE
         END_IF
     END_FOR
-END_IF
+END_FOR
 ]]></ST>
     </Implementation>
   </POU>
