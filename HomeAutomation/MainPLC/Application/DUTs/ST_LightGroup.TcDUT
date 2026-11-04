@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_LightGroup" Id="{D1A10006-0A11-4A11-8A11-000000000006}">
+    <Declaration><![CDATA[TYPE ST_LightGroup :
+STRUCT
+    nGroupId    : UINT;
+    nLightCount : USINT;
+    aLightIds   : ARRAY[1..20] OF UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
