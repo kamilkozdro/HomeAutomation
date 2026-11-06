@@ -21,22 +21,25 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\Controllers\Light\POUs\FB_LightCtrl.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Application\POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\DUTs\ST_DeviceId.TcDUT">
+    <Compile Include="Application\Devices\DUTs\ST_DeviceId.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\DUTs\ST_SwitchControlData.TcDUT">
+    <Compile Include="Application\Devices\Light\DUTs\E_LightAction.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\DUTs\E_LightAction.TcDUT">
+    <Compile Include="Application\Devices\Light\DUTs\ST_LightCmd.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\DUTs\ST_LightCmd.TcDUT">
+    <Compile Include="Application\Devices\Light\POUs\FB_LightCtrl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\Devices\Switch\DUTs\ST_SwitchControlData.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\Rooms\FB_LivingRoom.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\ITFs\I_Device.TcIO">
@@ -58,9 +61,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\Devices\Switch\POUs\FB_SwitchCtrl.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Application\Devices\Light\POUs\FB_Light.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\Devices\Relay\POUs\FB_RelayMonostable.TcPOU">
