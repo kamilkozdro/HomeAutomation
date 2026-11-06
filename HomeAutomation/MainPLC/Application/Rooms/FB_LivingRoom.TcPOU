@@ -67,5 +67,6 @@ IF fbAmbientSwitchCtrl.stControlData.bShortClick AND
     GVL_LightCmds.stLivingRoomAmbientCmd.eAction := E_LightAction.Toggle;
 END_IF
 ]]></ST>
+    </Implementation>
   </POU>
 </TcPlcObject>
