@@ -4,85 +4,29 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
     // Temporary logical I/O variables. Map these to physical terminals in the I/O configuration.
-    bSwitchInput : BOOL;
-    bRelayOutput : BOOL;
+    bCeilingSwitchInput : BOOL;
+    bWallSwitchInput    : BOOL;
+    bAmbientSwitchInput : BOOL;
 
-    stSwitchId : ST_DeviceId;
-    stRelayId  : ST_DeviceId;
-    stLightId  : ST_DeviceId;
+    bCeilingLightOutput : BOOL;
+    bWallLightOutput    : BOOL;
+    bAmbientLightOutput : BOOL;
 
-    stLightCmd : ST_LightCmd;
-
-    fbSwitch    : FB_SwitchMonostable;
-    fbSwitchCtrl : FB_SwitchCtrl;
-    fbRelay     : FB_RelayMonostable;
-    fbLight     : FB_Light;
-    fbLightCtrl : FB_LightCtrl;
+    fbLivingRoom : FB_LivingRoom;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Device identities.
-stSwitchId.sId := 1;
-stSwitchId.sName := 'Wall Switch';
-stSwitchId.sRoom := 'Living Room';
-
-stRelayId.sId := 2;
-stRelayId.sName := 'Light Relay';
-stRelayId.sRoom := 'Living Room';
-
-stLightId.sId := 3;
-stLightId.sName := 'Ceiling Light';
-stLightId.sRoom := 'Living Room';
-
-// 1. Read the physical/logical switch input.
-fbSwitch(
-    stDeviceId := stSwitchId,
-    bInput := bSwitchInput
+      <ST><![CDATA[// The room FB owns its switches, lights, relays and room-level behavior.
+fbLivingRoom(
+    bCeilingSwitchInput := bCeilingSwitchInput,
+    bWallSwitchInput := bWallSwitchInput,
+    bAmbientSwitchInput := bAmbientSwitchInput,
+    bCeilingLightOutput => bCeilingLightOutput,
+    bWallLightOutput => bWallLightOutput,
+    bAmbientLightOutput => bAmbientLightOutput
 );
 
-// 2. Interpret switch transitions and generate control data.
-fbSwitchCtrl(
-    iSwitch := fbSwitch
-);
-
-// 3. Compose the light with its relay.
-fbLight(
-    stDeviceId := stLightId,
-    iRelay := fbRelay
-);
-
-// 4. Generate one-cycle light commands in the room program.
-// Reset the command every scan; switch events set it for this scan only.
-stLightCmd.eAction := E_LightAction.None;
-stLightCmd.nBrightness := 0;
-
-IF fbSwitchCtrl.stControlData.bShortClick THEN
-    CASE fbSwitchCtrl.stControlData.nShortClickCount OF
-        1:
-            stLightCmd.eAction := E_LightAction.Toggle;
-
-        2:
-            stLightCmd.eAction := E_LightAction.SetBrightness;
-            stLightCmd.nBrightness := 40;
-
-        4:
-            stLightCmd.eAction := E_LightAction.TurnOff;
-    END_CASE
-END_IF
-
-// 5. Execute the command for this single light.
-fbLightCtrl(
-    stLightCmd := stLightCmd,
-    iLight := fbLight
-);
-
-// 6. Execute the relay FB after the light controller so its output is updated in this scan.
-fbRelay(
-    stDeviceId := stRelayId
-);
-
-// Temporary logical output. Map bRelayOutput to a physical output terminal.
-bRelayOutput := fbRelay.bOutput;
+// Map the logical input/output variables to physical terminals in the I/O configuration.
 ]]></ST>
     </Implementation>
   </POU>
