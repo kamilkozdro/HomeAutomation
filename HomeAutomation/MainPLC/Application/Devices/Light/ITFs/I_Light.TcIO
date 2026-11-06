@@ -18,5 +18,11 @@
     <Method Name="Toggle" Id="{A1A1A1A1-A1A1-41A1-81A1-A1A1A1A1A1A5}">
       <Declaration><![CDATA[METHOD Toggle]]></Declaration>
     </Method>
+    <Method Name="SetBrightness" Id="{A1A1A1A1-A1A1-41A1-81A1-A1A1A1A1A1A6}">
+      <Declaration><![CDATA[METHOD SetBrightness
+VAR_INPUT
+    nBrightness : UINT;
+END_VAR]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>
