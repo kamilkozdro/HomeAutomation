@@ -3,30 +3,11 @@
   <POU Name="MAIN" Id="{99999999-9999-4999-8999-999999999999}">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-    // Temporary logical I/O variables. Map these to physical terminals in the I/O configuration.
-    bCeilingSwitchInput : BOOL;
-    bWallSwitchInput    : BOOL;
-    bAmbientSwitchInput : BOOL;
-
-    bCeilingLightOutput : BOOL;
-    bWallLightOutput    : BOOL;
-    bAmbientLightOutput : BOOL;
-
-    fbLivingRoom : FB_LivingRoom;
+    fbHouse : FB_House;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// The room FB owns its switches, lights, relays and room-level behavior.
-fbLivingRoom(
-    bCeilingSwitchInput := bCeilingSwitchInput,
-    bWallSwitchInput := bWallSwitchInput,
-    bAmbientSwitchInput := bAmbientSwitchInput,
-    bCeilingLightOutput => bCeilingLightOutput,
-    bWallLightOutput => bWallLightOutput,
-    bAmbientLightOutput => bAmbientLightOutput
-);
-
-// Map the logical input/output variables to physical terminals in the I/O configuration.
+      <ST><![CDATA[fbHouse();
 ]]></ST>
     </Implementation>
   </POU>
