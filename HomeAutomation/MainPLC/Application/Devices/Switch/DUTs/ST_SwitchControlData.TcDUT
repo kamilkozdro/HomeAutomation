@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_SwitchControlData" Id="{A9E21D47-5C83-4B10-9F62-1D7A3C8E5001}">
+    <Declaration><![CDATA[TYPE ST_SwitchControlData :
+STRUCT
+    bShortClick      : BOOL;
+    nShortClickCount : USINT;
+    bLongClick       : BOOL;
+    bIsHeld          : BOOL;
+    bHoldReleased    : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
