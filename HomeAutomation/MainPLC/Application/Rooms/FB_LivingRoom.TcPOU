@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="FB_LivingRoom" Id="{D4E8A210-3B71-4C96-8F25-7A1B2C3D4001}">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LivingRoom
+VAR_INPUT
+    bCeilingSwitchInput : BOOL;
+    bWallSwitchInput    : BOOL;
+    bAmbientSwitchInput : BOOL;
+END_VAR
+VAR_OUTPUT
+    bCeilingLightOutput : BOOL;
+    bWallLightOutput    : BOOL;
+    bAmbientLightOutput : BOOL;
+END_VAR
+VAR
+    stCeilingSwitchId : ST_DeviceId;
+    stWallSwitchId    : ST_DeviceId;
+    stAmbientSwitchId : ST_DeviceId;
+
+    stCeilingRelayId : ST_DeviceId;
+    stWallRelayId    : ST_DeviceId;
+    stAmbientRelayId : ST_DeviceId;
+
+    stCeilingLightId : ST_DeviceId;
+    stWallLightId    : ST_DeviceId;
+    stAmbientLightId : ST_DeviceId;
+
+    stCeilingLightCmd : ST_LightCmd;
+    stWallLightCmd    : ST_LightCmd;
+    stAmbientLightCmd : ST_LightCmd;
+
+    fbCeilingSwitch : FB_SwitchMonostable;
+    fbWallSwitch    : FB_SwitchMonostable;
+    fbAmbientSwitch : FB_SwitchMonostable;
+
+    fbCeilingSwitchCtrl : FB_SwitchCtrl;
+    fbWallSwitchCtrl    : FB_SwitchCtrl;
+    fbAmbientSwitchCtrl : FB_SwitchCtrl;
+
+    fbCeilingRelay : FB_RelayMonostable;
+    fbWallRelay    : FB_RelayMonostable;
+    fbAmbientRelay : FB_RelayMonostable;
+
+    fbCeilingLight : FB_Light;
+    fbWallLight    : FB_Light;
+    fbAmbientLight : FB_Light;
+
+    fbCeilingLightCtrl : FB_LightCtrl;
+    fbWallLightCtrl    : FB_LightCtrl;
+    fbAmbientLightCtrl : FB_LightCtrl;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Configure device identities.
+stCeilingSwitchId.sId := 101;
+stCeilingSwitchId.sName := 'Ceiling Switch';
+stCeilingSwitchId.sRoom := 'Living Room';
+
+stWallSwitchId.sId := 102;
+stWallSwitchId.sName := 'Wall Switch';
+stWallSwitchId.sRoom := 'Living Room';
+
+stAmbientSwitchId.sId := 103;
+stAmbientSwitchId.sName := 'Ambient Switch';
+stAmbientSwitchId.sRoom := 'Living Room';
+
+stCeilingRelayId.sId := 201;
+stCeilingRelayId.sName := 'Ceiling Relay';
+stCeilingRelayId.sRoom := 'Living Room';
+
+stWallRelayId.sId := 202;
+stWallRelayId.sName := 'Wall Relay';
+stWallRelayId.sRoom := 'Living Room';
+
+stAmbientRelayId.sId := 203;
+stAmbientRelayId.sName := 'Ambient Relay';
+stAmbientRelayId.sRoom := 'Living Room';
+
+stCeilingLightId.sId := 301;
+stCeilingLightId.sName := 'Ceiling Light';
+stCeilingLightId.sRoom := 'Living Room';
+
+stWallLightId.sId := 302;
+stWallLightId.sName := 'Wall Light';
+stWallLightId.sRoom := 'Living Room';
+
+stAmbientLightId.sId := 303;
+stAmbientLightId.sName := 'Ambient Light';
+stAmbientLightId.sRoom := 'Living Room';
+
+// Read the three switch inputs and interpret their gestures.
+fbCeilingSwitch(stDeviceId := stCeilingSwitchId, bInput := bCeilingSwitchInput);
+fbWallSwitch(stDeviceId := stWallSwitchId, bInput := bWallSwitchInput);
+fbAmbientSwitch(stDeviceId := stAmbientSwitchId, bInput := bAmbientSwitchInput);
+
+fbCeilingSwitchCtrl(iSwitch := fbCeilingSwitch);
+fbWallSwitchCtrl(iSwitch := fbWallSwitch);
+fbAmbientSwitchCtrl(iSwitch := fbAmbientSwitch);
+
+// Compose each light with its relay.
+fbCeilingLight(stDeviceId := stCeilingLightId, iRelay := fbCeilingRelay);
+fbWallLight(stDeviceId := stWallLightId, iRelay := fbWallRelay);
+fbAmbientLight(stDeviceId := stAmbientLightId, iRelay := fbAmbientRelay);
+
+// Commands are pulses: clear them at the beginning of every scan.
+stCeilingLightCmd.eAction := E_LightAction.None;
+stCeilingLightCmd.nBrightness := 0;
+stWallLightCmd.eAction := E_LightAction.None;
+stWallLightCmd.nBrightness := 0;
+stAmbientLightCmd.eAction := E_LightAction.None;
+stAmbientLightCmd.nBrightness := 0;
+
+// Ceiling switch: one click toggles the ceiling light,
+// two clicks set 40% brightness, four clicks turn all living-room lights off.
+IF fbCeilingSwitchCtrl.stControlData.bShortClick THEN
+    CASE fbCeilingSwitchCtrl.stControlData.nShortClickCount OF
+        1:
+            stCeilingLightCmd.eAction := E_LightAction.Toggle;
+        2:
+            stCeilingLightCmd.eAction := E_LightAction.SetBrightness;
+            stCeilingLightCmd.nBrightness := 40;
+        4:
+            stCeilingLightCmd.eAction := E_LightAction.TurnOff;
+            stWallLightCmd.eAction := E_LightAction.TurnOff;
+            stAmbientLightCmd.eAction := E_LightAction.TurnOff;
+    END_CASE
+END_IF
+
+// Wall switch: one click toggles the wall light.
+IF fbWallSwitchCtrl.stControlData.bShortClick AND
+   (fbWallSwitchCtrl.stControlData.nShortClickCount = 1) THEN
+    stWallLightCmd.eAction := E_LightAction.Toggle;
+END_IF
+
+// Ambient switch: one click toggles the ambient light.
+IF fbAmbientSwitchCtrl.stControlData.bShortClick AND
+   (fbAmbientSwitchCtrl.stControlData.nShortClickCount = 1) THEN
+    stAmbientLightCmd.eAction := E_LightAction.Toggle;
+END_IF
+
+// Each light controller executes commands for exactly one light.
+fbCeilingLightCtrl(stLightCmd := stCeilingLightCmd, iLight := fbCeilingLight);
+fbWallLightCtrl(stLightCmd := stWallLightCmd, iLight := fbWallLight);
+fbAmbientLightCtrl(stLightCmd := stAmbientLightCmd, iLight := fbAmbientLight);
+
+// Update relay outputs after command execution in this scan.
+fbCeilingRelay(stDeviceId := stCeilingRelayId);
+fbWallRelay(stDeviceId := stWallRelayId);
+fbAmbientRelay(stDeviceId := stAmbientRelayId);
+
+bCeilingLightOutput := fbCeilingRelay.bOutput;
+bWallLightOutput := fbWallRelay.bOutput;
+bAmbientLightOutput := fbAmbientRelay.bOutput;
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
