@@ -11,12 +11,12 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// Clear command pulses before room logic generates commands for this scan.
-GVL_LightCmds.stLivingRoomCeiling.eAction := E_LightAction.None;
-GVL_LightCmds.stLivingRoomCeiling.nBrightness := 0;
-GVL_LightCmds.stLivingRoomWall.eAction := E_LightAction.None;
-GVL_LightCmds.stLivingRoomWall.nBrightness := 0;
-GVL_LightCmds.stLivingRoomAmbient.eAction := E_LightAction.None;
-GVL_LightCmds.stLivingRoomAmbient.nBrightness := 0;
+GVL_LightCmds.stLivingRoomCeilingCmd.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomCeilingCmd.nBrightness := 0;
+GVL_LightCmds.stLivingRoomWallCmd.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomWallCmd.nBrightness := 0;
+GVL_LightCmds.stLivingRoomAmbientCmd.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomAmbientCmd.nBrightness := 0;
 
 // Rooms generate commands for shared devices.
 fbLivingRoom();
