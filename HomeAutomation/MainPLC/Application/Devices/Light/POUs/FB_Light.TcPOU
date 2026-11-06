@@ -59,5 +59,23 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SetBrightness" Id="{B2B2B2B2-B2B2-42B2-82B2-B2B2B2B2B2B8}">
+      <Declaration><![CDATA[METHOD PUBLIC SetBrightness
+VAR_INPUT
+    nBrightness : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// A relay-backed light supports only on/off switching.
+// Zero switches it off; any non-zero level switches it on.
+// A dimmer-backed light implementation can provide actual level control.
+IF nBrightness = 0 THEN
+    iRelay.TurnOff();
+ELSE
+    iRelay.TurnOn();
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>
