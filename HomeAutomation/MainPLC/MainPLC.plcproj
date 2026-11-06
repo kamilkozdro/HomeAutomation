@@ -39,6 +39,15 @@
     <Compile Include="Application\Devices\Switch\DUTs\ST_SwitchControlData.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Application\House\POUs\FB_House.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\GVLs\GVL_Lights.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\GVLs\GVL_LightCmds.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Application\Rooms\FB_LivingRoom.TcPOU">
       <SubType>Code</SubType>
     </Compile>
