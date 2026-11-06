@@ -46,25 +46,25 @@ fbAmbientSwitchCtrl(iSwitch := fbAmbientSwitch);
 IF fbCeilingSwitchCtrl.stControlData.bShortClick THEN
     CASE fbCeilingSwitchCtrl.stControlData.nShortClickCount OF
         1:
-            GVL_LightCmds.stLivingRoomCeiling.eAction := E_LightAction.Toggle;
+            GVL_LightCmds.stLivingRoomCeilingCmd.eAction := E_LightAction.Toggle;
         2:
-            GVL_LightCmds.stLivingRoomCeiling.eAction := E_LightAction.SetBrightness;
-            GVL_LightCmds.stLivingRoomCeiling.nBrightness := 40;
+            GVL_LightCmds.stLivingRoomCeilingCmd.eAction := E_LightAction.SetBrightness;
+            GVL_LightCmds.stLivingRoomCeilingCmd.nBrightness := 40;
         4:
-            GVL_LightCmds.stLivingRoomCeiling.eAction := E_LightAction.TurnOff;
-            GVL_LightCmds.stLivingRoomWall.eAction := E_LightAction.TurnOff;
-            GVL_LightCmds.stLivingRoomAmbient.eAction := E_LightAction.TurnOff;
+            GVL_LightCmds.stLivingRoomCeilingCmd.eAction := E_LightAction.TurnOff;
+            GVL_LightCmds.stLivingRoomWallCmd.eAction := E_LightAction.TurnOff;
+            GVL_LightCmds.stLivingRoomAmbientCmd.eAction := E_LightAction.TurnOff;
     END_CASE
 END_IF
 
 IF fbWallSwitchCtrl.stControlData.bShortClick AND
    (fbWallSwitchCtrl.stControlData.nShortClickCount = 1) THEN
-    GVL_LightCmds.stLivingRoomWall.eAction := E_LightAction.Toggle;
+    GVL_LightCmds.stLivingRoomWallCmd.eAction := E_LightAction.Toggle;
 END_IF
 
 IF fbAmbientSwitchCtrl.stControlData.bShortClick AND
    (fbAmbientSwitchCtrl.stControlData.nShortClickCount = 1) THEN
-    GVL_LightCmds.stLivingRoomAmbient.eAction := E_LightAction.Toggle;
+    GVL_LightCmds.stLivingRoomAmbientCmd.eAction := E_LightAction.Toggle;
 END_IF
 ]]></ST>
   </POU>
