@@ -21,10 +21,7 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\Home\POUs\FB_EventRouter.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Application\Controllers\Light\POUs\FB_LightController.TcPOU">
+    <Compile Include="Application\Controllers\Light\POUs\FB_LightCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\POUs\MAIN.TcPOU">
@@ -34,6 +31,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\DUTs\ST_SwitchControlData.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\DUTs\E_LightAction.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Application\DUTs\ST_LightCmd.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\ITFs\I_Device.TcIO">
@@ -54,7 +57,7 @@
     <Compile Include="Application\Devices\Switch\POUs\FB_SwitchMonostable.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Application\Devices\Switch\POUs\FB_SwitchController.TcPOU">
+    <Compile Include="Application\Devices\Switch\POUs\FB_SwitchCtrl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Application\Devices\Light\POUs\FB_Light.TcPOU">
