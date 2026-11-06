@@ -11,13 +11,13 @@ VAR
     stRelayId  : ST_DeviceId;
     stLightId  : ST_DeviceId;
 
-    fbSwitch           : FB_SwitchMonostable;
-    fbSwitchController : FB_SwitchController;
-    fbRelay            : FB_RelayMonostable;
-    fbLight            : FB_Light;
-    fbLightController  : FB_LightController;
+    stLightCmd : ST_LightCmd;
 
-    aLights : ARRAY[1..10] OF I_Light;
+    fbSwitch    : FB_SwitchMonostable;
+    fbSwitchCtrl : FB_SwitchCtrl;
+    fbRelay     : FB_RelayMonostable;
+    fbLight     : FB_Light;
+    fbLightCtrl : FB_LightCtrl;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -34,14 +34,14 @@ stLightId.sId := 3;
 stLightId.sName := 'Ceiling Light';
 stLightId.sRoom := 'Living Room';
 
-// 1. Physical/logical switch input.
+// 1. Read the physical/logical switch input.
 fbSwitch(
     stDeviceId := stSwitchId,
     bInput := bSwitchInput
 );
 
 // 2. Interpret switch transitions and generate control data.
-fbSwitchController(
+fbSwitchCtrl(
     iSwitch := fbSwitch
 );
 
@@ -51,17 +51,32 @@ fbLight(
     iRelay := fbRelay
 );
 
-// 4. Register the light in the collection controlled by FB_LightController.
-aLights[1] := fbLight;
+// 4. Generate one-cycle light commands in the room program.
+// Reset the command every scan; switch events set it for this scan only.
+stLightCmd.eAction := E_LightAction.None;
+stLightCmd.nBrightness := 0;
 
-// 5. Convert a single short click into a light toggle command.
-fbLightController(
-    stSwitchControlData := fbSwitchController.stControlData,
-    nLightCount := 1,
-    aLights := aLights
+IF fbSwitchCtrl.stControlData.bShortClick THEN
+    CASE fbSwitchCtrl.stControlData.nShortClickCount OF
+        1:
+            stLightCmd.eAction := E_LightAction.Toggle;
+
+        2:
+            stLightCmd.eAction := E_LightAction.SetBrightness;
+            stLightCmd.nBrightness := 40;
+
+        4:
+            stLightCmd.eAction := E_LightAction.TurnOff;
+    END_CASE
+END_IF
+
+// 5. Execute the command for this single light.
+fbLightCtrl(
+    stLightCmd := stLightCmd,
+    iLight := fbLight
 );
 
-// 6. Execute the relay FB after controller commands so its output is updated in this scan.
+// 6. Execute the relay FB after the light controller so its output is updated in this scan.
 fbRelay(
     stDeviceId := stRelayId
 );
