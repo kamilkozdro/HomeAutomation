@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <DUT Name="ST_LightCmd" Id="{D7C9A3E1-6F42-4A8D-9B31-2C5E7F901002}">
+    <Declaration><![CDATA[TYPE ST_LightCmd :
+STRUCT
+    eAction     : E_LightAction;
+    nBrightness : UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
