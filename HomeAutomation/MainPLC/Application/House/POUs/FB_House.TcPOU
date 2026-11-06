@@ -10,13 +10,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Clear command pulses before room logic generates commands for this scan.
-GVL_LightCmds.stLivingRoomCeilingCmd.eAction := E_LightAction.None;
-GVL_LightCmds.stLivingRoomCeilingCmd.nBrightness := 0;
-GVL_LightCmds.stLivingRoomWallCmd.eAction := E_LightAction.None;
-GVL_LightCmds.stLivingRoomWallCmd.nBrightness := 0;
-GVL_LightCmds.stLivingRoomAmbientCmd.eAction := E_LightAction.None;
-GVL_LightCmds.stLivingRoomAmbientCmd.nBrightness := 0;
+      <ST><![CDATA[// Clear all light command inputs before room logic generates commands for this scan.
+ClearLightCommands();
 
 // Rooms generate commands for shared devices.
 fbLivingRoom();
@@ -44,14 +39,29 @@ GVL_Lights.fbLivingRoomAmbient(
 );
 
 // Execute one controller per light.
-fbLivingRoomCeilingCtrl(stLightCmd := GVL_LightCmds.stLivingRoomCeiling, iLight := GVL_Lights.fbLivingRoomCeiling);
-fbLivingRoomWallCtrl(stLightCmd := GVL_LightCmds.stLivingRoomWall, iLight := GVL_Lights.fbLivingRoomWall);
-fbLivingRoomAmbientCtrl(stLightCmd := GVL_LightCmds.stLivingRoomAmbient, iLight := GVL_Lights.fbLivingRoomAmbient);
+fbLivingRoomCeilingCtrl(stLightCmd := GVL_LightCmds.stLivingRoomCeilingCmd, iLight := GVL_Lights.fbLivingRoomCeiling);
+fbLivingRoomWallCtrl(stLightCmd := GVL_LightCmds.stLivingRoomWallCmd, iLight := GVL_Lights.fbLivingRoomWall);
+fbLivingRoomAmbientCtrl(stLightCmd := GVL_LightCmds.stLivingRoomAmbientCmd, iLight := GVL_Lights.fbLivingRoomAmbient);
 
 // Update relay outputs after command execution in this scan.
 GVL_Lights.fbLivingRoomCeilingRelay(stDeviceId := GVL_Lights.stLivingRoomCeilingRelayId);
 GVL_Lights.fbLivingRoomWallRelay(stDeviceId := GVL_Lights.stLivingRoomWallRelayId);
 GVL_Lights.fbLivingRoomAmbientRelay(stDeviceId := GVL_Lights.stLivingRoomAmbientRelayId);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearLightCommands" Id="{A8100001-3B71-4C96-8F25-7A1B2C3D4003}">
+      <Declaration><![CDATA[METHOD PRIVATE ClearLightCommands
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GVL_LightCmds.stLivingRoomCeilingCmd.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomCeilingCmd.nBrightness := 0;
+
+GVL_LightCmds.stLivingRoomWallCmd.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomWallCmd.nBrightness := 0;
+
+GVL_LightCmds.stLivingRoomAmbientCmd.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomAmbientCmd.nBrightness := 0;
 ]]></ST>
       </Implementation>
     </Method>
