@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.20">
+  <POU Name="FB_House" Id="{A8100001-3B71-4C96-8F25-7A1B2C3D4001}">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_House
+VAR
+    fbLivingRoom : FB_LivingRoom;
+    fbLivingRoomCeilingCtrl : FB_LightCtrl;
+    fbLivingRoomWallCtrl    : FB_LightCtrl;
+    fbLivingRoomAmbientCtrl : FB_LightCtrl;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Clear command pulses before room logic generates commands for this scan.
+GVL_LightCmds.stLivingRoomCeiling.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomCeiling.nBrightness := 0;
+GVL_LightCmds.stLivingRoomWall.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomWall.nBrightness := 0;
+GVL_LightCmds.stLivingRoomAmbient.eAction := E_LightAction.None;
+GVL_LightCmds.stLivingRoomAmbient.nBrightness := 0;
+
+// Rooms generate commands for shared devices.
+fbLivingRoom();
+
+// Execute all light controllers and light devices once per PLC scan.
+ExecuteLights();
+]]></ST>
+    </Implementation>
+    <Method Name="ExecuteLights" Id="{A8100001-3B71-4C96-8F25-7A1B2C3D4002}">
+      <Declaration><![CDATA[METHOD PRIVATE ExecuteLights
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Connect each global light to its relay.
+GVL_Lights.fbLivingRoomCeiling(
+    stDeviceId := GVL_Lights.stLivingRoomCeilingId,
+    iRelay := GVL_Lights.fbLivingRoomCeilingRelay
+);
+GVL_Lights.fbLivingRoomWall(
+    stDeviceId := GVL_Lights.stLivingRoomWallId,
+    iRelay := GVL_Lights.fbLivingRoomWallRelay
+);
+GVL_Lights.fbLivingRoomAmbient(
+    stDeviceId := GVL_Lights.stLivingRoomAmbientId,
+    iRelay := GVL_Lights.fbLivingRoomAmbientRelay
+);
+
+// Execute one controller per light.
+fbLivingRoomCeilingCtrl(stLightCmd := GVL_LightCmds.stLivingRoomCeiling, iLight := GVL_Lights.fbLivingRoomCeiling);
+fbLivingRoomWallCtrl(stLightCmd := GVL_LightCmds.stLivingRoomWall, iLight := GVL_Lights.fbLivingRoomWall);
+fbLivingRoomAmbientCtrl(stLightCmd := GVL_LightCmds.stLivingRoomAmbient, iLight := GVL_Lights.fbLivingRoomAmbient);
+
+// Update relay outputs after command execution in this scan.
+GVL_Lights.fbLivingRoomCeilingRelay(stDeviceId := GVL_Lights.stLivingRoomCeilingRelayId);
+GVL_Lights.fbLivingRoomWallRelay(stDeviceId := GVL_Lights.stLivingRoomWallRelayId);
+GVL_Lights.fbLivingRoomAmbientRelay(stDeviceId := GVL_Lights.stLivingRoomAmbientRelayId);
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
